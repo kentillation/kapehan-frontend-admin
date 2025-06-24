@@ -20,7 +20,14 @@
 
                     <!--eslint-disable-next-line -->
                     <template v-slot:item.actions="{ item }">
-                        <v-btn @click="$emit('edit-ingredient', item)" color="green" variant="tonal" size="small" icon="mdi-pencil"></v-btn>
+                        <div class="d-flex" style="gap: 8px;">
+                            <v-tooltip text="Edit Ingredient" location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-btn v-bind="props" @click="$emit('edit-ingredient', item)" color="green" variant="tonal"
+                                        size="small" icon="mdi-pencil"></v-btn>
+                                </template>
+                            </v-tooltip>
+                        </div>
                     </template>
 
                 </v-data-table>

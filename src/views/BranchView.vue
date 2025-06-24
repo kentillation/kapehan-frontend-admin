@@ -100,11 +100,6 @@
                             <ProductsTable v-else @refresh="onRefreshProducts" @edit-product="editProductDialog" @view-ingredients="ingredientsDialog"
                                 :products="products" :loading="loadingProducts"
                                 :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"/>
-                            <ProductIngredientsDialog v-model="dialogIngredients" :product-ingredients="ingredients"
-                                :loading="ingredientLoading" @edit-ingredient="editIngredientDialog" :shop-id="branchDetails.shop_id"
-                                :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
-                                :product-id="productId" :product-name="productName" :product-temp="productTemp"
-                                :product-size="productSize" />
                             <ProductEditDialog v-model="productEditDialog"
                                 @update:modelValue="productEditDialog = $event"
                                 @update:product="currentProduct = $event"
@@ -112,13 +107,18 @@
                                 @save="updatingProduct" :valid="formValid" :loading="isSaving"
                                 :confirm="confirmUpdatingProductDialog"
                                 :selected-product="currentProduct?.product_name || ''" />
+                            <ProductIngredientsDialog v-model="dialogIngredients" :product-ingredients="ingredients"
+                                :loading="ingredientLoading" @edit-ingredient="editIngredientDialog" :shop-id="branchDetails.shop_id"
+                                :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
+                                :product-id="productId" :product-name="productName" :product-temp="productTemp"
+                                :product-size="productSize" />
                             <IngredientEditDialog v-model="ingredientEditDialog"
                                 @update:modelValue="ingredientEditDialog = $event"
                                 @update:ingredient="currentIngredient = $event"
                                 @update:confirm="confirmUpdatingIngredientDialog = $event" :ingredient="currentIngredient"
                                 @save="updatingIngredient" :valid="formValid" :loading="isSaving"
-                                :confirm="confirmUpdatingIngredientDialog"
-                                :selected-ingredient="currentIngredient?.product_name || ''" />
+                                :confirm="confirmUpdatingIngredientDialog" />
+                                <!-- :selected-ingredient="currentIngredient?.product_name || ''" -->
                             <ProductsHistoryDialog v-model="productsHistoryDialog"
                                 :branch-id="branchDetails.branch_id" />
                             <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray" class="mt-3"
