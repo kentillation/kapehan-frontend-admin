@@ -20,7 +20,7 @@
 
                     <!--eslint-disable-next-line -->
                     <template v-slot:item.actions="{ item }">
-                        <v-btn @click="edit(item)" color="green" variant="tonal" size="small" icon="mdi-pencil"></v-btn>
+                        <v-btn @click="$emit('edit-ingredient', item)" color="green" variant="tonal" size="small" icon="mdi-pencil"></v-btn>
                     </template>
 
                 </v-data-table>
@@ -36,6 +36,12 @@
                     <v-icon>mdi-close</v-icon>&nbsp; Close
                 </v-btn>
             </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="editIngredientDialog">
+        <v-card>
+            <v-card-title class="text-h6">{{ productName }}{{ productTemp }}{{ productSize }}</v-card-title>
         </v-card>
     </v-dialog>
 </template>
@@ -82,9 +88,13 @@ export default {
             default: false
         }
     },
-    emits: ['update:modelValue'],
+    emits: [
+        'update:modelValue',
+        'edit-ingredient',
+    ],
     data() {
         return {
+            editIngredientDialog: false,
             headers: [
                 { title: 'Ingredient', value: 'stock_ingredient', sortable: true },
                 { title: 'Usage', value: 'unit', sortable: true },
@@ -124,9 +134,6 @@ export default {
             };
             return actions[availabilityId] || `Action ${availabilityId}`;
         },
-        edit(item) {
-            
-        }
     }
 }
 </script>

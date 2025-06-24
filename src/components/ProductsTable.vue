@@ -126,6 +126,11 @@ export default {
             default: null
         }
     },
+    emits: [
+        'refresh',
+        'edit-product',
+        'view-ingredients',
+    ],
     // computed: {
     //     hasCheck() {
     //         return !this.products.some(item => item.selected);

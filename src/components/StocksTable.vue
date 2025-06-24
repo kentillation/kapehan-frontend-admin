@@ -95,6 +95,10 @@ export default {
             required: true
         }
     },
+    emits: [
+        'refresh',
+        'edit-stock',
+    ],
     // computed: {
     //     hasCheck() {
     //         return !this.stocks.some(item => item.selected);

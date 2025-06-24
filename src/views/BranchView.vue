@@ -97,14 +97,13 @@
                     <v-tabs-window-item value="products">
                         <v-container class="pa-10">
                             <ProductsTableSkeleton v-if="loadingProducts" />
-                            <ProductsTable v-else :products="products" @refresh="onRefreshProducts"
-                                @edit-product="editProductDialog" :shop-id="branchDetails.shop_id"
-                                :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
-                                :loading="loadingProducts" @view-ingredients="ingredientsDialog" />
+                            <ProductsTable v-else @refresh="onRefreshProducts" @edit-product="editProductDialog" @view-ingredients="ingredientsDialog"
+                                :products="products" :loading="loadingProducts"
+                                :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"/>
                             <ProductIngredientsDialog v-model="dialogIngredients" :product-ingredients="ingredients"
-                                :loading="ingredientLoading" :shop-id="branchDetails.shop_id"
+                                :loading="ingredientLoading" @edit-ingredient="editIngredientDialog" :shop-id="branchDetails.shop_id"
                                 :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
-                                :product-id="productID" :product-name="productName" :product-temp="productTemp"
+                                :product-id="productId" :product-name="productName" :product-temp="productTemp"
                                 :product-size="productSize" />
                             <ProductEditDialog v-model="productEditDialog"
                                 @update:modelValue="productEditDialog = $event"
@@ -113,6 +112,13 @@
                                 @save="updatingProduct" :valid="formValid" :loading="isSaving"
                                 :confirm="confirmUpdatingProductDialog"
                                 :selected-product="currentProduct?.product_name || ''" />
+                            <IngredientEditDialog v-model="ingredientEditDialog"
+                                @update:modelValue="ingredientEditDialog = $event"
+                                @update:ingredient="ingredients = $event"
+                                @update:confirm="confirmUpdatingIngredientDialog = $event" :ingredient="ingredients"
+                                @save="updatingIngredient" :valid="formValid" :loading="isSaving"
+                                :confirm="confirmUpdatingIngredientDialog"
+                                :selected-ingredient="ingredients?.product_name || ''" />
                             <ProductsHistoryDialog v-model="productsHistoryDialog"
                                 :branch-id="branchDetails.branch_id" />
                             <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray" class="mt-3"
@@ -173,6 +179,7 @@ import Snackbar from '@/components/Snackbar.vue';
 import ProductsTable from '@/components/ProductsTable.vue';
 import ProductsTableSkeleton from '@/components/ProductsTableSkeleton.vue';
 import ProductEditDialog from '@/components/ProductEditDialog.vue';
+import IngredientEditDialog from '@/components/IngredientEditDialog.vue';
 import ProductIngredientsDialog from '@/components/ProductIngredientsDialog.vue';
 import StocksTable from '@/components/StocksTable.vue';
 import StocksTableSkeleton from '@/components/StocksTableSkeleton.vue';
@@ -194,7 +201,9 @@ export default {
             loadingProducts: false,
             products: [],
             productEditDialog: false,
+            ingredientEditDialog: false,
             confirmUpdatingProductDialog: false,
+            confirmUpdatingIngredientDialog: false,
             productsHistoryDialog: false,
             productsLoaded: false,
             editProduct: [],
@@ -205,7 +214,8 @@ export default {
             dialogIngredients: false,
             ingredients: [],
             ingredientLoading: false,
-            productID: '',
+            editIngredient: [],
+            productId: 0,
             productName: '',
             productTemp: '',
             productSize: '',
@@ -247,6 +257,7 @@ export default {
         ProductsTableSkeleton,
         ProductEditDialog,
         ProductIngredientsDialog,
+        IngredientEditDialog,
         StocksTable,
         StocksTableSkeleton,
         StockEditDialog,
@@ -360,7 +371,7 @@ export default {
         async ingredientsDialog(item) {
             this.dialogIngredients = true;
             this.ingredients = [];
-            this.productID = item.product_id;
+            this.productId = item.product_id;
             this.productName = item.product_name;
             this.productTemp = item.temp_label;
             this.productSize = item.size_label;
@@ -483,9 +494,37 @@ export default {
             }
         },
 
+        async updatingIngredient() {
+            this.isSaving = true;
+            try {
+                const ingredientData = {
+                    product_id: this.ingredients.product_id,
+                    stock_id: this.ingredients.stock_id,
+                    uni_usage: this.ingredients.uni_usage,
+                    ingredient_capital: parseFloat(this.ingredients.ingredient_capital),
+                };
+                this.confirmUpdatingEditDialog = false;
+                console.log(ingredientData);
+                // await this.productsStore.updateIngredientStore(ingredientData);
+                // this.ingredientEditDialog = false;
+                // this.onRefreshProducts();
+                // this.showSuccess("Ingredient updated successfully!");
+            } catch (error) {
+                console.error('Failed to update ingredient:', error);
+                this.showError("Failed to update ingredient. Please try again!");
+            } finally {
+                this.isSaving = false;
+            }
+        },
+
         async editProductDialog(item) {
             this.currentProduct = { ...item };
             this.productEditDialog = true;
+        },
+
+        async editIngredientDialog(item) {
+            this.ingredients = { ...item };
+            this.ingredientEditDialog = true;
         },
 
         openEditStockDialog(item) {
