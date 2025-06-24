@@ -113,8 +113,8 @@ export default {
     },
     emits: [
         'update:modelValue',
+        'update:ingredient',
         'update:confirm',
-        'update:product',
         'save'
     ],
     methods: {

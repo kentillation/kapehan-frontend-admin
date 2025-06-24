@@ -114,11 +114,11 @@
                                 :selected-product="currentProduct?.product_name || ''" />
                             <IngredientEditDialog v-model="ingredientEditDialog"
                                 @update:modelValue="ingredientEditDialog = $event"
-                                @update:ingredient="ingredients = $event"
-                                @update:confirm="confirmUpdatingIngredientDialog = $event" :ingredient="ingredients"
+                                @update:ingredient="currentIngredient = $event"
+                                @update:confirm="confirmUpdatingIngredientDialog = $event" :ingredient="currentIngredient"
                                 @save="updatingIngredient" :valid="formValid" :loading="isSaving"
                                 :confirm="confirmUpdatingIngredientDialog"
-                                :selected-ingredient="ingredients?.product_name || ''" />
+                                :selected-ingredient="currentIngredient?.product_name || ''" />
                             <ProductsHistoryDialog v-model="productsHistoryDialog"
                                 :branch-id="branchDetails.branch_id" />
                             <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray" class="mt-3"
@@ -219,6 +219,7 @@ export default {
             productName: '',
             productTemp: '',
             productSize: '',
+            currentIngredient: null,
 
             // Stocks
             loadingStocks: false,
@@ -498,10 +499,10 @@ export default {
             this.isSaving = true;
             try {
                 const ingredientData = {
-                    product_id: this.ingredients.product_id,
-                    stock_id: this.ingredients.stock_id,
-                    uni_usage: this.ingredients.uni_usage,
-                    ingredient_capital: parseFloat(this.ingredients.ingredient_capital),
+                    product_id: this.currentIngredient.product_id,
+                    stock_id: this.currentIngredient.stock_id,
+                    uni_usage: this.currentIngredient.uni_usage,
+                    ingredient_capital: parseFloat(this.currentIngredient.ingredient_capital),
                 };
                 this.confirmUpdatingEditDialog = false;
                 console.log(ingredientData);
@@ -523,7 +524,7 @@ export default {
         },
 
         async editIngredientDialog(item) {
-            this.ingredients = { ...item };
+            this.currentIngredient = { ...item };
             this.ingredientEditDialog = true;
         },
 
