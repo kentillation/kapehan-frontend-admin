@@ -6,12 +6,13 @@
             <v-card-text>
                 <v-form ref="form" :model-value="valid">
                     <v-text-field :model-value="ingredient.product_name"
-                        @update:modelValue="handleInputUpdate('product_name', $event)" label="Product ID"
-                        :rules="[v => !!v || 'Required']" outlined dense />
-
-                    <v-text-field :model-value="ingredient.stock_id"
-                        @update:modelValue="handleInputUpdate('stock_id', $event)" label="Stock ID"
-                        :rules="[v => !!v || 'Required']" outlined dense />
+                        @update:modelValue="handleInputUpdate('product_name', $event)" label="Product Name"
+                        :rules="[v => !!v || 'Required']" class="text-grey-darken-1" outlined dense readonly />
+                    <v-autocomplete :model-value="ingredient.stock_ingredient"
+                        @update:modelValue="handleInputUpdate('stock_ingredient', $event)" label="Stock Name"
+                        item-title="stock_ingredient" item-value="stock_id"
+                        :items="stocksOption" @click="getStocksOption" outlined dense>
+                    </v-autocomplete>
                     
                     <v-text-field :model-value="ingredient.unit_usage"
                         @update:modelValue="handleCostUpdate($event)" label="Unit usage"
@@ -58,6 +59,7 @@
                 </v-card>
             </v-dialog>
             <LoaderUI :visible="loading" message="Saving..." />
+            <Snackbar ref="snackbarRef" />
         </v-card>
     </v-dialog>
 </template>
@@ -65,25 +67,19 @@
 <script>
 import apiClient from '../axios'
 import LoaderUI from '@/components/LoaderUI.vue';
+import Snackbar from '@/components/Snackbar.vue';
+
 
 export default {
     name: 'IngredientEditDialog',
     components: {
         LoaderUI,
+        Snackbar,
     },
     data() {
         return {
-            productTemperatureOption: [],
-            productSizeOption: [],
-            productCategoryOption: [],
-            productAvailabilityOption: [],
+            stocksOption: [],
         }
-    },
-    mounted() {
-        this.getProductTemperatureOption();
-        this.getProductSizeOption();
-        this.getProductCategoryOption();
-        this.getProductAvailabilityOption();
     },
     props: {
         modelValue: {
@@ -94,7 +90,7 @@ export default {
             type: Boolean,
             required: true
         },
-        product: {
+        ingredient: {
             type: Object,
             default: null
         },
@@ -146,23 +142,16 @@ export default {
                         Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
                     },
                 });
-                this[targetArray] = response.data;
+                this[targetArray] = Array.isArray(response.data)
+            ? response.data
+            : (Array.isArray(response.data.data) ? response.data.data : []);
             } catch (error) {
                 this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
             }
         },
-        getProductTemperatureOption() {
-            this.getOptions('/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
+        getStocksOption() {
+            this.getOptions(`/stocks-name/${this.ingredient.branch_id}`, 'stocksOption', 'Failed to fetch stock names');
         },
-        getProductSizeOption() {
-            this.getOptions('/product-size-option', 'productSizeOption', 'Failed to fetch product temperatures');
-        },
-        getProductCategoryOption() {
-            this.getOptions('/product-category-option', 'productCategoryOption', 'Failed to fetch product temperatures');
-        },
-        getProductAvailabilityOption() {
-            this.getOptions('/product-availability-option', 'productAvailabilityOption', 'Failed to fetch product temperatures');
-        }
     }
 }
 </script>
