@@ -8,7 +8,6 @@ import AddProduct from '../views/AddProduct.vue';
 import AddProductIngredients from '../views/AddProductIngredients.vue';
 import EditProducts from '../views/EditProducts.vue';
 import Ingredients from '../views/Ingredients.vue';
-import Cashier from '../views/Cashier.vue';
 import Help from '../views/Help.vue';
 import About from '../views/About.vue';
 import LoaderUI from '../components/LoaderUI.vue';
@@ -25,7 +24,6 @@ const routes = [
     { path: '/add-product-ingredients', name: 'AddProductIngredients', component: AddProductIngredients, meta: { requiresAuth: true } },
     { path: '/edit-products', name: 'EditProducts', component: EditProducts, meta: { requiresAuth: true } },
     { path: '/ingredients', name: 'Ingredients', component: Ingredients, meta: { requiresAuth: true } },
-    { path: '/cashier', name: 'Cashier', component: Cashier, meta: { requiresAuth: true } },
     { path: '/help', name: 'Help', component: Help, meta: { requiresAuth: true } },
     { path: '/about', name: 'About', component: About, meta: { requiresAuth: true } },
     { path: '/loader', name: 'LoaderUI', component: LoaderUI, meta: { requiresAuth: true } },

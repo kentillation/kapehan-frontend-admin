@@ -22,8 +22,6 @@
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3"
             style="border-radius: 30px;">Create
             Branch</v-list-item>
-          <v-list-item prepend-icon="mdi-account-cash" @click="toCashier" class="bg-brown-darken-3"
-            style="border-radius: 30px;">Cashier</v-list-item>
         
         <v-divider class="mt-4"></v-divider>
         <v-list-subheader size="30">Branch</v-list-subheader>
@@ -111,9 +109,6 @@ export default {
     },
     toNewBranch() {
       this.$router.push('/new-branch');
-    },
-    toCashier() {
-      this.$router.push('/cashier');
     },
     toHelp() {
       this.$router.push('/help');
