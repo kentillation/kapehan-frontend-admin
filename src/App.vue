@@ -22,9 +22,6 @@
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3"
             style="border-radius: 30px;">Create
             Branch</v-list-item>
-          <v-list-item prepend-icon="mdi-plus" @click="toNewShop" class="bg-brown-darken-3"
-            style="border-radius: 30px;">Create
-            Shop</v-list-item>
           <v-list-item prepend-icon="mdi-account-cash" @click="toCashier" class="bg-brown-darken-3"
             style="border-radius: 30px;">Cashier</v-list-item>
         
@@ -111,9 +108,6 @@ export default {
     },
     toDashboard() {
       this.$router.push('/dashboard');
-    },
-    toNewShop() {
-      this.$router.push('/new-shop');
     },
     toNewBranch() {
       this.$router.push('/new-branch');
