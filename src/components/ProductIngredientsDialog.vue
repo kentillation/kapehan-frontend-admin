@@ -123,6 +123,9 @@ export default {
                 2: 'Update',
             };
             return actions[availabilityId] || `Action ${availabilityId}`;
+        },
+        edit(item) {
+            
         }
     }
 }

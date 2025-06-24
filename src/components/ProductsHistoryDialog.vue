@@ -81,7 +81,7 @@ export default {
                 { title: 'Product Name', value: 'product_name', sortable: true },
                 { title: 'Description', value: 'description', sortable: true },
                 { title: 'Type', value: 'manage_id', sortable: true },
-                { title: 'Performed By', value: 'name', sortable: true },
+                { title: 'Performed By', value: 'admin_name', sortable: true },
                 { title: 'Date', value: 'created_at', sortable: true },
             ]
         };
