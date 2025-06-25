@@ -206,6 +206,8 @@ import ProductsHistoryDialog from '@/components/ProductsHistoryDialog.vue';
 import ProductsReportsTableSkeleton from '@/components/ProductsReportsTableSkeleton.vue';
 import ProductsReportTable from '@/components/ProductsReportTable.vue';
 import StocksReportTable from '@/components/StocksReportTable.vue';
+import StocksReportsTableSkeleton from '@/components/StocksReportsTableSkeleton.vue';
+
 
 
 export default {
@@ -224,7 +226,8 @@ export default {
         ProductsHistoryDialog,
         ProductsReportsTableSkeleton,
         ProductsReportTable,
-        StocksReportTable
+        StocksReportTable,
+        StocksReportsTableSkeleton,
     },
     data() {
         return {

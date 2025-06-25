@@ -64,6 +64,7 @@ export default {
         const headers = [
             { title: '', value: 'select', width: '5%' },
             { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '10%' },
+            { title: 'Unit', value: 'unit_label', sortable: 'true', width: '10%' },
             { title: 'Stock In', value: 'display_stock_in', sortable: 'true', width: '10%' },
             { title: 'Unit Cost', value: 'display_unit_cost', sortable: 'true', width: '10%' },
             { title: 'Updated', value: 'updated_at', sortable: 'true', width: '25%' },
