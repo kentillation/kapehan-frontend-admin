@@ -5,12 +5,21 @@
                 <v-toolbar-title>
                     <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
                 </v-toolbar-title>
-                <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                <v-skeleton-loader type="text" width="60" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                <v-skeleton-loader type="text" width="60" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                <v-skeleton-loader type="text" width="60" class="bg-grey-lighten-1 ms-1 me-3"></v-skeleton-loader>
             </v-toolbar>
         </template>
 
         <template v-slot:[`item.product_name`]>
+            <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
+        </template>
+
+        <template v-slot:[`item.temp_label`]>
+            <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
+        </template>
+
+        <template v-slot:[`item.size_label`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
@@ -22,19 +31,8 @@
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.availability_label`]>
-            <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
-        </template>
-
         <template v-slot:[`item.updated_at`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
-        </template>
-
-        <template v-slot:[`item.actions`]>
-            <div class="d-flex">
-                <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-            </div>
         </template>
     </v-data-table>
 </template>
@@ -46,11 +44,11 @@ export default {
         return {
             headers: [
                 { title: '', value: 'product_name' },
+                { title: '', value: 'temp_label' },
+                { title: '', value: 'size_label' },
                 { title: '', value: 'product_price' },
                 { title: '', value: 'category_label' },
-                { title: '', value: 'availability_label' },
                 { title: '', value: 'updated_at' },
-                { title: '', value: 'actions' },
             ],
             skeletonItems: Array(10).fill({}) // Creates 10 empty rows
         }

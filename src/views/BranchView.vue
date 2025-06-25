@@ -163,6 +163,9 @@
                             <ProductsReportsTableSkeleton v-if="loadingProductReports" />
                             <ProductsReportTable v-else :products="productReports" :loading="loadingProductReports" @refresh="onRefreshProductsReport"
                                 :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
+                            <StocksReportsTableSkeleton v-if="loadingStockReports" />
+                            <StocksReportTable v-else :stocks="stockReports" :loading="loadingStockReports" @refresh="onRefreshStocksReport"
+                                :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
                         </v-container>
                     </v-tabs-window-item>
 
@@ -202,6 +205,7 @@ import StocksHistoryDialog from '@/components/StocksHistoryDialog.vue';
 import ProductsHistoryDialog from '@/components/ProductsHistoryDialog.vue';
 import ProductsReportsTableSkeleton from '@/components/ProductsReportsTableSkeleton.vue';
 import ProductsReportTable from '@/components/ProductsReportTable.vue';
+import StocksReportTable from '@/components/StocksReportTable.vue';
 
 
 export default {
@@ -220,6 +224,7 @@ export default {
         ProductsHistoryDialog,
         ProductsReportsTableSkeleton,
         ProductsReportTable,
+        StocksReportTable
     },
     data() {
         return {
@@ -266,6 +271,9 @@ export default {
             productReports: [],
             productReportsLoaded: false,
             loadingProductReports: false,
+            stockReports: [],
+            stockReportsLoaded: false,
+            loadingStockReports: false,
 
             formValid: true,
             isSaving: false,
@@ -335,6 +343,7 @@ export default {
                 this.fetchStocks();
             } else if (newTab === 'reports') {
                 this.fetchProductsReport();
+                this.fetchStocksReport();
             }
         }
     },
@@ -471,6 +480,31 @@ export default {
                 this.showError("Error fetching reports!");
             } finally {
                 this.loadingProductReports = false;
+            }
+        },
+
+        async fetchStocksReport() {
+            this.loadingStockReports = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.stockReports = [];
+                    return;
+                }
+                await this.stocksStore.fetchAllStocksStore(this.branchDetails.branch_id);
+                if (this.stocksStore.stocks.length === 0) {
+                    this.stockReports = [];
+                } else {
+                    this.stockReports = this.stocksStore.stocks.map(stock => this.formatStock(stock));
+                }
+                this.stockReportsLoaded = true;
+                this.loadingStockReports = false;
+            } catch (error) {
+                console.error('Error fetching stocks:', error);
+                this.showError("Error fetching stocks!");
+            } finally {
+                this.loadingStockReports = false;
             }
         },
 
@@ -616,7 +650,7 @@ export default {
                 ...stock,
                 stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
                 display_stock_in: `${stock.stock_in}${stock.unit_avb}`,
-                display_stock_cost_per_unit: `₱${stock.stock_cost_per_unit}`,
+                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),
             };
         },
@@ -682,6 +716,13 @@ export default {
             this.loadingProductReports = true;
             setTimeout(() => {
                 this.fetchProductsReport();
+            }, 1000);
+        },
+
+        onRefreshStocksReport() {
+            this.loadingStockReports = true;
+            setTimeout(() => {
+                this.fetchStocksReport();
             }, 1000);
         }
     }

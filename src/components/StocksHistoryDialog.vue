@@ -23,7 +23,7 @@
 
                     <!--eslint-disable-next-line -->
                     <template v-slot:item.manage_id="{ item }">
-                        <v-chip :color="getManageIdColor(item.manage_id)">
+                        <v-chip :color="getManageIdColor(item.manage_id)" size="small">
                             {{ formatManageId(item.manage_id) }}
                         </v-chip>
                     </template>
