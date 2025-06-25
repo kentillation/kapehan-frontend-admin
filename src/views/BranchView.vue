@@ -171,10 +171,17 @@
                     <!-- Reports -->
                     <v-tabs-window-item value="reports">
                         <v-container class="pa-10">
-                            <v-btn-toggle v-model="activeReportsTab" class="mb-4">
-                                <v-btn class="bg-brown-lighten-1" value="products">Products Report</v-btn>
-                                <v-btn class="bg-brown-lighten-1" value="stocks">Stocks Report</v-btn>
-                            </v-btn-toggle>
+                            <v-tabs v-model="activeReportsTab" class="d-flex mb-4" align-tabs="left" color="white" stacked>
+                                <v-tab value="products" class="rounded">
+                                    Products Report
+                                </v-tab>
+                                <v-tab value="stocks" class="rounded">
+                                    Stocks Report
+                                </v-tab>
+                                <v-tab value="orders" class="rounded">
+                                    Orders Report
+                                </v-tab>
+                            </v-tabs>
                             <transition name="slide-x-transition" mode="out-in">
                                 <div :key="activeReportsTab">
                                     <ProductsReportsTableSkeleton v-if="loadingProductReports && activeReportsTab === 'products'" />

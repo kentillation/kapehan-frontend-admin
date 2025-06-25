@@ -4,14 +4,22 @@
         density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
-                <v-toolbar-title class="text-h6 font-weight-medium">
-                    <span class="to-hide">Products Report</span>
-                    <span class="to-show">Products</span>
-                </v-toolbar-title>
-                <v-btn prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
-                <v-btn prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
-                <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"
-                    @click="$emit('refresh')" :loading="loading"></v-btn>
+                <v-row>
+                    <v-col cols="12" lg="6" md="6" sm="6">
+                        <p class="text-h6 font-weight-medium">
+                            <span class="to-hide">Products Report</span>
+                            <span class="to-show"></span>
+                        </p>
+                    </v-col>
+                    <v-col cols="12" lg="6" md="6" sm="6">
+                        <div class="d-flex justify-end">
+                            <v-btn prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
+                            <v-btn prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
+                            <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"
+                                @click="$emit('refresh')" :loading="loading"></v-btn>
+                        </div>
+                    </v-col>
+                </v-row>
             </v-toolbar>
             <v-divider></v-divider>
         </template>

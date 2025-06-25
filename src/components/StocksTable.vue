@@ -112,12 +112,11 @@ export default {
         const headers = [
             { title: '', value: 'select', width: '5%' },
             { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '20%' },
-            { title: 'Stock In', value: 'display_stock_in', sortable: 'true', width: '10%' },
-            // { title: 'Stock Out', value: 'stock_out', sortable: 'true', width: '10%' },
-            { title: 'Unit Cost', value: 'display_stock_cost_per_unit', sortable: 'true', width: '10%' },
+            { title: 'Stock In', value: 'display_stock_in', sortable: 'true', width: '15%' },
+            { title: 'Unit Cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
             { title: 'Availability', value: 'availability_label', sortable: 'true', width: '10%' },
-            { title: 'Updated', value: 'updated_at', sortable: 'true', width: '25%' },
-            { title: 'Actions', value: 'actions', width: '20%' },
+            { title: 'Updated', value: 'updated_at', sortable: 'true', width: '20%' },
+            { title: 'Actions', value: 'actions', width: '15%' },
         ];
 
         const filteredHeaders = computed(() => {
@@ -131,7 +130,7 @@ export default {
             return props.stocks.map(stock => ({
                 ...stock,
                 display_stock_in: `${stock.stock_in} ${stock.unit_avb}`,
-                display_stock_cost_per_unit: `₱${stock.stock_cost_per_unit}`,
+                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
             }));
         });
 
