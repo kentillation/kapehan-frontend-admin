@@ -9,7 +9,7 @@
                             <v-toolbar-title>Products Management History</v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn color="primary" variant="tonal" @click="fetchProductsHistory" :loading="loading"
-                                prepend-icon="mdi-refresh">
+                                prepend-icon="mdi-refresh" class="me-4">
                                 Refresh
                             </v-btn>
                         </v-toolbar>

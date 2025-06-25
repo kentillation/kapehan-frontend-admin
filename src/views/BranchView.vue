@@ -157,18 +157,6 @@
                         </v-container>
                     </v-tabs-window-item>
 
-                    <!-- Reports -->
-                    <v-tabs-window-item value="reports">
-                        <v-container class="pa-10">
-                            <ProductsReportsTableSkeleton v-if="loadingProductReports" />
-                            <ProductsReportTable v-else :products="productReports" :loading="loadingProductReports" @refresh="onRefreshProductsReport"
-                                :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
-                            <StocksReportsTableSkeleton v-if="loadingStockReports" />
-                            <StocksReportTable v-else :stocks="stockReports" :loading="loadingStockReports" @refresh="onRefreshStocksReport"
-                                :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
-                        </v-container>
-                    </v-tabs-window-item>
-
                     <!-- Branch Info -->
                     <v-tabs-window-item value="branch_info">
                         <v-container class="pa-10">
@@ -179,6 +167,41 @@
                             </div>
                         </v-container>
                     </v-tabs-window-item>
+
+                    <!-- Reports -->
+                    <v-tabs-window-item value="reports">
+                        <v-container class="pa-10">
+                            <v-btn-toggle v-model="activeReportsTab" class="mb-4">
+                                <v-btn class="bg-brown-lighten-1" value="products">Products Report</v-btn>
+                                <v-btn class="bg-brown-lighten-1" value="stocks">Stocks Report</v-btn>
+                            </v-btn-toggle>
+                            <transition name="slide-x-transition" mode="out-in">
+                                <div :key="activeReportsTab">
+                                    <ProductsReportsTableSkeleton v-if="loadingProductReports && activeReportsTab === 'products'" />
+                                    <ProductsReportTable
+                                        v-else-if="activeReportsTab === 'products'"
+                                        :products="productReports"
+                                        :loading="loadingProductReports"
+                                        @refresh="onRefreshProductsReport"
+                                        :shop-id="branchDetails.shop_id"
+                                        :branch-id="branchDetails.branch_id"
+                                        :branch-name="branchDetails.branch_name"
+                                    />
+                                    <StocksReportsTableSkeleton v-if="loadingStockReports && activeReportsTab === 'stocks'" />
+                                    <StocksReportTable
+                                        v-else-if="activeReportsTab === 'stocks'"
+                                        :stocks="stockReports"
+                                        :loading="loadingStockReports"
+                                        @refresh="onRefreshStocksReport"
+                                        :shop-id="branchDetails.shop_id"
+                                        :branch-id="branchDetails.branch_id"
+                                        :branch-name="branchDetails.branch_name"
+                                    />
+                                </div>
+                            </transition>
+                        </v-container>
+                    </v-tabs-window-item>
+
                 </v-tabs-window>
             </v-card>
         </template>
@@ -271,6 +294,7 @@ export default {
             currentStock: null,
 
             // Reports
+            activeReportsTab: 'products',
             productReports: [],
             productReportsLoaded: false,
             loadingProductReports: false,
@@ -314,8 +338,8 @@ export default {
                 { label: 'Orders', value: 'orders', clickHandler: () => this.switchToOrdersTab() },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
-                { label: 'Reports', value: 'reports', },
                 { label: 'Branch Info', value: 'branch_info', clickHandler: () => this.switchToBranchInfoTab() },
+                { label: 'Reports', value: 'reports', },
             ];
         },
         stockCost: {

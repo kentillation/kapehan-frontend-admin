@@ -9,7 +9,7 @@
                             <v-toolbar-title>Stock Management History</v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn color="primary" variant="tonal" @click="fetchStocksHistory" :loading="loading"
-                                prepend-icon="mdi-refresh">
+                                prepend-icon="mdi-refresh" class="me-4">
                                 Refresh
                             </v-btn>
                         </v-toolbar>

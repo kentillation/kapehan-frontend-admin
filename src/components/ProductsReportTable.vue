@@ -1,6 +1,6 @@
 <template>
     <v-data-table :headers="filteredHeaders" :items="products" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table mb-4"
+        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table"
         density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
@@ -16,9 +16,9 @@
             <v-divider></v-divider>
         </template>
         <!--eslint-disable-next-line -->
-        <template v-slot:item.display_product_price="{ item }">
+        <template v-slot:item.product_name="{ item }">
             <span :class="{ 'text-red': item.availability_id === 2 }">
-                {{ item.display_product_price }}
+                {{ item.product_name }}
             </span>
         </template>
         <template v-slot:no-data>
