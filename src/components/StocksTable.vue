@@ -1,8 +1,9 @@
 <template>
-    <v-text-field class="to-hide" density="comfortable" v-model="searchStock"
-        :placeholder="`Search stock in ${branchName}`" clearable variant="outlined"></v-text-field>
-    <v-text-field class="to-show" density="comfortable" v-model="searchStock" :placeholder="`Search stock`" clearable
-        variant="outlined"></v-text-field>
+    <v-row>
+        <v-col cols="12" lg="4" md="4" sm="6">
+            <v-text-field density="comfortable" v-model="searchStock" :placeholder="`Search stock in ${branchName}`" clearable variant="outlined"></v-text-field>
+        </v-col>
+    </v-row>
     <v-data-table :headers="filteredHeaders" :items="stocks" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'stock_igngredient', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
         <template v-slot:top>

@@ -2,12 +2,9 @@
     <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat>
-                <v-toolbar-title>
-                    <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
-                </v-toolbar-title>
-                <v-skeleton-loader type="text" width="60" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="60" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="60" class="bg-grey-lighten-1 ms-1 me-3"></v-skeleton-loader>
+                <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1 me-3"></v-skeleton-loader>
             </v-toolbar>
         </template>
 

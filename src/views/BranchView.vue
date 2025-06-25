@@ -170,16 +170,12 @@
 
                     <!-- Reports -->
                     <v-tabs-window-item value="reports">
-                        <v-container class="pa-10">
+                        <v-container class="mt-5">
                             <v-tabs v-model="activeReportsTab" class="d-flex mb-4" align-tabs="left" color="white" stacked>
-                                <v-tab value="products" class="rounded">
-                                    Products Report
-                                </v-tab>
-                                <v-tab value="stocks" class="rounded">
-                                    Stocks Report
-                                </v-tab>
-                                <v-tab value="orders" class="rounded">
-                                    Orders Report
+                                <v-tab v-for="tab in reportsTabs" :key="tab.value" class="rounded" :value="tab.value"
+                                    :class="{ 'active-tab': activeReportsTab === tab.value }"
+                                    @click="tab.clickHandler ? tab.clickHandler() : null">
+                                    {{ tab.label }}
                                 </v-tab>
                             </v-tabs>
                             <transition name="slide-x-transition" mode="out-in">
@@ -347,6 +343,13 @@ export default {
                 { label: 'Stocks', value: 'stocks', },
                 { label: 'Branch Info', value: 'branch_info', clickHandler: () => this.switchToBranchInfoTab() },
                 { label: 'Reports', value: 'reports', },
+            ];
+        },
+        reportsTabs() {
+            return [
+                { label: 'Products Report', value: 'products', },
+                { label: 'Stocks Report', value: 'stocks', },
+                { label: 'Orders Report', value: 'orders', },
             ];
         },
         stockCost: {

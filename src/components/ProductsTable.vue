@@ -1,8 +1,10 @@
 <template>
-    <v-text-field class="to-hide" density="comfortable" v-model="searchProduct"
-        :placeholder="`Search product in ${branchName}`" clearable variant="outlined"></v-text-field>
-    <v-text-field class="to-show" density="comfortable" v-model="searchProduct" :placeholder="`Search product`" clearable
-        variant="outlined"></v-text-field>
+    <v-row>
+        <v-col cols="12" lg="4" md="4" sm="6">
+            <v-text-field density="comfortable" v-model="searchProduct" :placeholder="`Search product in ${branchName}`" clearable variant="outlined"></v-text-field>
+        </v-col>
+    </v-row>
+        
     <v-data-table :headers="filteredHeaders" :items="products" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table"
         density="comfortable">
@@ -25,7 +27,7 @@
                 </v-btn>
 
                 <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="primary"
-                    variant="tonal"></v-btn>
+                    variant="tonal" size="small"></v-btn>
             </v-toolbar>
 
             <v-divider></v-divider>
