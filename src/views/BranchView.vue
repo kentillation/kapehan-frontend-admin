@@ -12,6 +12,7 @@
                     </v-tab>
                 </v-tabs>
                 <v-tabs-window v-model="activeTab">
+                    <!-- Dashboard -->
                     <v-tabs-window-item value="dashboard">
                         <v-container class="pa-10">
                             <v-row>
@@ -88,12 +89,14 @@
                         </v-container>
                     </v-tabs-window-item>
 
+                    <!-- Orders -->
                     <v-tabs-window-item value="orders">
                         <v-container class="pa-10">
                             This is the content of Orders
                         </v-container>
                     </v-tabs-window-item>
 
+                    <!-- Products -->
                     <v-tabs-window-item value="products">
                         <v-container class="pa-10">
                             <ProductsTableSkeleton v-if="loadingProducts" />
@@ -108,7 +111,7 @@
                                 :confirm="confirmUpdatingProductDialog"
                                 :selected-product="currentProduct?.product_name || ''" />
                             <ProductIngredientsDialog v-model="dialogIngredients" :product-ingredients="ingredients"
-                                :loading="ingredientLoading" @edit-ingredient="editIngredientDialog" :shop-id="branchDetails.shop_id"
+                                :loading="loadingIngredient" @edit-ingredient="editIngredientDialog" :shop-id="branchDetails.shop_id"
                                 :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
                                 :product-id="productId" :product-name="productName" :product-temp="productTemp"
                                 :product-size="productSize" />
@@ -129,6 +132,7 @@
                         </v-container>
                     </v-tabs-window-item>
 
+                    <!-- Stocks -->
                     <v-tabs-window-item value="stocks">
                         <v-container class="pa-10">
                             <StocksTableSkeleton v-if="loadingStocks" />
@@ -153,6 +157,16 @@
                         </v-container>
                     </v-tabs-window-item>
 
+                    <!-- Reports -->
+                    <v-tabs-window-item value="reports">
+                        <v-container class="pa-10">
+                            <ProductsReportsTableSkeleton v-if="loadingProductReports" />
+                            <ProductsReportTable v-else :products="productReports" :loading="loadingProductReports" @refresh="onRefreshProductsReport"
+                                :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
+                        </v-container>
+                    </v-tabs-window-item>
+
+                    <!-- Branch Info -->
                     <v-tabs-window-item value="branch_info">
                         <v-container class="pa-10">
                             <div class="d-flex flex-column" v-for="(detail, i) in branchDetailItems" :key="i" cols="12"
@@ -170,11 +184,11 @@
 </template>
 
 <script>
+import apiClient from '../axios';
 import { ref } from 'vue';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useProductsStore } from '@/stores/productsStore';
-import apiClient from '../axios';
 import Snackbar from '@/components/Snackbar.vue';
 import ProductsTable from '@/components/ProductsTable.vue';
 import ProductsTableSkeleton from '@/components/ProductsTableSkeleton.vue';
@@ -186,72 +200,12 @@ import StocksTableSkeleton from '@/components/StocksTableSkeleton.vue';
 import StockEditDialog from '@/components/StockEditDialog.vue';
 import StocksHistoryDialog from '@/components/StocksHistoryDialog.vue';
 import ProductsHistoryDialog from '@/components/ProductsHistoryDialog.vue';
+import ProductsReportsTableSkeleton from '@/components/ProductsReportsTableSkeleton.vue';
+import ProductsReportTable from '@/components/ProductsReportTable.vue';
+
 
 export default {
     name: 'BranchView',
-
-    data() {
-        return {
-
-            // Branch
-            branchDetails: {},
-            loadingBranchDetails: false,
-
-            // Products
-            loadingProducts: false,
-            products: [],
-            productEditDialog: false,
-            ingredientEditDialog: false,
-            confirmUpdatingProductDialog: false,
-            confirmUpdatingIngredientDialog: false,
-            productsHistoryDialog: false,
-            productsLoaded: false,
-            editProduct: [],
-            selectedProduct: '',
-            currentProduct: null,
-
-            // Product Ingredients
-            dialogIngredients: false,
-            ingredients: [],
-            ingredientLoading: false,
-            editIngredient: [],
-            productId: 0,
-            productName: '',
-            productTemp: '',
-            productSize: '',
-            currentIngredient: null,
-
-            // Stocks
-            loadingStocks: false,
-            stockEditDialog: false,
-            stockHistoryDialog: false,
-            confirmUpdatingStockDialog: false,
-            addStockDialog: false,
-            formValid: true,
-            isSaving: false,
-            stocks: [],
-            stocksLoaded: false,
-            editStock: [],
-            selectedStock: '',
-            currentStock: null,
-
-            availabilityOptions: [
-                { availability_id: 1, availability_label: 'Available' },
-                { availability_id: 2, availability_label: 'Not Available' },
-            ],
-
-            unitStockOptions: [
-                { unit_id: 1, unit_label: 'g' },
-                { unit_id: 2, unit_label: 'mL' },
-                { unit_id: 3, unit_label: 'pcs' },
-                { unit_id: 4, unit_label: 'kg' },
-                { unit_id: 5, unit_label: 'L' },
-                { unit_id: 6, unit_label: 'box' },
-                { unit_id: 7, unit_label: 'bottle' },
-            ],
-        };
-    },
-
     components: {
         Snackbar,
         ProductsTable,
@@ -264,24 +218,76 @@ export default {
         StockEditDialog,
         StocksHistoryDialog,
         ProductsHistoryDialog,
+        ProductsReportsTableSkeleton,
+        ProductsReportTable,
     },
+    data() {
+        return {
+            // Branch
+            branchDetails: {},
+            loadingBranchDetails: false,
 
+            // Products
+            products: [],
+            editProduct: [],
+            selectedProduct: '',
+            loadingProducts: false,
+            productEditDialog: false,
+            confirmUpdatingProductDialog: false,
+            productsHistoryDialog: false,
+            productsLoaded: false,
+            currentProduct: null,
+
+            // Product Ingredients
+            ingredients: [],
+            editIngredient: [],
+            productName: '',
+            productTemp: '',
+            productSize: '',
+            productId: 0,
+            loadingIngredient: false,
+            dialogIngredients: false,
+            ingredientEditDialog: false,
+            confirmUpdatingIngredientDialog: false,
+            currentIngredient: null,
+
+            // Stocks
+            stocks: [],
+            editStock: [],
+            selectedStock: '',
+            loadingStocks: false,
+            stockEditDialog: false,
+            confirmUpdatingStockDialog: false,
+            stockHistoryDialog: false,
+            stocksLoaded: false,
+            currentStock: null,
+
+            // Reports
+            productReports: [],
+            productReportsLoaded: false,
+            loadingProductReports: false,
+
+            formValid: true,
+            isSaving: false,
+            availabilityOptions: [
+                { availability_id: 1, availability_label: 'Available' },
+                { availability_id: 2, availability_label: 'Not Available' },
+            ],
+        };
+    },
     props: {
         branchName: {
             type: String,
             required: true
         },
     },
-
     setup() {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
         const productsStore = useProductsStore();
-
         const activeTab = ref('dashboard');
         return { activeTab, loadingStore, stocksStore, productsStore };
     },
-
     computed: {
         branchDetailItems() {
             return [
@@ -297,6 +303,7 @@ export default {
                 { label: 'Orders', value: 'orders', clickHandler: () => this.switchToOrdersTab() },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
+                { label: 'Reports', value: 'reports', },
                 { label: 'Branch Info', value: 'branch_info', clickHandler: () => this.switchToBranchInfoTab() },
             ];
         },
@@ -309,7 +316,6 @@ export default {
             }
         }
     },
-
     watch: {
         '$route.params.branchName': {
             immediate: true,
@@ -327,10 +333,11 @@ export default {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {
                 this.fetchStocks();
+            } else if (newTab === 'reports') {
+                this.fetchProductsReport();
             }
         }
     },
-
     methods: {
         async fetchBranchDetails() {
             this.loadingBranchDetails = true;
@@ -376,7 +383,7 @@ export default {
             this.productName = item.product_name;
             this.productTemp = item.temp_label;
             this.productSize = item.size_label;
-            this.ingredientLoading = true;
+            this.loadingIngredient = true;
             try {
                 const response = await apiClient.get(`/ingredients/${item.product_id}`, {
                     headers: {
@@ -388,7 +395,7 @@ export default {
                 console.error('Error fetching ingredients:', error);
                 this.showError("Error fetching ingredients!");
             } finally {
-                this.ingredientLoading = false;
+                this.loadingIngredient = false;
             }
         },
 
@@ -439,6 +446,31 @@ export default {
                 this.showError("Error fetching stocks!");
             } finally {
                 this.loadingStocks = false;
+            }
+        },
+
+        async fetchProductsReport() {
+            this.loadingProductReports = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.productReports = [];
+                    return;
+                }
+                await this.productsStore.fetchAllProductsStore(this.branchDetails.branch_id);
+                if (this.productsStore.products.length === 0) {
+                    this.productReports = [];
+                } else {
+                    this.productReportsLoaded = true;
+                    this.productReports = this.productsStore.products.map(product => this.formatProduct(product));
+                }
+                this.loadingProductReports = false;
+            } catch (error) {
+                console.error('Error fetching reports:', error);
+                this.showError("Error fetching reports!");
+            } finally {
+                this.loadingProductReports = false;
             }
         },
 
@@ -555,24 +587,6 @@ export default {
             };
         },
 
-        // updateStockInList(payload, updatedAt) {
-        //     const index = this.stocks.findIndex(stock => stock.stock_id === payload.stock_id);
-        //     if (index !== -1) {
-        //         const unitObj = this.unitStockOptions.find(u => u.unit_id === payload.stock_unit);
-        //         const unitLabel = unitObj ? unitObj.unit_label : '';
-
-        //         this.stocks[index] = {
-        //             ...payload,
-        //             stock_ingredient: this.capitalizeFirstLetter(payload.stock_ingredient),
-        //             stock_in: `${this.capitalizeFirstLetter(payload.stock_in)}${unitLabel}`,
-        //             updated_at: this.formatDateTime(updatedAt),
-        //             availability_label: this.availabilityOptions
-        //                 .find(a => a.availability_id === payload.availability_id)
-        //                 ?.availability_label || '',
-        //         };
-        //     }
-        // },
-
         openStockHistory() {
             this.currentStock = { ...this.currentStock };
             this.stockHistoryDialog = true;
@@ -604,6 +618,15 @@ export default {
                 display_stock_in: `${stock.stock_in}${stock.unit_avb}`,
                 display_stock_cost_per_unit: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),
+            };
+        },
+
+        formatReport(productReport) {
+            return {
+                ...productReport,
+                display_product_name: `${this.capitalizeFirstLetter(productReport.product_name)}${productReport.temp_label}${productReport.size_label}`,
+                display_product_price: `₱${productReport.product_price}`,
+                updated_at: this.formatDateTime(productReport.updated_at),
             };
         },
 
@@ -652,6 +675,13 @@ export default {
             this.loadingStocks = true;
             setTimeout(() => {
                 this.fetchStocks();
+            }, 1000);
+        },
+
+        onRefreshProductsReport() {
+            this.loadingProductReports = true;
+            setTimeout(() => {
+                this.fetchProductsReport();
             }, 1000);
         }
     }

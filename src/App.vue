@@ -22,13 +22,15 @@
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3"
             style="border-radius: 30px;">Create
             Branch</v-list-item>
-        
-        <v-divider class="mt-4"></v-divider>
-        <v-list-subheader size="30">Branch</v-list-subheader>
+
+          <v-divider class="mt-4"></v-divider>
+
+          <v-list-subheader size="30">Branch</v-list-subheader>
           <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="branch[0]"
             :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3"
             style="border-radius: 30px;" />
-        <v-divider class="mt-4"></v-divider>
+            
+          <v-divider class="mt-4"></v-divider>
 
           <v-list-subheader size="30">More</v-list-subheader>
           <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3"
@@ -51,7 +53,6 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
 import GlobalLoader from '@/components/GlobalLoader.vue';
-
 
 export default {
   name: 'App',
