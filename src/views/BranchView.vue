@@ -203,6 +203,22 @@
                                         :shop-logo-link="branchDetails.shop_logo_link"
                                         :admin-name="branchDetails.admin_name"
                                     />
+
+                                    <OrdersReportsTableSkeleton v-if="loadingOrderReports && activeReportsTab === 'orders'" />
+                                    <OrdersReportTable
+                                        v-else-if="activeReportsTab === 'orders'"
+                                        :orders="orderReports"
+                                        :loading="loadingOrderReports"
+                                        @refresh="onRefreshOrdersReport"
+                                        :shop-id="branchDetails.shop_id"
+                                        :shop-name="branchDetails.shop_name"
+                                        :branch-id="branchDetails.branch_id"
+                                        :branch-name="branchDetails.branch_name"
+                                        :branch-location="branchDetails.branch_location"
+                                        :contact="branchDetails.contact"
+                                        :shop-logo-link="branchDetails.shop_logo_link"
+                                        :admin-name="branchDetails.admin_name"
+                                    />
                                 </div>
                             </transition>
                         </v-container>
@@ -236,7 +252,8 @@ import ProductsReportsTableSkeleton from '@/components/ProductsReportsTableSkele
 import ProductsReportTable from '@/components/ProductsReportTable.vue';
 import StocksReportTable from '@/components/StocksReportTable.vue';
 import StocksReportsTableSkeleton from '@/components/StocksReportsTableSkeleton.vue';
-
+import OrdersReportTable from '@/components/OrdersReportTable.vue';
+import OrdersReportsTableSkeleton from '@/components/OrdersReportsTableSkeleton.vue';
 
 
 export default {
@@ -257,6 +274,8 @@ export default {
         ProductsReportTable,
         StocksReportTable,
         StocksReportsTableSkeleton,
+        OrdersReportTable,
+        OrdersReportsTableSkeleton,
     },
     data() {
         return {
@@ -304,9 +323,14 @@ export default {
             productReports: [],
             productReportsLoaded: false,
             loadingProductReports: false,
+
             stockReports: [],
             stockReportsLoaded: false,
             loadingStockReports: false,
+
+            orderReports: [],
+            orderReportsLoaded: false,
+            loadingOrderReports: false,
 
             formValid: true,
             isSaving: false,
@@ -384,6 +408,7 @@ export default {
             } else if (newTab === 'reports') {
                 this.fetchProductsReport();
                 this.fetchStocksReport();
+                this.fetchOrdersReport();
             }
         }
     },
@@ -548,6 +573,31 @@ export default {
             }
         },
 
+        async fetchOrdersReport() {
+            this.loadingOrderReports = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.orderReports = [];
+                    return;
+                }
+                await this.ordersStore.fetchAllOrdersStore(this.branchDetails.branch_id);
+                if (this.ordersStore.orders.length === 0) {
+                    this.orderReports = [];
+                } else {
+                    this.orderReports = this.ordersStore.orders.map(order => this.formatOrder(order));
+                }
+                this.orderReportsLoaded = true;
+                this.loadingOrderReports = false;
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                this.showError("Error fetching orders!");
+            } finally {
+                this.loadingOrderReports = false;
+            }
+        },
+
         async updatingStock() {
             this.isSaving = true;
             try {
@@ -695,6 +745,16 @@ export default {
             };
         },
 
+        formatOrder(order) {
+            return {
+                ...order,
+                display_customer_cash: `₱${order.customer_cash}`,
+                display_customer_charge: `₱${order.customer_charge}`,
+                display_customer_change: `₱${order.customer_change}`,
+                updated_at: this.formatDateTime(order.updated_at),
+            };
+        },
+
         formatReport(productReport) {
             return {
                 ...productReport,
@@ -764,7 +824,14 @@ export default {
             setTimeout(() => {
                 this.fetchStocksReport();
             }, 1000);
+        },
+        onRefreshOrdersReport() {
+            this.loadingOrderReports = true;
+            setTimeout(() => {
+                this.fetchOrdersReport();
+            }, 1000);
         }
+        
     }
 };
 </script>

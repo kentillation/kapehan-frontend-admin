@@ -1,28 +1,19 @@
 <template>
-    <v-data-table :headers="productsHeaders" :items="products" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'product_name', order: 'asc' }]" class="hover-table" density="comfortable">
+    <v-data-table :headers="ordersHeaders" :items="orders" :loading="loading" :items-per-page="10"
+        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
-                <v-btn @click="downloadProducts" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
-                <v-btn @click="printProducts" prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
+                <v-btn @click="downloadOrders" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
+                <v-btn @click="printOrders" prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
                 <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"
                     @click="$emit('refresh')" :loading="loading"></v-btn>
             </v-toolbar>
-            <v-divider></v-divider>
         </template>
-        <!--eslint-disable-next-line -->
-        <template v-slot:item.product_name="{ item }">
-            <span :class="{ 'text-red': item.availability_id === 2 }">
-                {{ item.product_name }}
-            </span>
-        </template>
+
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No products found for this branch.</span>
+                <span>&nbsp; No orders found for this branch.</span>
             </v-alert>
-        </template>
-        <template v-slot:loading>
-            <v-skeleton-loader type="table-row@6"></v-skeleton-loader>
         </template>
     </v-data-table>
     <Snackbar ref="snackbarRef" />
@@ -30,22 +21,21 @@
 
 <script>
 import { useLoadingStore } from '@/stores/loading';
-import { useProductsStore } from '@/stores/productsStore';
+import { useOrdersStore } from '@/stores/ordersStore';
 import Snackbar from '@/components/Snackbar.vue';
 
-
 export default {
-    name: 'ProductsReportTable',
+    name: 'OdersReportsTable',
     data() {
         return {
-            productsHeaders: [
+            ordersHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Product', value: 'product_name', sortable: true, width: '10%' },
-                { title: 'Temperature', value: 'temp_label', sortable: true, width: '10%' },
-                { title: 'Size', value: 'size_label', sortable: true, width: '10%' },
-                { title: 'Price', value: 'display_product_price', sortable: true, width: '10%' },
-                { title: 'Category', value: 'category_label', sortable: true, width: '10%' },
-                { title: 'Last_update', value: 'updated_at', sortable: true, width: '20%' },
+                { title: 'Reference #', value: 'reference_number', sortable: 'true', width: '15%' },
+                { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
+                { title: 'Cash render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
+                { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
+                { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
+                { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
         }
     },
@@ -53,9 +43,9 @@ export default {
         Snackbar,
     },
     props: {
-        products: {
+        orders: {
             type: Array,
-            required: true,
+            required: true
         },
         loading: {
             type: Boolean,
@@ -93,13 +83,14 @@ export default {
             type: String,
             required: true
         },
+
     },
     emits: [
         'refresh',
     ],
     setup() {
         const loadingStore = useLoadingStore();
-        const productsStore = useProductsStore();
+        const ordersStore = useOrdersStore();
         const currentDate = new Date().toLocaleDateString('en-PH', {
             year: 'numeric',
             month: 'long',
@@ -111,28 +102,27 @@ export default {
         const formatCurrentDate = currentDate.replace(/,/g, '');
         return {
             loadingStore,
-            productsStore,
+            ordersStore,
             formatCurrentDate,
         };
     },
     methods: {
-        async downloadProducts(){
-            await this.productsStore.fetchAllProductsStore(this.branchId);
-            if (this.productsStore.products.length === 0) {
-                alert('No products available to download.');
+        async downloadOrders() {
+            await this.ordersStore.fetchAllOrdersStore(this.branchId);
+            if (this.ordersStore.orders.length === 0) {
+                alert('No orders available to download.');
                 return;
             } else {
-                this.loadingStore.show('Downloading products...');
+                this.loadingStore.show('Downloading orders...');
             }
-            const products = this.productsStore.products.map(product => ({
-                'Product Name': product.product_name,
-                'Temperature': product.temp_label,
-                'Size': product.size_label,
-                'Price': product.product_price,
-                'Category': product.category_label,
-                'Last Update': this.formatDateTime(product.updated_at),
+            const orders = this.ordersStore.orders.map(order => ({
+                'Reference #': order.reference_number,
+                'Quantity': order.total_quantity,
+                'Cash render': order.customer_cash,
+                'Charge': order.customer_charge,
+                'Change': order.customer_change,
+                'Last Update': this.formatDateTime(order.updated_at),
             }));
-
             const headings = [
                 `Shop Name: ${this.shopName}`,
                 `Branch Name: ${this.branchName}`,
@@ -142,27 +132,26 @@ export default {
                 `Prepared by : ${this.adminName}`,
                 '',
             ].join('\n');
-
-            const csvContent = "data:text/csv;charset=utf-8," 
+            const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(products[0]).join(",") + "\n"
-                + products.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(orders[0]).join(",") + "\n"
+                + orders.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Products_Report_${this.branchName}.csv`);
+            link.setAttribute("download", `Orders_Report_${this.branchName}.csv`);
             document.body.appendChild(link); // Required for FF
-            this.showSuccess("Products downloaded successfully!");
+            this.showSuccess("Orders downloaded successfully!");
             link.click();
             this.loadingStore.hide();
             document.body.removeChild(link);
             // this.$emit('refresh');
         },
 
-        async printProducts() {
-            await this.productsStore.fetchAllProductsStore(this.branchId);
-            if (this.productsStore.products.length === 0) {
-                alert('No products available to print.');
+        async printOrders() {
+            await this.ordersStore.fetchAllOrdersStore(this.branchId);
+            if (this.ordersStore.orders.length === 0) {
+                alert('No orders available to print.');
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -173,7 +162,7 @@ export default {
             printWindow.document.write(`
                 <html>
                     <head>
-                        <title>Products Report</title>
+                        <title>Orders Report</title>
                         <style>
                             body { font-family: Arial, sans-serif; }
                             table { width: 100%; border-collapse: collapse; }
@@ -187,33 +176,33 @@ export default {
                     </head>
                     <body>
                         <div class="headings">
-                            <img src="${ this.shopLogoLink }" alt="Logo" style="width: 200px; height: auto;">
+                            <img src="${this.shopLogoLink}" alt="Logo" style="width: 200px; height: auto;">
                             <div>
                                 <h2>${this.shopName}</h2>
                                 <h4>${this.branchName} Branch</h4>
                                 <h5>${this.branchLocation}</h5>
                                 <h5>${this.contact}</h5>
                             </div>
-                            <h5>${ this.formatCurrentDate }</h5>
+                            <h5>${this.formatCurrentDate}</h5>
                         </div>
-                        <p><strong>Products Report for ${this.branchName} Branch</strong></p>
+                        <p><strong>Orders Report for ${this.branchName} Branch</strong></p>
                         <table>
                             <tr>
-                                <th>Product Name</th>
-                                <th>Temperature</th>
-                                <th>Size</th>
-                                <th>Price</th>
-                                <th>Category</th>
+                                <th>Reference #</th>
+                                <th>Quantity</th>
+                                <th>Cash render</th>
+                                <th>Charge</th>
+                                <th>Change</th>
                                 <th>Last Update</th>
                             </tr>
-                            ${this.productsStore.products.map(product => `
+                            ${this.ordersStore.orders.map(order => `
                                 <tr>
-                                    <td>${product.product_name}</td>
-                                    <td>${product.temp_label}</td>
-                                    <td>${product.size_label}</td>
-                                    <td>₱${product.product_price}</td>
-                                    <td>${product.category_label}</td>
-                                    <td>${this.formatDateTime(product.updated_at)}</td>
+                                    <td>${order.reference_number}</td>
+                                    <td>${order.total_quantity}</td>
+                                    <td>${order.customer_cash}</td>
+                                    <td>₱${order.customer_charge}</td>
+                                    <td>₱${order.customer_change}</td>
+                                    <td>${this.formatDateTime(order.updated_at)}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -226,7 +215,7 @@ export default {
             printWindow.document.close();
             printWindow.print();
         },
-        
+
         formatDateTime(dateString) {
             if (!dateString) return 'N/A';
             const date = new Date(dateString);
@@ -243,33 +232,10 @@ export default {
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
         },
+
         showSuccess(message) {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
     }
 }
 </script>
-
-<style scoped>
-.hover-table:deep(.v-data-table__tr:hover) {
-    background-color: rgba(0, 0, 0, 0.04);
-}
-
-.to-hide {
-    display: inline;
-}
-
-.to-show {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .to-hide {
-        display: none;
-    }
-
-    .to-show {
-        display: inline;
-    }
-}
-</style>

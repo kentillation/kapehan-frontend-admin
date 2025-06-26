@@ -25,7 +25,7 @@ import { useStocksStore } from '@/stores/stocksStore';
 import Snackbar from '@/components/Snackbar.vue';
 
 export default {
-    name: 'StocksTable',
+    name: 'StocksReportTable',
     data() {
         return {
             stocksHeaders: [
