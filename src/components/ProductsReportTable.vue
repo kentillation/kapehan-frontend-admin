@@ -1,7 +1,6 @@
 <template>
     <v-data-table :headers="productsHeaders" :items="products" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'product_name', order: 'asc' }]" class="hover-table"
-        density="comfortable">
+        :sort-by="[{ key: 'product_name', order: 'asc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
                 <v-btn @click="downloadProducts" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
@@ -26,11 +25,14 @@
             <v-skeleton-loader type="table-row@6"></v-skeleton-loader>
         </template>
     </v-data-table>
+    <Snackbar ref="snackbarRef" />
 </template>
 
 <script>
 import { useLoadingStore } from '@/stores/loading';
 import { useProductsStore } from '@/stores/productsStore';
+import Snackbar from '@/components/Snackbar.vue';
+
 
 export default {
     name: 'ProductsTable',
@@ -48,6 +50,7 @@ export default {
         }
     },
     components: {
+        Snackbar,
     },
     props: {
         products: {
@@ -90,10 +93,6 @@ export default {
             type: String,
             required: true
         },
-        error: {
-            type: [String, Error, null],
-            default: null
-        }
     },
     emits: [
         'refresh',
@@ -118,9 +117,13 @@ export default {
     },
     methods: {
         async downloadProducts(){
-            this.loadingStore.show('Downloading products...');
             await this.productsStore.fetchAllProductsStore(this.branchId);
-            this.loadingStore.hide();
+            if (this.productsStore.products.length === 0) {
+                alert('No products available to download.');
+                return;
+            } else {
+                this.loadingStore.show('Downloading products...');
+            }
             const products = this.productsStore.products.map(product => ({
                 'Product Name': product.product_name,
                 'Temperature': product.temp_label,
@@ -137,7 +140,7 @@ export default {
                 `Contact: ${this.contact}`,
                 `Date: ${this.formatCurrentDate}`,
                 `Prepared by : ${this.adminName}`,
-                '', // Empty line for spacing
+                '',
             ].join('\n');
 
             const csvContent = "data:text/csv;charset=utf-8," 
@@ -149,12 +152,19 @@ export default {
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", `Products_Report_${this.branchName}.csv`);
             document.body.appendChild(link); // Required for FF
+            this.showSuccess("Products downloaded successfully!");
             link.click();
+            this.loadingStore.hide();
             document.body.removeChild(link);
-            this.$emit('refresh');
+            // this.$emit('refresh');
         },
+
         async printProducts() {
             await this.productsStore.fetchAllProductsStore(this.branchId);
+            if (this.productsStore.products.length === 0) {
+                alert('No products available to print.');
+                return;
+            }
             const printWindow = window.open('', '_blank');
             if (!printWindow) {
                 alert('Please allow popups for this website to print the report.');
@@ -216,6 +226,7 @@ export default {
             printWindow.document.close();
             printWindow.print();
         },
+        
         formatDateTime(dateString) {
             if (!dateString) return 'N/A';
             const date = new Date(dateString);
@@ -227,6 +238,13 @@ export default {
                 minute: '2-digit',
                 timeZone: 'Asia/Manila'
             });
+        },
+
+        showError(message) {
+            this.$refs.snackbarRef.showSnackbar(message, "error");
+        },
+        showSuccess(message) {
+            this.$refs.snackbarRef.showSnackbar(message, "success");
         },
     }
 }

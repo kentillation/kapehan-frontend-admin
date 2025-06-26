@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="px-4">
         <h1 class="text-brown-lighten-1">{{ branchDetails.branch_name || branchName }} Branch</h1>
 
         <template v-if="branchDetails.branch_name">
@@ -195,8 +195,13 @@
                                         :loading="loadingStockReports"
                                         @refresh="onRefreshStocksReport"
                                         :shop-id="branchDetails.shop_id"
+                                        :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
                                         :branch-name="branchDetails.branch_name"
+                                        :branch-location="branchDetails.branch_location"
+                                        :contact="branchDetails.contact"
+                                        :shop-logo-link="branchDetails.shop_logo_link"
+                                        :admin-name="branchDetails.admin_name"
                                     />
                                 </div>
                             </transition>
@@ -327,6 +332,7 @@ export default {
     computed: {
         branchDetailItems() {
             return [
+                { label: 'Branch name', value: this.branchDetails.branch_name },
                 { label: 'Branch manager', value: this.branchDetails.m_name },
                 { label: 'Contact', value: this.branchDetails.contact },
                 { label: 'Email', value: this.branchDetails.m_email },
@@ -414,7 +420,6 @@ export default {
         switchToReportsTab() {
             this.activeReportsTab = 'orders';
         },
-
 
         switchToBranchInfoTab() {
             this.activeTab = 'branch_info';
