@@ -22,15 +22,15 @@
                                             <v-row>
                                                 <v-col cols="6" class="bg-grey-lighten-1 ma-0 rounded">
                                                     <v-icon class="text-brown-darken-1 ms-3"
-                                                        size="100">mdi-receipt-outline</v-icon>
+                                                        size="100">mdi-google-analytics</v-icon>
                                                 </v-col>
                                                 <v-col cols="6">
                                                     <div class="d-flex flex-column">
-                                                        <h2 class="text-brown-lighten-1 ms-3">Orders</h2>
+                                                        <h2 class="text-brown-lighten-1 ms-3">Sales</h2>
                                                         <p class="ms-3" style="font-size: 40px;">2,000</p>
                                                         <div class="d-flex justify-end">
                                                             <h4 class="bg-brown-darken-1 pa-1 rounded"
-                                                                style="cursor: pointer;" @click="switchToOrdersTab()">
+                                                                style="cursor: pointer;" @click="switchToReportsTab()">
                                                                 View</h4>
                                                         </div>
                                                     </div>
@@ -86,13 +86,6 @@
                                     </v-card>
                                 </v-col>
                             </v-row>
-                        </v-container>
-                    </v-tabs-window-item>
-
-                    <!-- Orders -->
-                    <v-tabs-window-item value="orders">
-                        <v-container>
-                            This is the content of Orders
                         </v-container>
                     </v-tabs-window-item>
 
@@ -338,7 +331,6 @@ export default {
         tabs() {
             return [
                 { label: 'Dashboard', value: 'dashboard' },
-                { label: 'Orders', value: 'orders', clickHandler: () => this.switchToOrdersTab() },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
                 { label: 'Branch Info', value: 'branch_info', clickHandler: () => this.switchToBranchInfoTab() },
@@ -406,10 +398,6 @@ export default {
             }
         },
 
-        switchToOrdersTab() {
-            this.activeTab = 'orders';
-        },
-
         switchToProductsTab() {
             this.activeTab = 'products';
         },
@@ -417,6 +405,11 @@ export default {
         switchToStocksTab() {
             this.activeTab = 'stocks';
         },
+
+        switchToReportsTab() {
+            this.activeReportsTab = 'orders';
+        },
+
 
         switchToBranchInfoTab() {
             this.activeTab = 'branch_info';
