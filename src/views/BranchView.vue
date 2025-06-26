@@ -186,6 +186,7 @@
                                         :branch-location="branchDetails.branch_location"
                                         :contact="branchDetails.contact"
                                         :shop-logo-link="branchDetails.shop_logo_link"
+                                        :admin-name="branchDetails.admin_name"
                                     />
                                     <StocksReportsTableSkeleton v-if="loadingStockReports && activeReportsTab === 'stocks'" />
                                     <StocksReportTable

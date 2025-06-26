@@ -86,6 +86,10 @@ export default {
             type: String,
             required: true
         },
+        adminName: {
+            type: String,
+            required: true
+        },
         error: {
             type: [String, Error, null],
             default: null
@@ -101,11 +105,15 @@ export default {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
         });
+        const formatCurrentDate = currentDate.replace(/,/g, '');
         return {
             loadingStore,
             productsStore,
-            currentDate,
+            formatCurrentDate,
         };
     },
     methods: {
@@ -121,7 +129,18 @@ export default {
                 'Category': product.category_label,
                 'Last Update': this.formatDateTime(product.updated_at),
             }));
+
+            const headings = [
+                `Shop Name:,${this.shopName}`,
+                `Branch Name:,${this.branchName}`,
+                `Branch Location:,${this.branchLocation}`,
+                `Contact:,${this.contact}`,
+                `Date:,${this.formatCurrentDate}`,
+                '', // Empty line for spacing
+            ].join('\n');
+
             const csvContent = "data:text/csv;charset=utf-8," 
+                + headings + "\n"
                 + Object.keys(products[0]).join(",") + "\n"
                 + products.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
@@ -152,7 +171,6 @@ export default {
                             h2 { margin: 0; }
                             h2, h4, h5 { text-align: center; }
                             h4, h5 { font-weight: normal; margin: 5px; }
-                            .report-head { margin-top: 10px; }
                             .headings { display: flex; align-items: center; justify-content: space-between;}
                         </style>
                     </head>
@@ -165,9 +183,9 @@ export default {
                                 <h5>${this.branchLocation}</h5>
                                 <h5>${this.contact}</h5>
                             </div>
-                            <h4>Date: ${ this.currentDate }</h4>
+                            <h5>${ this.formatCurrentDate }</h5>
                         </div>
-                        <p class="report-head"><strong>Products Report for ${this.branchName} Branch</strong></p>
+                        <p><strong>Products Report for ${this.branchName} Branch</strong></p>
                         <table>
                             <tr>
                                 <th>Product Name</th>
@@ -182,11 +200,16 @@ export default {
                                     <td>${product.product_name}</td>
                                     <td>${product.temp_label}</td>
                                     <td>${product.size_label}</td>
-                                    <td>${product.product_price}</td>
+                                    <td>₱${product.product_price}</td>
                                     <td>${product.category_label}</td>
                                     <td>${this.formatDateTime(product.updated_at)}</td>
                                 </tr>`).join('')}
                         </table>
+                        <footer>
+                            <p style="margin-top: 30px;">
+                                Prepared by: <strong>${this.adminName}</strong>
+                            </p>
+                        </footer>
                     </body>
                 </html>`);
             printWindow.document.close();
