@@ -62,11 +62,27 @@ export default {
             type: Number,
             required: true
         },
+        shopName: {
+            type: String,
+            required: true
+        },
         branchId: {
             type: Number,
             required: true
         },
         branchName: {
+            type: String,
+            required: true
+        },
+        branchLocation: {
+            type: String,
+            required: true
+        },
+        contact: {
+            type: String,
+            required: true
+        },
+        shopLogoLink: {
             type: String,
             required: true
         },
@@ -81,9 +97,15 @@ export default {
     setup() {
         const loadingStore = useLoadingStore();
         const productsStore = useProductsStore();
+        const currentDate = new Date().toLocaleDateString('en-PH', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
         return {
             loadingStore,
             productsStore,
+            currentDate,
         };
     },
     methods: {
@@ -127,11 +149,25 @@ export default {
                             table { width: 100%; border-collapse: collapse; }
                             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
                             th { background-color: #f2f2f2; }
-                            h1 { text-align: center; }
+                            h2 { margin: 0; }
+                            h2, h4, h5 { text-align: center; }
+                            h4, h5 { font-weight: normal; margin: 5px; }
+                            .report-head { margin-top: 10px; }
+                            .headings { display: flex; align-items: center; justify-content: space-between;}
                         </style>
                     </head>
                     <body>
-                        <h1>Products Report for ${this.branchName}</h1>
+                        <div class="headings">
+                            <img src="${ this.shopLogoLink }" alt="Logo" style="width: 200px; height: auto;">
+                            <div>
+                                <h2>${this.shopName}</h2>
+                                <h4>${this.branchName} Branch</h4>
+                                <h5>${this.branchLocation}</h5>
+                                <h5>${this.contact}</h5>
+                            </div>
+                            <h4>Date: ${ this.currentDate }</h4>
+                        </div>
+                        <p class="report-head"><strong>Products Report for ${this.branchName} Branch</strong></p>
                         <table>
                             <tr>
                                 <th>Product Name</th>

@@ -33,7 +33,6 @@ export const BRANCH_API = {
             if (!branchData) {
                 throw new Error('Branch data is required');
             }
-
             const response = await apiClient.post(
                 this.ENDPOINTS.CREATE,
                 branchData,
@@ -44,18 +43,12 @@ export const BRANCH_API = {
                     }
                 }
             );
-
-            // Check if response exists and has data
             if (!response.data) {
                 throw new Error('No data received from server');
             }
-
-            // If success is false, throw error with message
             if (response.data.success === false) {
                 throw new Error(response.data.message || 'Failed to create branch');
             }
-
-            // If success is true, return the data
             return response.data;
         } catch (error) {
             console.error('[BranchService] Error creating branch:', error);
@@ -70,7 +63,6 @@ export const BRANCH_API = {
             if (!branchName) {
                 throw new Error('Branch name is required');
             }
-
             const response = await apiClient.get(
                 `${this.ENDPOINTS.DETAILS}/${branchName}`,
                 {
@@ -79,11 +71,9 @@ export const BRANCH_API = {
                     }
                 }
             );
-
             if (!response.data?.success) {
                 throw new Error(response.data?.message || 'Failed to fetch branch details');
             }
-
             return response.data;
         } catch (error) {
             console.error('[BranchService] Error fetching branch details:', error);

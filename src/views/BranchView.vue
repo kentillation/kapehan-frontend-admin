@@ -180,8 +180,12 @@
                                         :loading="loadingProductReports"
                                         @refresh="onRefreshProductsReport"
                                         :shop-id="branchDetails.shop_id"
+                                        :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
                                         :branch-name="branchDetails.branch_name"
+                                        :branch-location="branchDetails.branch_location"
+                                        :contact="branchDetails.contact"
+                                        :shop-logo-link="branchDetails.shop_logo_link"
                                     />
                                     <StocksReportsTableSkeleton v-if="loadingStockReports && activeReportsTab === 'stocks'" />
                                     <StocksReportTable
