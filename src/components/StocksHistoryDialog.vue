@@ -3,14 +3,15 @@
         <v-card>
             <v-card-text>
                 <v-data-table :headers="headers" :items="stocksHistory" :loading="loading" :items-per-page="10"
-                    class="elevation-1 hover-table">
+                    :sort-by="[{ key: 'created_at', order: 'desc' }]" class="elevation-1 hover-table">
                     <template v-slot:top>
                         <v-toolbar flat>
-                            <v-toolbar-title>Stock Management History</v-toolbar-title>
+                            <h2 class="ms-3 to-hide">Stocks Management History</h2>
+                            <h2 class="ms-3 to-show">History</h2>
                             <v-spacer></v-spacer>
                             <v-btn color="primary" variant="tonal" @click="fetchStocksHistory" :loading="loading"
-                                prepend-icon="mdi-refresh" class="me-4">
-                                Refresh
+                                prepend-icon="mdi-refresh" class="ps-6 me-4" size="small">
+                                <span class="to-hide">Refresh</span>
                             </v-btn>
                         </v-toolbar>
                     </template>
@@ -82,8 +83,8 @@ export default {
                 { title: 'Ingredient', value: 'stock_ingredient', sortable: true },
                 { title: 'Description', value: 'description', sortable: true },
                 { title: 'Type', value: 'manage_id', sortable: true },
-                { title: 'Performed By', value: 'admin_name', sortable: true },
-                { title: 'Date', value: 'created_at', sortable: true },
+                { title: 'Performed_by', value: 'admin_name', sortable: true },
+                { title: 'Date_created', value: 'created_at', sortable: true },
             ]
         };
     },

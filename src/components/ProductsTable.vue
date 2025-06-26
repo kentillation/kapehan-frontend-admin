@@ -1,29 +1,25 @@
 <template>
     <v-row>
         <v-col cols="12" lg="4" md="4" sm="6">
-            <v-text-field density="comfortable" v-model="searchProduct" :placeholder="`Search product in ${branchName}`" clearable variant="outlined"></v-text-field>
+            <v-text-field density="comfortable" v-model="searchProduct" placeholder="Search product here..." clearable
+                variant="outlined"></v-text-field>
         </v-col>
     </v-row>
-        
     <v-data-table :headers="productHeaders" :items="products" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table"
-        density="comfortable">
+        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
         <template v-slot:top>
-            <v-toolbar flat color="transparent">
-                <v-toolbar-title class="text-h6 font-weight-medium">
-                    <span class="to-hide">List of all Products</span>
-                    <span class="to-show">List</span>
-                </v-toolbar-title>
-
+            <v-toolbar flat>
+                <h2 class="ms-3 to-hide">List of all Products</h2>
+                <h2 class="ms-3 to-show">List</h2>
                 <v-spacer></v-spacer>
-
                 <AddProductDialog v-model="addProductDialog" />
                 <v-btn @click="openAddProductDialog" :disabled="loading" prepend-icon="mdi-plus" color="primary"
-                    class="me-2" variant="tonal">&nbsp;Add
+                    class="me-2" variant="tonal">
+                    <span class="to-hide">Add products</span>
+                    <span class="to-show">products</span>
                 </v-btn>
-
-                <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="primary"
-                    variant="tonal" size="small"></v-btn>
+                <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="primary" variant="tonal"
+                    size="small" class="me-3"></v-btn>
             </v-toolbar>
 
             <v-divider></v-divider>

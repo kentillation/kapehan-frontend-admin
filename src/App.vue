@@ -3,9 +3,7 @@
     <v-main>
       <v-app-bar v-if="showSidebar" prominent>
         <v-app-bar-nav-icon v-if="showMenu" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>
-          <span>{{ authStore.shopName }}</span>
-        </v-toolbar-title>
+        <h3>{{ authStore.shopName }}</h3>
         <v-spacer></v-spacer>
         <v-btn icon @click="toggleTheme" :title="themeText">
           <v-icon>mdi-theme-light-dark</v-icon>
