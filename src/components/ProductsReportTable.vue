@@ -131,11 +131,12 @@ export default {
             }));
 
             const headings = [
-                `Shop Name:,${this.shopName}`,
-                `Branch Name:,${this.branchName}`,
-                `Branch Location:,${this.branchLocation}`,
-                `Contact:,${this.contact}`,
-                `Date:,${this.formatCurrentDate}`,
+                `Shop Name: ${this.shopName}`,
+                `Branch Name: ${this.branchName}`,
+                `Branch Loc: ${this.branchLocation}`,
+                `Contact: ${this.contact}`,
+                `Date: ${this.formatCurrentDate}`,
+                `Prepared by : ${this.adminName}`,
                 '', // Empty line for spacing
             ].join('\n');
 
