@@ -4,8 +4,8 @@
             <v-text-field density="comfortable" v-model="searchStock" :placeholder="`Search stock in ${branchName}`" clearable variant="outlined"></v-text-field>
         </v-col>
     </v-row>
-    <v-data-table :headers="filteredHeaders" :items="stocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'stock_igngredient', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
+    <v-data-table :headers="stockHeaders" :items="stocks" :loading="loading" :items-per-page="10"
+        :sort-by="[{ key: 'stock_ingredient', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent">
                 <v-toolbar-title class="text-h6 font-weight-medium">
@@ -58,8 +58,6 @@
 </template>
 
 <script>
-import { computed } from 'vue';
-import { useDisplay } from 'vuetify';
 import { useLoadingStore } from '@/stores/loading';
 import AddStockDialog from '@/components/AddStockDialog.vue';
 
@@ -69,6 +67,15 @@ export default {
         return {
             searchStock: '',
             addStockDialog: false,
+            stockHeaders: [
+                { title: '', value: 'select', width: '5%' },
+                { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '20%' },
+                { title: 'Stock_quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
+                { title: 'Unit_cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
+                { title: 'Availability', value: 'availability_label', sortable: 'true', width: '10%' },
+                { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '20%' },
+                { title: '', value: 'actions', width: '15%' },
+            ],
         }
     },
     components: {
@@ -105,41 +112,10 @@ export default {
     //         return !this.stocks.some(item => item.selected);
     //     }
     // },
-    setup(props) {
+    setup() {
         const loadingStore = useLoadingStore();
-
-        const { mobile } = useDisplay();
-
-        const headers = [
-            { title: '', value: 'select', width: '5%' },
-            { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '20%' },
-            { title: 'Stock In', value: 'display_stock_in', sortable: 'true', width: '15%' },
-            { title: 'Unit Cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
-            { title: 'Availability', value: 'availability_label', sortable: 'true', width: '10%' },
-            { title: 'Updated', value: 'updated_at', sortable: 'true', width: '20%' },
-            { title: 'Actions', value: 'actions', width: '15%' },
-        ];
-
-        const filteredHeaders = computed(() => {
-            return headers.map(header => ({
-                ...header,
-                title: mobile.value ? header.title.substring(0, 3) : header.title
-            }));
-        });
-
-        const processedStocks = computed(() => {
-            return props.stocks.map(stock => ({
-                ...stock,
-                display_stock_in: `${stock.stock_in} ${stock.unit_avb}`,
-                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
-            }));
-        });
-
         return {
             loadingStore,
-            headers,
-            filteredHeaders,
-            processedStocks,
         };
     },
     methods: {

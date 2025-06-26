@@ -14,7 +14,7 @@
                 <v-tabs-window v-model="activeTab">
                     <!-- Dashboard -->
                     <v-tabs-window-item value="dashboard">
-                        <v-container class="pa-10">
+                        <v-container>
                             <v-row>
                                 <v-col cols="12" lg="4" md="6" sm="12">
                                     <v-card>
@@ -91,14 +91,14 @@
 
                     <!-- Orders -->
                     <v-tabs-window-item value="orders">
-                        <v-container class="pa-10">
+                        <v-container>
                             This is the content of Orders
                         </v-container>
                     </v-tabs-window-item>
 
                     <!-- Products -->
                     <v-tabs-window-item value="products">
-                        <v-container class="pa-10">
+                        <v-container>
                             <ProductsTableSkeleton v-if="loadingProducts" />
                             <ProductsTable v-else @refresh="onRefreshProducts" @edit-product="editProductDialog" @view-ingredients="ingredientsDialog"
                                 :products="products" :loading="loadingProducts"
@@ -134,7 +134,7 @@
 
                     <!-- Stocks -->
                     <v-tabs-window-item value="stocks">
-                        <v-container class="pa-10">
+                        <v-container>
                             <StocksTableSkeleton v-if="loadingStocks" />
                             <StocksTable v-else :stocks="stocks" @refresh="onRefreshStocks"
                                 @edit-stock="openEditStockDialog" :branch-id="branchDetails.branch_id"
@@ -159,7 +159,7 @@
 
                     <!-- Branch Info -->
                     <v-tabs-window-item value="branch_info">
-                        <v-container class="pa-10">
+                        <v-container>
                             <div class="d-flex flex-column" v-for="(detail, i) in branchDetailItems" :key="i" cols="12"
                                 lg="3" md="4" sm="6" xs="12">
                                 <p class="text-grey-darken-1">{{ detail.label }}</p>
@@ -170,7 +170,7 @@
 
                     <!-- Reports -->
                     <v-tabs-window-item value="reports">
-                        <v-container class="mt-5">
+                        <v-container>
                             <v-tabs v-model="activeReportsTab" class="d-flex mb-4" align-tabs="left" color="white" stacked>
                                 <v-tab v-for="tab in reportsTabs" :key="tab.value" class="rounded" :value="tab.value"
                                     :class="{ 'active-tab': activeReportsTab === tab.value }"
@@ -347,9 +347,9 @@ export default {
         },
         reportsTabs() {
             return [
-                { label: 'Products Report', value: 'products', },
-                { label: 'Stocks Report', value: 'stocks', },
-                { label: 'Orders Report', value: 'orders', },
+                { label: 'Products', value: 'products', },
+                { label: 'Stocks', value: 'stocks', },
+                { label: 'Orders', value: 'orders', },
             ];
         },
         stockCost: {
@@ -765,9 +765,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.active-tab {
-    background-color: rgba(121, 85, 72, 0.2);
-}
-</style>

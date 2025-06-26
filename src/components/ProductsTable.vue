@@ -5,7 +5,7 @@
         </v-col>
     </v-row>
         
-    <v-data-table :headers="filteredHeaders" :items="products" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="productHeaders" :items="products" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table"
         density="comfortable">
         <template v-slot:top>
@@ -16,10 +16,6 @@
                 </v-toolbar-title>
 
                 <v-spacer></v-spacer>
-
-                <!-- <v-btn :disabled="hasCheck" @click="toEditPage" prepend-icon="mdi-pencil" color="green" class="me-2"
-                    variant="tonal">&nbsp;Edit
-                </v-btn> -->
 
                 <AddProductDialog v-model="addProductDialog" />
                 <v-btn @click="openAddProductDialog" :disabled="loading" prepend-icon="mdi-plus" color="primary"
@@ -85,8 +81,6 @@
 </template>
 
 <script>
-import { computed } from 'vue';
-import { useDisplay } from 'vuetify';
 import { useLoadingStore } from '@/stores/loading';
 import AddProductDialog from '@/components/AddProductDialog.vue';
 
@@ -96,6 +90,15 @@ export default {
         return {
             searchProduct: '',
             addProductDialog: false,
+            productHeaders: [
+                { title: '', value: 'select', width: '5%' },
+                { title: 'Product', value: 'display_product_name', sortable: true, width: '20%' },
+                { title: 'Price', value: 'display_product_price', sortable: true, width: '10%' },
+                { title: 'Category', value: 'category_label', sortable: true, width: '15%' },
+                { title: 'Availability', value: 'availability_label', sortable: true, width: '15%' },
+                { title: 'Last_update', value: 'updated_at', sortable: true, width: '20%' },
+                { title: '', value: 'actions', sortable: false, width: '15%' }
+            ],
         };
     },
     components: {
@@ -138,41 +141,10 @@ export default {
     //         return !this.products.some(item => item.selected);
     //     }
     // },
-    setup(props) {
+    setup() {
         const loadingStore = useLoadingStore();
-
-        const { mobile } = useDisplay();
-
-        const headers = [
-            { title: '', value: 'select', width: '5%' },
-            { title: 'Product', value: 'display_product_name', sortable: true, width: '20%' },
-            { title: 'Price', value: 'display_product_price', sortable: true, width: '10%' },
-            { title: 'Category', value: 'category_label', sortable: true, width: '15%' },
-            { title: 'Availability', value: 'availability_label', sortable: true, width: '15%' },
-            { title: 'Updated', value: 'updated_at', sortable: true, width: '20%' },
-            { title: 'Actions', value: 'actions', sortable: false, width: '15%' }
-        ];
-
-        const filteredHeaders = computed(() => {
-            return headers.map(header => ({
-                ...header,
-                title: mobile.value ? header.title.substring(0, 3) : header.title
-            }));
-        });
-
-        const processedProducts = computed(() => {
-            return props.products.map(product => ({
-                ...product,
-                display_product_name: product.display_product_name || product.product_name,
-                display_product_price: product.display_product_price || `₱${product.product_price}`,
-            }));
-        });
-
         return {
             loadingStore,
-            headers,
-            filteredHeaders,
-            processedProducts,
         };
     },
     methods: {

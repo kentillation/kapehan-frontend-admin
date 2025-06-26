@@ -7,6 +7,10 @@ body {
     min-width: 0 !important;
 }
 
+.v-tab.v-tab.v-btn {
+    height: 40px !important;
+}
+
 .active-tab {
     background: linear-gradient(90deg,
             rgba(128, 41, 0, 0.1) 0%,
