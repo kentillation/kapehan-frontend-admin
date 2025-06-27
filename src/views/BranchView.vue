@@ -320,7 +320,7 @@ export default {
             currentStock: null,
 
             // Reports
-            activeReportsTab: 'products',
+            activeReportsTab: 'sales',
             productReports: [],
             productReportsLoaded: false,
             loadingProductReports: false,
@@ -376,6 +376,7 @@ export default {
         },
         reportsTabs() {
             return [
+                { label: 'Sales', value: 'sales', },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
                 { label: 'Orders', value: 'orders', },
