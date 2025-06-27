@@ -1,8 +1,7 @@
 <template>
-    <v-data-table :headers="ordersHeaders" :items="orders" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="ordersHeaders" :items="localOrders" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
-
             <v-row class="mt-5">
                 <v-col cols="12" lg="6" md="6" sm="6">
                     <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
@@ -10,21 +9,29 @@
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6">
                     <div class="d-flex">
-                        <v-btn @click="downloadOrders" prepend-icon="mdi-download" color="primary"
+                        <v-btn @click="downloadOrders(dateFilter)" prepend-icon="mdi-download" color="primary"
                             variant="tonal">XLS</v-btn>&nbsp;
-                        <v-btn @click="printOrders" prepend-icon="mdi-printer" color="primary"
+                        <v-btn @click="printOrders(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
                         <v-btn class="ps-7 me-3" prepend-icon="mdi-refresh" color="primary" variant="tonal"
                             @click="$emit('refresh')" :loading="loading"></v-btn>
                     </div>
                 </v-col>
             </v-row>
+        </template>
 
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.total_quantity="{ item }">
+            {{ item.total_quantity }} {{ item.total_quantity > 1 ? 'items' : 'item' }}
         </template>
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No orders found for this branch.</span>
+                <span>&nbsp; No orders found
+                    <template v-if="selectedFilterLabel">
+                        for <strong>{{ selectedFilterLabel }}</strong>
+                    </template>
+                </span>
             </v-alert>
         </template>
     </v-data-table>
@@ -40,9 +47,9 @@ export default {
     name: 'OdersReportsTable',
     data() {
         return {
+            localOrders: [],
             dateFilter: null,
             loadingOrderReports: false,
-            orderReports: [],
             ordersHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Reference', value: 'reference_number', sortable: 'true', width: '15%' },
@@ -65,14 +72,30 @@ export default {
         }
     },
     watch: {
+        orders: {
+            handler(newVal) {
+                this.localOrders = newVal.map(order => this.formatOrder(order));
+            },
+            immediate: true
+        },
         dateFilter(newVal) {
             this.fetchOrdersReport(newVal);
         },
+    },
+    computed: {
+        selectedFilterLabel() {
+            const found = this.dateFilterItems.find(item => item.filter_date_id === this.dateFilter);
+            return found ? found.filter_date_label : '';
+        }
     },
     components: {
         Snackbar,
     },
     props: {
+        orders: {
+            type: Array,
+            default: () => []
+        },
         loading: {
             type: Boolean,
             default: false
@@ -136,13 +159,14 @@ export default {
         async fetchOrdersReport(dateFilterId = null) {
             try {
                 await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
+                this.localOrders = this.ordersStore.orders.map(order => this.formatOrder(order));
             } catch (error) {
                 this.showError("Error fetching orders!");
             }
         },
 
-        async downloadOrders() {
-            await this.ordersStore.fetchAllOrdersStore(this.branchId);
+        async downloadOrders(dateFilterId = null) {
+            await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
             if (this.ordersStore.orders.length === 0) {
                 alert('No orders available to download.');
                 return;
@@ -182,8 +206,8 @@ export default {
             // this.$emit('refresh');
         },
 
-        async printOrders() {
-            await this.ordersStore.fetchAllOrdersStore(this.branchId);
+        async printOrders(dateFilterId = null) {
+            await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
             if (this.ordersStore.orders.length === 0) {
                 alert('No orders available to print.');
                 return;
@@ -261,6 +285,16 @@ export default {
                 minute: '2-digit',
                 timeZone: 'Asia/Manila'
             });
+        },
+
+        formatOrder(order) {
+            return {
+                ...order,
+                display_customer_cash: `₱${order.customer_cash}`,
+                display_customer_charge: `₱${order.customer_charge}`,
+                display_customer_change: `₱${order.customer_change}`,
+                updated_at: this.formatDateTime(order.updated_at),
+            };
         },
 
         showError(message) {
