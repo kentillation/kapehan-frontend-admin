@@ -207,9 +207,9 @@
                                     <OrdersReportsTableSkeleton v-if="loadingOrderReports && activeReportsTab === 'orders'" />
                                     <OrdersReportTable
                                         v-else-if="activeReportsTab === 'orders'"
-                                        :orders="orderReports"
+                                        :orders="ordersStore.orders"
                                         :loading="loadingOrderReports"
-                                        @refresh="onRefreshOrdersReport"
+                                        @refresh="fetchOrdersReport"
                                         :shop-id="branchDetails.shop_id"
                                         :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
@@ -237,6 +237,7 @@ import { ref } from 'vue';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useProductsStore } from '@/stores/productsStore';
+import { useOrdersStore } from '@/stores/ordersStore';
 import Snackbar from '@/components/Snackbar.vue';
 import ProductsTable from '@/components/ProductsTable.vue';
 import ProductsTableSkeleton from '@/components/ProductsTableSkeleton.vue';
@@ -350,8 +351,9 @@ export default {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
         const productsStore = useProductsStore();
+        const ordersStore = useOrdersStore();
         const activeTab = ref('dashboard');
-        return { activeTab, loadingStore, stocksStore, productsStore };
+        return { activeTab, loadingStore, stocksStore, productsStore, ordersStore };
     },
     computed: {
         branchDetailItems() {
@@ -825,12 +827,6 @@ export default {
                 this.fetchStocksReport();
             }, 1000);
         },
-        onRefreshOrdersReport() {
-            this.loadingOrderReports = true;
-            setTimeout(() => {
-                this.fetchOrdersReport();
-            }, 1000);
-        }
         
     }
 };

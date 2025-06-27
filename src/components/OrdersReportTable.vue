@@ -2,12 +2,24 @@
     <v-data-table :headers="ordersHeaders" :items="orders" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
-            <v-toolbar flat color="transparent">
-                <v-btn @click="downloadOrders" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
-                <v-btn @click="printOrders" prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
-                <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"
-                    @click="$emit('refresh')" :loading="loading"></v-btn>
-            </v-toolbar>
+
+            <v-row class="mt-5">
+                <v-col cols="12" lg="6" md="6" sm="6">
+                    <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
+                        item-value="filter_date_id" label="Date Filter" class="w-10"></v-autocomplete>
+                </v-col>
+                <v-col cols="12" lg="6" md="6" sm="6">
+                    <div class="d-flex">
+                        <v-btn @click="downloadOrders" prepend-icon="mdi-download" color="primary"
+                            variant="tonal">XLS</v-btn>&nbsp;
+                        <v-btn @click="printOrders" prepend-icon="mdi-printer" color="primary"
+                            variant="tonal">PRINT</v-btn>&nbsp;
+                        <v-btn class="ps-7 me-3" prepend-icon="mdi-refresh" color="primary" variant="tonal"
+                            @click="$emit('refresh')" :loading="loading"></v-btn>
+                    </div>
+                </v-col>
+            </v-row>
+
         </template>
 
         <template v-slot:no-data>
@@ -28,25 +40,39 @@ export default {
     name: 'OdersReportsTable',
     data() {
         return {
+            dateFilter: null,
+            loadingOrderReports: false,
+            orderReports: [],
             ordersHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Reference #', value: 'reference_number', sortable: 'true', width: '15%' },
+                { title: 'Reference', value: 'reference_number', sortable: 'true', width: '15%' },
                 { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
-                { title: 'Cash render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
+                { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
                 { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
                 { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
                 { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
+            dateFilterItems: [
+                { filter_date_id: 1, filter_date_label: 'Today' },
+                { filter_date_id: 2, filter_date_label: 'Yesterday' },
+                { filter_date_id: 3, filter_date_label: 'Last 7 days' },
+                { filter_date_id: 4, filter_date_label: 'This Week' },
+                { filter_date_id: 5, filter_date_label: 'Last 30 days' },
+                { filter_date_id: 6, filter_date_label: 'This Month' },
+                { filter_date_id: 7, filter_date_label: 'Last Month' },
+            ],
+            snackbarRef: null,
         }
+    },
+    watch: {
+        dateFilter(newVal) {
+            this.fetchOrdersReport(newVal);
+        },
     },
     components: {
         Snackbar,
     },
     props: {
-        orders: {
-            type: Array,
-            required: true
-        },
         loading: {
             type: Boolean,
             default: false
@@ -107,6 +133,14 @@ export default {
         };
     },
     methods: {
+        async fetchOrdersReport(dateFilterId = null) {
+            try {
+                await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
+            } catch (error) {
+                this.showError("Error fetching orders!");
+            }
+        },
+
         async downloadOrders() {
             await this.ordersStore.fetchAllOrdersStore(this.branchId);
             if (this.ordersStore.orders.length === 0) {
@@ -239,3 +273,14 @@ export default {
     }
 }
 </script>
+
+<style>
+.action-section {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.action-section-item {
+    width: 200px;
+}
+</style>

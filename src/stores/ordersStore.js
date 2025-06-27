@@ -9,22 +9,19 @@ export const useOrdersStore = defineStore('orders', {
     }),
 
     actions: {
-        async fetchAllOrdersStore(branchId) {
+        async fetchAllOrdersStore(branchId, dateFilterId = null) {
             this.loading = true;
             this.error = null;
             try {
-                if (!ORDER_API || typeof ORDER_API.fetchAllOrdersApi !== 'function') {
-                    throw new Error('ORDER_API service is not properly initialized');
-                }
-                const response = await ORDER_API.fetchAllOrdersApi(branchId);
+                const response = await ORDER_API.fetchAllOrdersApi(branchId, dateFilterId);
                 if (response && response.status === true) {
                     this.orders = response.data;
                 } else {
-                    throw new Error('Failed to fetch orders');
+                    throw new Error(response?.message || 'Failed to fetch orders');
                 }
             } catch (error) {
                 console.error('Error in fetchAllOrdersApi:', error);
-                this.error = 'Failed to fetch orders';
+                this.error = error.message || 'Failed to fetch orders';
                 throw error;
             } finally {
                 this.loading = false;
