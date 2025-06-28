@@ -44,7 +44,7 @@ import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 
 export default {
-    name: 'OdersReportsTable',
+    name: 'TransactionsReportsTable',
     data() {
         return {
             mappedTransactions: [],

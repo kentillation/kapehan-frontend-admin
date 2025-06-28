@@ -18,19 +18,23 @@
             </v-toolbar>
         </template>
 
-        <template v-slot:[`item.stock_ingredient`]>
+        <template v-slot:[`item.reference_number`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.unit_label`]>
+        <template v-slot:[`item.total_quantity`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.display_stock_in`]>
+        <template v-slot:[`item.cash_render`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.display_unit_cost`]>
+        <template v-slot:[`item.customer_charge`]>
+            <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
+        </template>
+        
+        <template v-slot:[`item.customer_change`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
@@ -42,14 +46,15 @@
 
 <script>
 export default {
-    name: 'StocksReportsTableSkeleton',
+    name: 'TransactionsReportsTableSkeleton',
     data() {
         return {
             headers: [
-                { title: '', value: 'stock_ingredient' },
-                { title: '', value: 'unit_label' },
-                { title: '', value: 'display_stock_in' },
-                { title: '', value: 'display_unit_cost' },
+                { title: '', value: 'reference_number' },
+                { title: '', value: 'total_quantity' },
+                { title: '', value: 'cash_render' },
+                { title: '', value: 'customer_charge' },
+                { title: '', value: 'customer_change' },
                 { title: '', value: 'updated_at' },
             ],
             skeletonItems: Array(10).fill({}) // Creates 10 empty rows
