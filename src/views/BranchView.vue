@@ -204,8 +204,8 @@
                                         :admin-name="branchDetails.admin_name"
                                     />
 
-                                    <OrdersReportsTableSkeleton v-if="loadingTransactionsReports && activeReportsTab === 'transactions'" />
-                                    <OrdersReportTable
+                                    <TransactionssReportsTableSkeleton v-if="loadingTransactionsReports && activeReportsTab === 'transactions'" />
+                                    <TransactionsReportTable
                                         v-else-if="activeReportsTab === 'transactions'"
                                         :transactions="transactStore.transactions"
                                         :loading="loadingTransactionsReports"
@@ -253,8 +253,8 @@ import ProductsReportsTableSkeleton from '@/components/ProductsReportsTableSkele
 import ProductsReportTable from '@/components/ProductsReportTable.vue';
 import StocksReportTable from '@/components/StocksReportTable.vue';
 import StocksReportsTableSkeleton from '@/components/StocksReportsTableSkeleton.vue';
-import OrdersReportTable from '@/components/OrdersReportTable.vue';
-import OrdersReportsTableSkeleton from '@/components/OrdersReportsTableSkeleton.vue';
+import TransactionsReportTable from '@/components/TransactionsReportTable.vue';
+import TransactionssReportsTableSkeleton from '@/components/TransactionssReportsTableSkeleton.vue';
 
 
 export default {
@@ -275,8 +275,8 @@ export default {
         ProductsReportTable,
         StocksReportTable,
         StocksReportsTableSkeleton,
-        OrdersReportTable,
-        OrdersReportsTableSkeleton,
+        TransactionsReportTable,
+        TransactionssReportsTableSkeleton,
     },
     data() {
         return {
