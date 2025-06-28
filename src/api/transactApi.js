@@ -1,11 +1,11 @@
 import apiClient from '../axios';
 
-export const ORDER_API = {
+export const TRANSACT_API = {
     ENDPOINTS: {
-        FETCH: '/orders',
+        FETCH: '/transactions',
     },
 
-    async fetchAllOrdersApi(branchId, dateFilterId = null) {
+    async fetchAllTransactionsApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
@@ -26,7 +26,7 @@ export const ORDER_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[OrdersAPI] Error fetching orders:', error);
+            console.error('[fetchAllTransactionsApi] Error fetching transactions:', error);
             throw error;
         }
     },

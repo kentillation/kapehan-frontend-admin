@@ -204,12 +204,12 @@
                                         :admin-name="branchDetails.admin_name"
                                     />
 
-                                    <OrdersReportsTableSkeleton v-if="loadingOrderReports && activeReportsTab === 'orders'" />
+                                    <OrdersReportsTableSkeleton v-if="loadingTransactionsReports && activeReportsTab === 'transactions'" />
                                     <OrdersReportTable
-                                        v-else-if="activeReportsTab === 'orders'"
-                                        :orders="ordersStore.orders"
-                                        :loading="loadingOrderReports"
-                                        @refresh="fetchOrdersReport"
+                                        v-else-if="activeReportsTab === 'transactions'"
+                                        :transactions="transactStore.transactions"
+                                        :loading="loadingTransactionsReports"
+                                        @refresh="onRefreshTransactionsReport"
                                         :shop-id="branchDetails.shop_id"
                                         :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
@@ -237,7 +237,7 @@ import { ref } from 'vue';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useProductsStore } from '@/stores/productsStore';
-import { useOrdersStore } from '@/stores/ordersStore';
+import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 import ProductsTable from '@/components/ProductsTable.vue';
 import ProductsTableSkeleton from '@/components/ProductsTableSkeleton.vue';
@@ -329,9 +329,9 @@ export default {
             stockReportsLoaded: false,
             loadingStockReports: false,
 
-            orderReports: [],
-            orderReportsLoaded: false,
-            loadingOrderReports: false,
+            transactionReports: [],
+            transactionReportsLoaded: false,
+            loadingTransactionsReports: false,
 
             formValid: true,
             isSaving: false,
@@ -351,9 +351,9 @@ export default {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
         const productsStore = useProductsStore();
-        const ordersStore = useOrdersStore();
+        const transactStore = useTransactStore();
         const activeTab = ref('dashboard');
-        return { activeTab, loadingStore, stocksStore, productsStore, ordersStore };
+        return { activeTab, loadingStore, stocksStore, productsStore, transactStore };
     },
     computed: {
         branchDetailItems() {
@@ -379,7 +379,7 @@ export default {
                 { label: 'Sales', value: 'sales', },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
-                { label: 'Orders', value: 'orders', },
+                { label: 'Transactions', value: 'transactions', },
             ];
         },
         stockCost: {
@@ -411,7 +411,7 @@ export default {
             } else if (newTab === 'reports') {
                 this.fetchProductsReport();
                 this.fetchStocksReport();
-                this.fetchOrdersReport();
+                this.fetchTransactionsReport();
             }
         }
     },
@@ -446,7 +446,7 @@ export default {
         },
 
         switchToReportsTab() {
-            this.activeReportsTab = 'orders';
+            this.activeReportsTab = 'transactions';
         },
 
         switchToBranchInfoTab() {
@@ -576,28 +576,28 @@ export default {
             }
         },
 
-        async fetchOrdersReport() {
-            this.loadingOrderReports = true;
+        async fetchTransactionsReport() {
+            this.loadingTransactionsReports = true;
             try {
                 this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.orderReports = [];
+                    this.transactionReports = [];
                     return;
                 }
-                await this.ordersStore.fetchAllOrdersStore(this.branchDetails.branch_id);
-                if (this.ordersStore.orders.length === 0) {
-                    this.orderReports = [];
+                await this.transactStore.fetchAllTransactionsStore(this.branchDetails.branch_id);
+                if (this.transactStore.transactions.length === 0) {
+                    this.transactionReports = [];
                 } else {
-                    this.orderReports = this.ordersStore.orders.map(order => this.formatOrder(order));
+                    this.transactionReports = this.transactStore.transactions.map(transact => this.formatTransactions(transact));
                 }
-                this.orderReportsLoaded = true;
-                this.loadingOrderReports = false;
+                this.transactionReportsLoaded = true;
+                this.loadingTransactionsReports = false;
             } catch (error) {
-                console.error('Error fetching orders:', error);
-                this.showError("Error fetching orders!");
+                console.error('Error fetching transactions:', error);
+                this.showError("Error fetching transactions!");
             } finally {
-                this.loadingOrderReports = false;
+                this.loadingTransactionsReports = false;
             }
         },
 
@@ -748,13 +748,13 @@ export default {
             };
         },
 
-        formatOrder(order) {
+        formatTransactions(transaction) {
             return {
-                ...order,
-                display_customer_cash: `₱${order.customer_cash}`,
-                display_customer_charge: `₱${order.customer_charge}`,
-                display_customer_change: `₱${order.customer_change}`,
-                updated_at: this.formatDateTime(order.updated_at),
+                ...transaction,
+                display_customer_cash: `₱${transaction.customer_cash}`,
+                display_customer_charge: `₱${transaction.customer_charge}`,
+                display_customer_change: `₱${transaction.customer_change}`,
+                updated_at: this.formatDateTime(transaction.updated_at),
             };
         },
 
@@ -826,6 +826,13 @@ export default {
             this.loadingStockReports = true;
             setTimeout(() => {
                 this.fetchStocksReport();
+            }, 1000);
+        },
+
+        onRefreshTransactionsReport() {
+            this.loadingTransactionsReports = true;
+            setTimeout(() => {
+                this.fetchTransactionsReport();
             }, 1000);
         },
         

@@ -1,21 +1,21 @@
 <template>
-    <v-data-table :headers="ordersHeaders" :items="localOrders" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="transactionsHeaders" :items="mappedTransactions" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-row class="mt-5">
-                <v-col cols="12" lg="6" md="6" sm="6">
-                    <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
-                        item-value="filter_date_id" label="Date Filter" class="w-10"></v-autocomplete>
-                </v-col>
-                <v-col cols="12" lg="6" md="6" sm="6">
-                    <div class="d-flex">
-                        <v-btn @click="downloadOrders(dateFilter)" prepend-icon="mdi-download" color="primary"
+                <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
+                    <div class="d-flex ms-3 mb-5">
+                        <v-btn @click="downloadTransactions(dateFilter)" prepend-icon="mdi-download" color="primary"
                             variant="tonal">XLS</v-btn>&nbsp;
-                        <v-btn @click="printOrders(dateFilter)" prepend-icon="mdi-printer" color="primary"
+                        <v-btn @click="printTransactions(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
-                        <v-btn class="ps-7 me-3" prepend-icon="mdi-refresh" color="primary" variant="tonal"
+                        <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
                             @click="$emit('refresh')" :loading="loading"></v-btn>
                     </div>
+                </v-col>
+                <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
+                    <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
+                        item-value="filter_date_id" label="Date Filter" class="mx-3"></v-autocomplete>
                 </v-col>
             </v-row>
         </template>
@@ -27,7 +27,7 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No orders found
+                <span>&nbsp; No transactions found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>
@@ -40,19 +40,18 @@
 
 <script>
 import { useLoadingStore } from '@/stores/loading';
-import { useOrdersStore } from '@/stores/ordersStore';
+import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 
 export default {
     name: 'OdersReportsTable',
     data() {
         return {
-            localOrders: [],
+            mappedTransactions: [],
             dateFilter: null,
-            loadingOrderReports: false,
-            ordersHeaders: [
+            transactionsHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Reference', value: 'reference_number', sortable: 'true', width: '15%' },
+                { title: 'Reference_number', value: 'reference_number', sortable: 'true', width: '15%' },
                 { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
                 { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
                 { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
@@ -72,14 +71,14 @@ export default {
         }
     },
     watch: {
-        orders: {
+        transactions: {
             handler(newVal) {
-                this.localOrders = newVal.map(order => this.formatOrder(order));
+                this.mappedTransactions = newVal.map(order => this.formatOrder(order));
             },
             immediate: true
         },
         dateFilter(newVal) {
-            this.fetchOrdersReport(newVal);
+            this.fetchTransactionsReport(newVal);
         },
     },
     computed: {
@@ -92,7 +91,7 @@ export default {
         Snackbar,
     },
     props: {
-        orders: {
+        transactions: {
             type: Array,
             default: () => []
         },
@@ -139,7 +138,7 @@ export default {
     ],
     setup() {
         const loadingStore = useLoadingStore();
-        const ordersStore = useOrdersStore();
+        const transactStore = useTransactStore();
         const currentDate = new Date().toLocaleDateString('en-PH', {
             year: 'numeric',
             month: 'long',
@@ -151,30 +150,30 @@ export default {
         const formatCurrentDate = currentDate.replace(/,/g, '');
         return {
             loadingStore,
-            ordersStore,
+            transactStore,
             formatCurrentDate,
         };
     },
     methods: {
-        async fetchOrdersReport(dateFilterId = null) {
+        async fetchTransactionsReport(dateFilterId = null) {
             try {
-                await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-                this.localOrders = this.ordersStore.orders.map(order => this.formatOrder(order));
+                await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
+                this.mappedTransactions = this.transactStore.transactions.map(order => this.formatOrder(order));
             } catch (error) {
-                this.showError("Error fetching orders!");
+                this.showError("Error fetching transactions!");
             }
         },
 
-        async downloadOrders(dateFilterId = null) {
-            await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-            if (this.ordersStore.orders.length === 0) {
-                alert('No orders available to download.');
+        async downloadTransactions(dateFilterId = null) {
+            await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
+            if (this.transactStore.transactions.length === 0) {
+                alert('No transactions available to download.');
                 return;
             } else {
-                this.loadingStore.show('Downloading orders...');
+                this.loadingStore.show('Downloading transactions...');
             }
-            const orders = this.ordersStore.orders.map(order => ({
-                'Reference #': order.reference_number,
+            const transactions = this.transactStore.transactions.map(order => ({
+                'Reference Number': order.reference_number,
                 'Quantity': order.total_quantity,
                 'Cash render': order.customer_cash,
                 'Charge': order.customer_charge,
@@ -184,7 +183,7 @@ export default {
             const headings = [
                 `Shop Name: ${this.shopName}`,
                 `Branch Name: ${this.branchName}`,
-                `Branch Loc: ${this.branchLocation}`,
+                `Branch Loccation: ${this.branchLocation}`,
                 `Contact: ${this.contact}`,
                 `Date: ${this.formatCurrentDate}`,
                 `Prepared by : ${this.adminName}`,
@@ -192,24 +191,24 @@ export default {
             ].join('\n');
             const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(orders[0]).join(",") + "\n"
-                + orders.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(transactions[0]).join(",") + "\n"
+                + transactions.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Orders_Report_${this.branchName}.csv`);
+            link.setAttribute("download", `Transactions_Report_${this.branchName}.csv`);
             document.body.appendChild(link); // Required for FF
-            this.showSuccess("Orders downloaded successfully!");
+            this.showSuccess("Transactions downloaded successfully!");
             link.click();
             this.loadingStore.hide();
             document.body.removeChild(link);
             // this.$emit('refresh');
         },
 
-        async printOrders(dateFilterId = null) {
-            await this.ordersStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-            if (this.ordersStore.orders.length === 0) {
-                alert('No orders available to print.');
+        async printTransactions(dateFilterId = null) {
+            await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
+            if (this.transactStore.transactions.length === 0) {
+                alert('No transactions available to print.');
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -220,7 +219,7 @@ export default {
             printWindow.document.write(`
                 <html>
                     <head>
-                        <title>Orders Report</title>
+                        <title>Transactions Report</title>
                         <style>
                             body { font-family: Arial, sans-serif; }
                             table { width: 100%; border-collapse: collapse; }
@@ -243,7 +242,7 @@ export default {
                             </div>
                             <h5>${this.formatCurrentDate}</h5>
                         </div>
-                        <p><strong>Orders Report for ${this.branchName} Branch</strong></p>
+                        <p><strong>Transactions Report for ${this.branchName} Branch</strong></p>
                         <table>
                             <tr>
                                 <th>Reference #</th>
@@ -253,7 +252,7 @@ export default {
                                 <th>Change</th>
                                 <th>Last Update</th>
                             </tr>
-                            ${this.ordersStore.orders.map(order => `
+                            ${this.transactStore.transactions.map(order => `
                                 <tr>
                                     <td>${order.reference_number}</td>
                                     <td>${order.total_quantity}</td>
