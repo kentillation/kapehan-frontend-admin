@@ -219,6 +219,22 @@
                                         :shop-logo-link="branchDetails.shop_logo_link"
                                         :admin-name="branchDetails.admin_name"
                                     />
+
+                                    <SalesReportsTableSkeleton v-if="loadingTransactionOrdersReports && activeReportsTab === 'transactions'" />
+                                    <SalesReportTable
+                                        v-else-if="activeReportsTab === 'sales'"
+                                        :transaction-orders="transactStore.transactionOrders"
+                                        :loading="loadingTransactionOrdersReports"
+                                        @refresh="onRefreshTransactionsReport"
+                                        :shop-id="branchDetails.shop_id"
+                                        :shop-name="branchDetails.shop_name"
+                                        :branch-id="branchDetails.branch_id"
+                                        :branch-name="branchDetails.branch_name"
+                                        :branch-location="branchDetails.branch_location"
+                                        :contact="branchDetails.contact"
+                                        :shop-logo-link="branchDetails.shop_logo_link"
+                                        :admin-name="branchDetails.admin_name"
+                                    />
                                 </div>
                             </transition>
                         </v-container>
@@ -255,6 +271,8 @@ import StocksReportTable from '@/components/StocksReportTable.vue';
 import StocksReportsTableSkeleton from '@/components/StocksReportsTableSkeleton.vue';
 import TransactionsReportTable from '@/components/TransactionsReportTable.vue';
 import TransactionsReportsTableSkeleton from '@/components/TransactionsReportsTableSkeleton.vue';
+import SalesReportTable from '@/components/SalesReportTable.vue';
+import SalesReportsTableSkeleton from '@/components/SalesReportsTableSkeleton.vue';
 
 
 export default {
@@ -277,6 +295,9 @@ export default {
         StocksReportsTableSkeleton,
         TransactionsReportTable,
         TransactionsReportsTableSkeleton,
+        SalesReportTable,
+        SalesReportsTableSkeleton,
+
     },
     data() {
         return {
@@ -332,6 +353,10 @@ export default {
             transactionReports: [],
             transactionReportsLoaded: false,
             loadingTransactionsReports: false,
+
+            transactionOrdersReports: [],
+            transactionOrdersReportsLoaded: false,
+            loadingTransactionOrdersReports: false,
 
             formValid: true,
             isSaving: false,
@@ -412,6 +437,7 @@ export default {
                 this.fetchProductsReport();
                 this.fetchStocksReport();
                 this.fetchTransactionsReport();
+                this.fetchTransactionOrdersReport();
             }
         }
     },
@@ -598,6 +624,31 @@ export default {
                 this.showError("Error fetching transactions!");
             } finally {
                 this.loadingTransactionsReports = false;
+            }
+        },
+
+        async fetchTransactionOrdersReport() {
+            this.loadingTransactionOrdersReports = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.transactionOrdersReports = [];
+                    return;
+                }
+                await this.transactStore.fetchAllTransactionsOrdersStore(this.branchDetails.branch_id);
+                if (this.transactStore.transactionOrders.length === 0) {
+                    this.transactionOrdersReports = [];
+                } else {
+                    this.transactionOrdersReports = this.transactStore.transactionOrders.map(t_orders => this.formatTransactions(t_orders));
+                }
+                this.transactionOrdersReportsLoaded = true;
+                this.loadingTransactionOrdersReports = false;
+            } catch (error) {
+                console.error('Error fetching transaction orders:', error);
+                this.showError("Error fetching transaction orders!");
+            } finally {
+                this.loadingTransactionOrdersReports = false;
             }
         },
 
@@ -833,6 +884,13 @@ export default {
             this.loadingTransactionsReports = true;
             setTimeout(() => {
                 this.fetchTransactionsReport();
+            }, 1000);
+        },
+
+        onRefreshTransactionsoOrdersReport() {
+            this.loadingTransactionOrdersReports = true;
+            setTimeout(() => {
+                this.fetchTransactionOrdersReport();
             }, 1000);
         },
         

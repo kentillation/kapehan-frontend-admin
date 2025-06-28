@@ -1,13 +1,13 @@
 <template>
-    <v-data-table :headers="transactionsHeaders" :items="mappedTransactions" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="transactionOrdersHeaders" :items="mappedTransactionOrders" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-row class="mt-5">
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
                     <div class="d-flex ms-3 mb-5">
-                        <v-btn @click="downloadTransactions(dateFilter)" prepend-icon="mdi-download" color="primary"
+                        <v-btn @click="downloadTransactionOrders(dateFilter)" prepend-icon="mdi-download" color="primary"
                             variant="tonal">XLS</v-btn>&nbsp;
-                        <v-btn @click="printTransactions(dateFilter)" prepend-icon="mdi-printer" color="primary"
+                        <v-btn @click="printTransactionOrders(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
                         <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
                             @click="$emit('refresh')" :loading="loading"></v-btn>
@@ -27,7 +27,7 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No transactions found
+                <span>&nbsp; No transaction orders found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>
@@ -44,18 +44,17 @@ import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 
 export default {
-    name: 'TransactionsReportsTable',
+    name: 'SalesReportTable',
     data() {
         return {
-            mappedTransactions: [],
+            mappedTransactionOrders: [],
             dateFilter: null,
-            transactionsHeaders: [
-                { title: 'Reference_number', value: 'reference_number', sortable: 'true', width: '15%' },
-                { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
-                { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
-                { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
-                { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
+            transactionOrdersHeaders: [
                 { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: 'Product', value: 'product_name', sortable: 'true', width: '15%' },
+                { title: 'Price', value: 'product_price', sortable: 'true', width: '15%' },
+                { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
+                { title: 'Total Price', value: 'total_price', sortable: 'true', width: '15%' },
             ],
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
@@ -72,12 +71,12 @@ export default {
     watch: {
         transactions: {
             handler(newVal) {
-                this.mappedTransactions = newVal.map(order => this.formatOrder(order));
+                this.mappedTransactionOrders = newVal.map(t_order => this.formatTransactionOrders(t_order));
             },
             immediate: true
         },
         dateFilter(newVal) {
-            this.fetchTransactionsReport(newVal);
+            this.fetchTransactionOrdersReport(newVal);
         },
     },
     computed: {
@@ -90,7 +89,7 @@ export default {
         Snackbar,
     },
     props: {
-        transactions: {
+        transactionOrders: {
             type: Array,
             default: () => []
         },
@@ -154,30 +153,29 @@ export default {
         };
     },
     methods: {
-        async fetchTransactionsReport(dateFilterId = null) {
+        async fetchTransactionOrdersReport(dateFilterId = null) {
             try {
-                await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
-                this.mappedTransactions = this.transactStore.transactions.map(order => this.formatOrder(order));
+                await this.transactStore.fetchAllTransactionsOrdersStore(this.branchId, dateFilterId);
+                this.mappedTransactionOrders = this.transactStore.transactionOrders.map(t_order => this.formatTransactionOrders(t_order));
             } catch (error) {
-                this.showError("Error fetching transactions!");
+                this.showError("Error fetching transaction orders!");
             }
         },
 
-        async downloadTransactions(dateFilterId = null) {
-            await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
-            if (this.transactStore.transactions.length === 0) {
-                alert('No transactions available to download.');
+        async downloadTransactionOrders(dateFilterId = null) {
+            await this.transactStore.fetchAllTransactionsOrdersStore(this.branchId, dateFilterId);
+            if (this.transactStore.transactionOrders.length === 0) {
+                alert('No transaction orders available to download.');
                 return;
             } else {
-                this.loadingStore.show('Downloading transactions...');
+                this.loadingStore.show('Downloading transaction orders...');
             }
-            const transactions = this.transactStore.transactions.map(order => ({
-                'Reference Number': order.reference_number,
-                'Quantity': order.total_quantity,
-                'Cash render': order.customer_cash,
-                'Charge': order.customer_charge,
-                'Change': order.customer_change,
-                'Last Update': this.formatDateTime(order.updated_at),
+            const transactionOrders = this.transactStore.transactionOrders.map(t_order => ({
+                'Last Update': this.formatDateTime(t_order.updated_at),
+                'Product': t_order.product_name,
+                'Price': t_order.product_price,
+                'Total_quantity': t_order.total_quantity,
+                'Total_price': t_order.total_price,
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
@@ -190,8 +188,8 @@ export default {
             ].join('\n');
             const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(transactions[0]).join(",") + "\n"
-                + transactions.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(transactionOrders[0]).join(",") + "\n"
+                + transactionOrders.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -204,10 +202,10 @@ export default {
             // this.$emit('refresh');
         },
 
-        async printTransactions(dateFilterId = null) {
-            await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
-            if (this.transactStore.transactions.length === 0) {
-                alert('No transactions available to print.');
+        async printTransactionOrders(dateFilterId = null) {
+            await this.transactStore.fetchAllTransactionsOrdersStore(this.branchId, dateFilterId);
+            if (this.transactStore.transactionOrders.length === 0) {
+                alert('No transactionOrders available to print.');
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -244,21 +242,19 @@ export default {
                         <p><strong>Transactions Report for ${this.branchName} Branch</strong></p>
                         <table>
                             <tr>
-                                <th>Reference #</th>
+                                <th>Last Update</th>
                                 <th>Quantity</th>
                                 <th>Cash render</th>
                                 <th>Charge</th>
                                 <th>Change</th>
-                                <th>Last Update</th>
                             </tr>
-                            ${this.transactStore.transactions.map(order => `
+                            ${this.transactStore.transactionOrders.map(t_order => `
                                 <tr>
-                                    <td>${order.reference_number}</td>
-                                    <td>${order.total_quantity}</td>
-                                    <td>${order.customer_cash}</td>
-                                    <td>₱${order.customer_charge}</td>
-                                    <td>₱${order.customer_change}</td>
-                                    <td>${this.formatDateTime(order.updated_at)}</td>
+                                    <td>${this.formatDateTime(t_order.updated_at)}</td>
+                                    <td>${t_order.product_name}</td>
+                                    <td>${t_order.product_price}</td>
+                                    <td>₱${t_order.total_quantity}</td>
+                                    <td>₱${t_order.total_price}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -285,13 +281,12 @@ export default {
             });
         },
 
-        formatOrder(order) {
+        formatTransactionOrders(t_order) {
             return {
-                ...order,
-                display_customer_cash: `₱${order.customer_cash}`,
-                display_customer_charge: `₱${order.customer_charge}`,
-                display_customer_change: `₱${order.customer_change}`,
-                updated_at: this.formatDateTime(order.updated_at),
+                ...t_order,
+                updated_at: this.formatDateTime(t_order.updated_at),
+                display_product_price: `₱${t_order.product_price}`,
+                display_total_price: `₱${t_order.total_price}`,
             };
         },
 
