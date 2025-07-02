@@ -23,14 +23,13 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
-                                                                <v-icon class="text-brown-darken-1" size="100">mdi-account-cash</v-icon>
+                                                                <v-icon class="text-brown-darken-1" size="80">mdi-account-cash</v-icon>
                                                             </div>
-                                                            
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
-                                                                <h3 class="text-brown-lighten-2 ms-3">Sales</h3>
-                                                                <h1 class="ms-3 mt-2">2,315</h1>
+                                                                <h3 class="text-brown-lighten-2">Sales</h3>
+                                                                <h2 class="mt-2">₱{{ totalSales }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToSalesTab()">
@@ -49,13 +48,13 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
-                                                                <v-icon class="text-brown-darken-1" size="100">mdi-invoice-text-outline</v-icon>
+                                                                <v-icon class="text-brown-darken-1" size="80">mdi-invoice-text-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2 ms-3">Orders</h3>
-                                                                <h1 class="ms-3 mt-2">1,665</h1>
+                                                                <h3 class="text-brown-lighten-2">Orders</h3>
+                                                                <h2 class="mt-2">{{ totalOrders }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToOrdersTab()">
@@ -74,13 +73,13 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
-                                                                <v-icon class="text-brown-darken-1" size="100">mdi-food-outline</v-icon>
+                                                                <v-icon class="text-brown-darken-1" size="80">mdi-food-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2 ms-3">Products</h3>
-                                                                <h1 class="ms-3 mt-2">356</h1>
+                                                                <h3 class="text-brown-lighten-2">Products</h3>
+                                                                <h2 class="mt-2">{{ totalProducts }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToProductsTab()">
@@ -99,13 +98,13 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
-                                                                <v-icon class="text-brown-darken-1" size="100">mdi-archive-outline</v-icon>
+                                                                <v-icon class="text-brown-darken-1" size="80">mdi-archive-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2 ms-3">Stocks</h3>
-                                                                <h1 class="ms-3 mt-2">1,112</h1>
+                                                                <h3 class="text-brown-lighten-2">Stocks</h3>
+                                                                <h2 class="mt-2">{{ totalStocks }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" type="button"
@@ -210,7 +209,7 @@
                                             <SalesReportsTableSkeleton
                                                 v-if="loadingTransactionOrdersReports && activeReportsTab === 'sales'" />
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
-                                                :sales-data="transactStore.salesData" :loading="loadingTransactionOrdersReports"
+                                                :sales-by-date="transactStore.salesByDate" :loading="loadingTransactionOrdersReports"
                                                 @refresh="fetchSalesReport" :shop-id="branchDetails.shop_id"
                                                 :shop-name="branchDetails.shop_name" :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
@@ -322,6 +321,12 @@ export default {
             branchDetails: {},
             loadingBranchDetails: false,
 
+            // Dashboard
+            totalSales: '100,226',
+            totalOrders: '1,655',
+            totalProducts: '356',
+            totalStocks: '1,112',
+
             // Products
             products: [],
             editProduct: [],
@@ -371,8 +376,8 @@ export default {
             transactionReportsLoaded: false,
             loadingTransactionsReports: false,
 
-            salesDataReports: [],
-            salesDataReportsLoaded: false,
+            salesByDateReports: [],
+            salesByDateReportsLoaded: false,
             loadingTransactionOrdersReports: false,
 
             formValid: true,
@@ -433,6 +438,12 @@ export default {
             }
         }
     },
+    mounted() {
+        this.totalSales = '100,226';
+        this.totalOrders = '1,655';
+        this.totalProducts = '356';
+        this.totalStocks = '1,112';
+    },
     watch: {
         '$route.params.branchName': {
             immediate: true,
@@ -446,7 +457,12 @@ export default {
             }
         },
         activeTab(newTab) {
-            if (newTab === 'products') {
+            if (newTab === 'dashboard') {
+                this.totalSales = '100,226';
+                this.totalOrders = '1,655';
+                this.totalProducts = '356';
+                this.totalStocks = '1,112';
+            } else if (newTab === 'products') {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {
                 this.fetchStocks();
@@ -499,8 +515,6 @@ export default {
             this.activeTab = 'reports';
             this.activeReportsTab = 'stocks';
         },
-
-        
 
         switchToBranchInfoTab() {
             this.activeTab = 'branch_info';
@@ -660,16 +674,16 @@ export default {
                 this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.salesDataReports = [];
+                    this.salesByDateReports = [];
                     return;
                 }
                 await this.transactStore.fetchSalesStore(this.branchDetails.branch_id);
-                if (this.transactStore.salesData.length === 0) {
-                    this.salesDataReports = [];
+                if (this.transactStore.salesByDate.length === 0) {
+                    this.salesByDateReports = [];
                 } else {
-                    this.salesDataReports = this.transactStore.salesData.map(t_orders => this.formatTransactions(t_orders));
+                    this.salesByDateReports = this.transactStore.salesByDate.map(t_orders => this.formatTransactions(t_orders));
                 }
-                this.salesDataReportsLoaded = true;
+                this.salesByDateReportsLoaded = true;
                 this.loadingTransactionOrdersReports = false;
             } catch (error) {
                 console.error('Error fetching sales:', error);
@@ -832,6 +846,7 @@ export default {
                 display_customer_cash: `₱${transaction.customer_cash}`,
                 display_customer_charge: `₱${transaction.customer_charge}`,
                 display_customer_change: `₱${transaction.customer_change}`,
+                display_total_quantity: transaction.total_quantity,
                 updated_at: this.formatDateTime(transaction.updated_at),
             };
         },

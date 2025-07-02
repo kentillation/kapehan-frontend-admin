@@ -3,7 +3,7 @@ import apiClient from '../axios';
 export const TRANSACT_API = {
     ENDPOINTS: {
         FETCH: '/transactions',
-        FETCH_SALES: '/sales',
+        FETCH_SALES: '/sales-by-date',
     },
 
     async fetchAllTransactionsApi(branchId, dateFilterId = null) {

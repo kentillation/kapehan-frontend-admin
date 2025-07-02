@@ -4,7 +4,7 @@ import { TRANSACT_API } from '@/api/transactApi';
 export const useTransactStore = defineStore('transactions', {
     state: () => ({
         transactions: [],
-        salesData: [],
+        salesByDate: [],
         loading: false,
         error: null
     }),
@@ -34,7 +34,7 @@ export const useTransactStore = defineStore('transactions', {
             try {
                 const response = await TRANSACT_API.fetchSalesApi(branchId, dateFilterId);
                 if (response && response.status === true) {
-                    this.salesData = response.data;
+                    this.salesByDate = response.data;
                 } else {
                     throw new Error(response?.message || 'Failed to fetch sales');
                 }

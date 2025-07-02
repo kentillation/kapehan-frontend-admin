@@ -52,7 +52,7 @@ export default {
             salesReportHeaders: [
                 { title: 'Product', value: 'display_product_name', sortable: 'true', width: '15%' },
                 { title: 'Price', value: 'display_product_price', sortable: 'true', width: '15%' },
-                { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
+                { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '15%' },
                 { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
                 { title: 'Sales', value: 'display_sales', sortable: 'true', width: '15%' },
                 { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
@@ -70,7 +70,7 @@ export default {
         }
     },
     watch: {
-        salesData: {
+        salesByDate: {
             handler(newVal) {
                 this.mappedSales = newVal.map(sale => this.formatSales(sale));
             },
@@ -90,7 +90,7 @@ export default {
         Snackbar,
     },
     props: {
-        salesData: {
+        salesByDate: {
             type: Array,
             default: () => []
         },
@@ -157,7 +157,7 @@ export default {
         async fetchSalesReport(dateFilterId = null) {
             try {
                 await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
-                this.mappedSales = this.transactStore.salesData.map(t_order => this.formatSales(t_order));
+                this.mappedSales = this.transactStore.salesByDate.map(t_order => this.formatSales(t_order));
             } catch (error) {
                 this.showError("Error fetching sales!");
             }
@@ -165,13 +165,13 @@ export default {
 
         async downloadSales(dateFilterId = null) {
             await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
-            if (this.transactStore.salesData.length === 0) {
+            if (this.transactStore.salesByDate.length === 0) {
                 this.showError("No sales available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading sales...');
             }
-            const salesData = this.transactStore.salesData.map(t_order => ({
+            const salesByDate = this.transactStore.salesByDate.map(t_order => ({
                 'Product name': t_order.product_name,
                 'Product price': t_order.product_price,
                 'Total quantity': t_order.total_quantity,
@@ -190,8 +190,8 @@ export default {
             ].join('\n');
             const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(salesData[0]).join(",") + "\n"
-                + salesData.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(salesByDate[0]).join(",") + "\n"
+                + salesByDate.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -206,7 +206,7 @@ export default {
 
         async printSales(dateFilterId = null) {
             await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
-            if (this.transactStore.salesData.length === 0) {
+            if (this.transactStore.salesByDate.length === 0) {
                 this.showError("No sales available to print.");
                 return;
             }
@@ -252,7 +252,7 @@ export default {
                                 <th>Sales</th>
                                 <th>Date</th>
                             </tr>
-                            ${this.transactStore.salesData.map(t_order => `
+                            ${this.transactStore.salesByDate.map(t_order => `
                                 <tr>
                                     <td>${t_order.product_name}${t_order.temp_label}${t_order.size_label}</td>
                                     <td>₱${t_order.product_price}</td>
@@ -292,6 +292,7 @@ export default {
                 display_product_name: `${sale.product_name}${sale.temp_label}${sale.size_label}`,
                 updated_at: this.formatDateTime(sale.updated_at),
                 display_product_price: `₱${sale.product_price}`,
+                display_total_quantity: sale.total_quantity,
                 display_sales: `₱${sale.sales}`,
             };
         },

@@ -51,7 +51,7 @@ export default {
             dateFilter: null,
             transactionsHeaders: [
                 { title: 'Reference_number', value: 'reference_number', sortable: 'true', width: '15%' },
-                { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
+                { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '15%' },
                 { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
                 { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
                 { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
@@ -292,6 +292,7 @@ export default {
                 display_customer_cash: `₱${order.customer_cash}`,
                 display_customer_charge: `₱${order.customer_charge}`,
                 display_customer_change: `₱${order.customer_change}`,
+                display_total_quantity: order.total_quantity,
                 updated_at: this.formatDateTime(order.updated_at),
             };
         },
