@@ -255,7 +255,7 @@ export default {
                                 <tr>
                                     <td>${order.reference_number}</td>
                                     <td>${order.total_quantity}</td>
-                                    <td>${order.customer_cash}</td>
+                                    <td>₱${order.customer_cash}</td>
                                     <td>₱${order.customer_charge}</td>
                                     <td>₱${order.customer_change}</td>
                                     <td>${this.formatDateTime(order.updated_at)}</td>

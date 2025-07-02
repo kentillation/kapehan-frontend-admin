@@ -220,10 +220,10 @@
                                         :admin-name="branchDetails.admin_name"
                                     />
 
-                                    <SalesReportsTableSkeleton v-if="loadingTransactionOrdersReports && activeReportsTab === 'transactions'" />
+                                    <SalesReportsTableSkeleton v-if="loadingTransactionOrdersReports && activeReportsTab === 'sales'" />
                                     <SalesReportTable
                                         v-else-if="activeReportsTab === 'sales'"
-                                        :transaction-orders="transactStore.transactionOrders"
+                                        :transaction-orders="transactStore.salesData"
                                         :loading="loadingTransactionOrdersReports"
                                         @refresh="onRefreshTransactionsReport"
                                         :shop-id="branchDetails.shop_id"
@@ -354,8 +354,8 @@ export default {
             transactionReportsLoaded: false,
             loadingTransactionsReports: false,
 
-            transactionOrdersReports: [],
-            transactionOrdersReportsLoaded: false,
+            salesDataReports: [],
+            salesDataReportsLoaded: false,
             loadingTransactionOrdersReports: false,
 
             formValid: true,
@@ -437,7 +437,7 @@ export default {
                 this.fetchProductsReport();
                 this.fetchStocksReport();
                 this.fetchTransactionsReport();
-                this.fetchTransactionOrdersReport();
+                this.fetchSalesReport();
             }
         }
     },
@@ -627,26 +627,26 @@ export default {
             }
         },
 
-        async fetchTransactionOrdersReport() {
+        async fetchSalesReport() {
             this.loadingTransactionOrdersReports = true;
             try {
                 this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.transactionOrdersReports = [];
+                    this.salesDataReports = [];
                     return;
                 }
-                await this.transactStore.fetchAllTransactionsOrdersStore(this.branchDetails.branch_id);
-                if (this.transactStore.transactionOrders.length === 0) {
-                    this.transactionOrdersReports = [];
+                await this.transactStore.fetchSalesStore(this.branchDetails.branch_id);
+                if (this.transactStore.salesData.length === 0) {
+                    this.salesDataReports = [];
                 } else {
-                    this.transactionOrdersReports = this.transactStore.transactionOrders.map(t_orders => this.formatTransactions(t_orders));
+                    this.salesDataReports = this.transactStore.salesData.map(t_orders => this.formatTransactions(t_orders));
                 }
-                this.transactionOrdersReportsLoaded = true;
+                this.salesDataReportsLoaded = true;
                 this.loadingTransactionOrdersReports = false;
             } catch (error) {
-                console.error('Error fetching transaction orders:', error);
-                this.showError("Error fetching transaction orders!");
+                console.error('Error fetching sales:', error);
+                this.showError("Error fetching sales!");
             } finally {
                 this.loadingTransactionOrdersReports = false;
             }
@@ -890,7 +890,7 @@ export default {
         onRefreshTransactionsoOrdersReport() {
             this.loadingTransactionOrdersReports = true;
             setTimeout(() => {
-                this.fetchTransactionOrdersReport();
+                this.fetchSalesReport();
             }, 1000);
         },
         

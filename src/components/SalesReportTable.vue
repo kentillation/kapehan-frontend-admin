@@ -1,13 +1,13 @@
 <template>
-    <v-data-table :headers="transactionOrdersHeaders" :items="mappedTransactionOrders" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="salesReportHeaders" :items="mappedSales" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-row class="mt-5">
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
                     <div class="d-flex ms-3 mb-5">
-                        <v-btn @click="downloadTransactionOrders(dateFilter)" prepend-icon="mdi-download" color="primary"
+                        <v-btn @click="downloadSales(dateFilter)" prepend-icon="mdi-download" color="primary"
                             variant="tonal">XLS</v-btn>&nbsp;
-                        <v-btn @click="printTransactionOrders(dateFilter)" prepend-icon="mdi-printer" color="primary"
+                        <v-btn @click="printSales(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
                         <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
                             @click="$emit('refresh')" :loading="loading"></v-btn>
@@ -27,7 +27,7 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No transaction orders found
+                <span>&nbsp; No sales found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>
@@ -47,14 +47,15 @@ export default {
     name: 'SalesReportTable',
     data() {
         return {
-            mappedTransactionOrders: [],
+            mappedSales: [],
             dateFilter: null,
-            transactionOrdersHeaders: [
-                { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '25%' },
+            salesReportHeaders: [
+                { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
                 { title: 'Product', value: 'product_name', sortable: 'true', width: '15%' },
-                { title: 'Price', value: 'product_price', sortable: 'true', width: '15%' },
+                { title: 'Price', value: 'display_product_price', sortable: 'true', width: '15%' },
                 { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
-                { title: 'Total Price', value: 'total_price', sortable: 'true', width: '15%' },
+                { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
+                { title: 'Sales', value: 'display_sales', sortable: 'true', width: '15%' },
             ],
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
@@ -69,9 +70,9 @@ export default {
         }
     },
     watch: {
-        transactions: {
+        salesData: {
             handler(newVal) {
-                this.mappedTransactionOrders = newVal.map(t_order => this.formatTransactionOrders(t_order));
+                this.mappedSales = newVal.map(t_order => this.formatTransactionOrders(t_order));
             },
             immediate: true
         },
@@ -89,7 +90,7 @@ export default {
         Snackbar,
     },
     props: {
-        transactionOrders: {
+        salesData: {
             type: Array,
             default: () => []
         },
@@ -155,22 +156,22 @@ export default {
     methods: {
         async fetchTransactionOrdersReport(dateFilterId = null) {
             try {
-                await this.transactStore.fetchAllTransactionsOrdersStore(this.branchId, dateFilterId);
-                this.mappedTransactionOrders = this.transactStore.transactionOrders.map(t_order => this.formatTransactionOrders(t_order));
+                await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
+                this.mappedSales = this.transactStore.salesData.map(t_order => this.formatTransactionOrders(t_order));
             } catch (error) {
-                this.showError("Error fetching transaction orders!");
+                this.showError("Error fetching sales!");
             }
         },
 
-        async downloadTransactionOrders(dateFilterId = null) {
-            await this.transactStore.fetchAllTransactionsOrdersStore(this.branchId, dateFilterId);
-            if (this.transactStore.transactionOrders.length === 0) {
-                alert('No transaction orders available to download.');
+        async downloadSales(dateFilterId = null) {
+            await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
+            if (this.transactStore.salesData.length === 0) {
+                alert('No sales available to download.');
                 return;
             } else {
-                this.loadingStore.show('Downloading transaction orders...');
+                this.loadingStore.show('Downloading sales...');
             }
-            const transactionOrders = this.transactStore.transactionOrders.map(t_order => ({
+            const salesData = this.transactStore.salesData.map(t_order => ({
                 'Last Update': this.formatDateTime(t_order.updated_at),
                 'Product': t_order.product_name,
                 'Price': t_order.product_price,
@@ -188,8 +189,8 @@ export default {
             ].join('\n');
             const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(transactionOrders[0]).join(",") + "\n"
-                + transactionOrders.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(salesData[0]).join(",") + "\n"
+                + salesData.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -202,10 +203,10 @@ export default {
             // this.$emit('refresh');
         },
 
-        async printTransactionOrders(dateFilterId = null) {
-            await this.transactStore.fetchAllTransactionsOrdersStore(this.branchId, dateFilterId);
-            if (this.transactStore.transactionOrders.length === 0) {
-                alert('No transactionOrders available to print.');
+        async printSales(dateFilterId = null) {
+            await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
+            if (this.transactStore.salesData.length === 0) {
+                alert('No salesData available to print.');
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -239,22 +240,25 @@ export default {
                             </div>
                             <h5>${this.formatCurrentDate}</h5>
                         </div>
-                        <p><strong>Transactions Report for ${this.branchName} Branch</strong></p>
+                        <p><strong>Sales Report for ${this.branchName} Branch</strong></p>
+                        <p>As of ${ this.selectedFilterLabel }</p>
                         <table>
                             <tr>
-                                <th>Last Update</th>
-                                <th>Quantity</th>
-                                <th>Cash render</th>
-                                <th>Charge</th>
-                                <th>Change</th>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantiy</th>
+                                <th>Category</th>
+                                <th>Sales</th>
                             </tr>
-                            ${this.transactStore.transactionOrders.map(t_order => `
+                            ${this.transactStore.salesData.map(t_order => `
                                 <tr>
                                     <td>${this.formatDateTime(t_order.updated_at)}</td>
                                     <td>${t_order.product_name}</td>
-                                    <td>${t_order.product_price}</td>
-                                    <td>₱${t_order.total_quantity}</td>
-                                    <td>₱${t_order.total_price}</td>
+                                    <td>₱${t_order.product_price}</td>
+                                    <td>${t_order.total_quantity } ${ t_order.total_quantity > 1 ? 'items' : 'item'} </td>
+                                    <td>${t_order.category_label}</td>
+                                    <td>₱${t_order.sales}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -286,7 +290,7 @@ export default {
                 ...t_order,
                 updated_at: this.formatDateTime(t_order.updated_at),
                 display_product_price: `₱${t_order.product_price}`,
-                display_total_price: `₱${t_order.total_price}`,
+                display_sales: `₱${t_order.sales}`,
             };
         },
 

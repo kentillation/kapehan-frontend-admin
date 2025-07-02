@@ -2,7 +2,8 @@ import apiClient from '../axios';
 
 export const TRANSACT_API = {
     ENDPOINTS: {
-        FETCH: '/transaction-orders',
+        FETCH: '/transactions',
+        FETCH_SALES: '/transaction-orders',
     },
 
     async fetchAllTransactionsApi(branchId, dateFilterId = null) {
@@ -30,13 +31,13 @@ export const TRANSACT_API = {
             throw error;
         }
     },
-    async fetchAllTransactionsOrdersApi(branchId, dateFilterId = null) {
+    async fetchSalesApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
-            let endpoint = `${this.ENDPOINTS.FETCH}/${branchId}`;
+            let endpoint = `${this.ENDPOINTS.FETCH_SALES}/${branchId}`;
             if (dateFilterId) {
                 endpoint += `?date_filter=${dateFilterId}`;
             }
@@ -51,7 +52,7 @@ export const TRANSACT_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[fetchAllTransactionsOrdersApi] Error fetching transaction orders:', error);
+            console.error('[fetchSalesApi] Error fetching sales:', error);
             throw error;
         }
     },
