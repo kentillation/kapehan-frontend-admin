@@ -118,6 +118,16 @@
                                         </v-col>
                                     </v-row>
                                 </v-container>
+
+                                <!-- Sales Visualization -->
+                                 <v-container class="mt-5">
+                                    <h3>Sales Analytics</h3>
+                                    <v-card>
+                                        <v-card-text>
+                                            <SalesChart :sales-by-date="transactStore.salesByDate" />
+                                        </v-card-text>
+                                    </v-card>
+                                 </v-container>
                             </v-tabs-window-item>
 
                             <!-- Products -->
@@ -289,7 +299,7 @@ import TransactionsReportTable from '@/components/TransactionsReportTable.vue';
 import TransactionsReportsTableSkeleton from '@/components/TransactionsReportsTableSkeleton.vue';
 import SalesReportTable from '@/components/SalesReportTable.vue';
 import SalesReportsTableSkeleton from '@/components/SalesReportsTableSkeleton.vue';
-
+import SalesChart from '@/components/SalesChart.vue';
 
 export default {
     name: 'BranchView',
@@ -313,7 +323,7 @@ export default {
         TransactionsReportsTableSkeleton,
         SalesReportTable,
         SalesReportsTableSkeleton,
-
+        SalesChart,
     },
     data() {
         return {
@@ -453,6 +463,7 @@ export default {
                     this.fetchOrdersOnly();
                     this.fetchProductsOnly();
                     this.fetchStocksOnly();
+                    this.fetchSalesReport();
                 }
             }
         },
@@ -462,6 +473,7 @@ export default {
                 this.fetchOrdersOnly();
                 this.fetchProductsOnly();
                 this.fetchStocksOnly();
+                this.fetchSalesReport();
             } else if (newTab === 'products') {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {
