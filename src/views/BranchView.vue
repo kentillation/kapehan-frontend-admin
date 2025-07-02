@@ -324,9 +324,9 @@ export default {
             // Dashboard
             totalSales: '',
             loadingSales: false,
-            totalOrders: '1,655',
-            totalProducts: '356',
-            totalStocks: '1,112',
+            totalOrders: '',
+            totalProducts: '',
+            totalStocks: '',
 
             // Products
             products: [],
@@ -439,30 +439,26 @@ export default {
             }
         }
     },
-    mounted() {
-        this.fetchSalesOnly();
-        this.totalOrders = '1,655';
-        this.totalProducts = '356';
-        this.totalStocks = '1,112';
-    },
     watch: {
         '$route.params.branchName': {
             immediate: true,
             async handler(newBranchName) {
                 if (newBranchName) {
                     await this.fetchBranchDetails();
-                    // if (!this.productsLoaded) await this.fetchProducts();
-                    // if (!this.stocksLoaded) await this.fetchStocks();
                     this.activeTab = "dashboard";
+                    this.fetchSalesOnly();
+                    this.fetchOrdersOnly();
+                    this.fetchProductsOnly();
+                    this.fetchStocksOnly();
                 }
             }
         },
         activeTab(newTab) {
             if (newTab === 'dashboard') {
                 this.fetchSalesOnly();
-                this.totalOrders = '1,655';
-                this.totalProducts = '356';
-                this.totalStocks = '1,112';
+                this.fetchOrdersOnly();
+                this.fetchProductsOnly();
+                this.fetchStocksOnly();
             } else if (newTab === 'products') {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {
@@ -702,7 +698,7 @@ export default {
                     this.totalSales = '';
                     return;
                 }
-                await this.transactStore.fetchSalesStore(this.branchDetails.branch_id);
+                await this.transactStore.fetchSalesOnlyStore(this.branchDetails.branch_id);
                 if (this.transactStore.salesOnly.length === 0) {
                     this.totalSales = '';
                 } else {
@@ -710,10 +706,79 @@ export default {
                 }
                 this.loadingSales = false;
             } catch (error) {
-                console.error('Error fetching sales:', error);
-                this.showError("Error fetching sales!");
+                console.error('Error fetching total sales:', error);
+                this.showError("Error fetching total sales!");
             } finally {
                 this.loadingSales = false;
+            }
+        },
+
+        async fetchOrdersOnly() {
+            this.loadingOrdersOnly = true;
+            try {
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.totalOrders = '';
+                    return;
+                }
+                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id);
+                if (this.transactStore.ordersOnly.length === 0) {
+                    this.totalOrders = '';
+                } else {
+                    this.totalOrders = this.transactStore.ordersOnly.total_orders;
+                }
+                this.loadingOrdersOnly = false;
+            } catch (error) {
+                console.error('Error fetching total orders:', error);
+                this.showError("Error fetching total orders!");
+            } finally {
+                this.loadingOrdersOnly = false;
+            }
+        },
+
+        async fetchProductsOnly() {
+            this.loadingOrdersOnly = true;
+            try {
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.totalProducts = '';
+                    return;
+                }
+                await this.transactStore.fetchProductsOnlyStore(this.branchDetails.branch_id);
+                if (this.transactStore.productsOnly.length === 0) {
+                    this.totalProducts = '';
+                } else {
+                    this.totalProducts = this.transactStore.productsOnly.total_products;
+                }
+                this.loadingOrdersOnly = false;
+            } catch (error) {
+                console.error('Error fetching total products:', error);
+                this.showError("Error fetching total products!");
+            } finally {
+                this.loadingOrdersOnly = false;
+            }
+        },
+
+        async fetchStocksOnly() {
+            this.loadingOrdersOnly = true;
+            try {
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.totalStocks = '';
+                    return;
+                }
+                await this.transactStore.fetchStocksOnlyStore(this.branchDetails.branch_id);
+                if (this.transactStore.stocksOnly.length === 0) {
+                    this.totalStocks = '';
+                } else {
+                    this.totalStocks = this.transactStore.stocksOnly.total_stocks;
+                }
+                this.loadingOrdersOnly = false;
+            } catch (error) {
+                console.error('Error fetching total stocks:', error);
+                this.showError("Error fetching total stocks!");
+            } finally {
+                this.loadingOrdersOnly = false;
             }
         },
 

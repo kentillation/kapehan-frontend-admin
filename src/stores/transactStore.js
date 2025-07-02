@@ -6,6 +6,9 @@ export const useTransactStore = defineStore('transactions', {
         transactions: [],
         salesByDate: [],
         salesOnly: '',
+        ordersOnly: '',
+        productsOnly: '',
+        stocksOnly: '',
         loading: false,
         error: null
     }),
@@ -48,8 +51,8 @@ export const useTransactStore = defineStore('transactions', {
                 this.loading = false;
             }
         },
-        
-        async fetchSalesStore(branchId) {
+
+        async fetchSalesOnlyStore(branchId) {
             this.loading = true;
             this.error = null;
             try {
@@ -62,6 +65,63 @@ export const useTransactStore = defineStore('transactions', {
             } catch (error) {
                 console.error('Error in fetchSalesApi:', error);
                 this.error = error.message || 'Failed to fetch sales';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchOrdersOnlyStore(branchId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await TRANSACT_API.fetchOrdersApi(branchId);
+                if (response && response.status === true) {
+                    this.ordersOnly = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch sales');
+                }
+            } catch (error) {
+                console.error('Error in fetchOrdersApi:', error);
+                this.error = error.message || 'Failed to fetch sales';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchProductsOnlyStore(branchId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await TRANSACT_API.fetchProductsOnlyApi(branchId);
+                if (response && response.status === true) {
+                    this.productsOnly = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch products');
+                }
+            } catch (error) {
+                console.error('Error in fetchProductsOnlyApi:', error);
+                this.error = error.message || 'Failed to fetch products';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchStocksOnlyStore(branchId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await TRANSACT_API.fetchStocksOnlyApi(branchId);
+                if (response && response.status === true) {
+                    this.stocksOnly = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch products');
+                }
+            } catch (error) {
+                console.error('Error in fetchStocksOnlyApi:', error);
+                this.error = error.message || 'Failed to fetch products';
                 throw error;
             } finally {
                 this.loading = false;
