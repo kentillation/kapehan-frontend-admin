@@ -124,7 +124,7 @@
                                     <h3>Sales Analytics</h3>
                                     <v-card>
                                         <v-card-text>
-                                            <SalesChart :sales-by-date="transactStore.salesByDate" />
+                                            <SalesChart :sales-by-month="salesByMonthReports" @month-changed="fetchSalesByMonthReport" />
                                         </v-card-text>
                                     </v-card>
                                  </v-container>
@@ -394,6 +394,9 @@ export default {
             salesByDateReportsLoaded: false,
             loadingTransactionOrdersReports: false,
 
+            salesByMonthReports: [],
+            loadingSalesByMonthReports: false,
+
             formValid: true,
             isSaving: false,
             availabilityOptions: [
@@ -463,7 +466,7 @@ export default {
                     this.fetchOrdersOnly();
                     this.fetchProductsOnly();
                     this.fetchStocksOnly();
-                    this.fetchSalesReport();
+                    this.fetchSalesByMonthReport();
                 }
             }
         },
@@ -473,7 +476,7 @@ export default {
                 this.fetchOrdersOnly();
                 this.fetchProductsOnly();
                 this.fetchStocksOnly();
-                this.fetchSalesReport();
+                this.fetchSalesByMonthReport();
             } else if (newTab === 'products') {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {
@@ -702,6 +705,26 @@ export default {
                 this.showError("Error fetching sales!");
             } finally {
                 this.loadingTransactionOrdersReports = false;
+            }
+        },
+
+        async fetchSalesByMonthReport(month = null) {
+            this.loadingSalesByMonthReports = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.salesByMonthReports = [];
+                    return;
+                }
+                await this.transactStore.fetchSalesByMonthStore(this.branchDetails.branch_id, month);
+                this.salesByMonthReports = this.transactStore.salesByMonth || [];
+                this.salesByMonthReportsLoaded = true;
+            } catch (error) {
+                console.error('Error fetching sales:', error);
+                this.showError("Error fetching sales!");
+            } finally {
+                this.loadingSalesByMonthReports = false;
             }
         },
 

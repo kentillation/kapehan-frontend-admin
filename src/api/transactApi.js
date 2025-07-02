@@ -8,6 +8,8 @@ export const TRANSACT_API = {
         FETCH_ORDERS: '/orders-only',
         FETCH_PRODUCTS: '/products-only',
         FETCH_STOCKS: '/stocks-only',
+        FETCH_SALES_BY_MONTH: '/sales-by-month',
+
     },
 
     async fetchAllTransactionsApi(branchId, dateFilterId = null) {
@@ -153,4 +155,28 @@ export const TRANSACT_API = {
             throw error;
         }
     },
+
+    async fetchSalesByMonthApi(branchId, dateFilterId = null) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) throw new Error('No authentication token found');
+            let endpoint = `${this.ENDPOINTS.FETCH_SALES_BY_MONTH}/${branchId}`;
+            if (dateFilterId) {
+                endpoint += `?date_filter=${dateFilterId}`;
+            }
+            const response = await apiClient.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[fetchSalesByMonthApi] Error fetching sales:', error);
+            throw error;
+        }
+    }
 };

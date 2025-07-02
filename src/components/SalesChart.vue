@@ -1,19 +1,9 @@
 <template>
     <div>
-        <v-select v-model="selectedMonth" 
-            :items="monthOptions" 
-            item-title="title"
-            item-value="value"
-            label="Select Month" 
-            class="mb-4" 
-            dense 
-            outlined
-            style="max-width: 200px"
-            />
-        <Bar v-if="chartData" 
-            :data="chartData" 
-            :options="chartOptions" 
-            style="max-height: 350px" />
+        <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
+            label="Select Month" class="mb-4" dense outlined style="max-width: 200px"
+            @update:modelValue="handleMonthChange" />
+        <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px" />
     </div>
 </template>
 
@@ -34,12 +24,13 @@ Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 export default {
     components: { Bar },
     props: {
-        salesByDate: {
+        salesByMonth: {
             type: Array,
             required: true,
         },
     },
-    setup(props) {
+
+    setup(props, { emit }) {
         const monthOptions = [
             { title: 'January', value: 0 },
             { title: 'February', value: 1 },
@@ -57,8 +48,12 @@ export default {
 
         const selectedMonth = ref(new Date().getMonth());
 
+        const handleMonthChange = (monthIndex) => {
+            emit('month-changed', monthIndex + 1); // Send 1-based month to backend
+        };
+
         const filteredSales = computed(() => {
-            return props.salesByDate.filter(sale => {
+            return props.salesByMonth.filter(sale => {
                 const date = new Date(sale.updated_at);
                 return date.getMonth() === selectedMonth.value;
             });
@@ -66,21 +61,22 @@ export default {
 
         const chartData = computed(() => {
             if (!filteredSales.value.length) return null;
-            const days = {};
+            const year = new Date(filteredSales.value[0].updated_at).getFullYear();
+            const daysInMonth = new Date(year, selectedMonth.value + 1, 0).getDate();
+            const salesPerDay = Array(daysInMonth).fill(0);
             filteredSales.value.forEach(sale => {
                 const date = new Date(sale.updated_at);
                 const day = date.getDate();
-                days[day] = (days[day] || 0) + Number(sale.sales || sale.total_sales || 0);
+                salesPerDay[day - 1] += Number(sale.sales || sale.total_sales || 0);
             });
-            const labels = Object.keys(days).sort((a, b) => a - b);
-            const data = labels.map(day => days[day]);
+            const labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
             return {
                 labels,
                 datasets: [
                     {
                         label: 'Sales (₱)',
                         backgroundColor: '#795548',
-                        data,
+                        data: salesPerDay,
                     },
                 ],
             };
@@ -102,7 +98,9 @@ export default {
             selectedMonth,
             chartData,
             chartOptions,
+            handleMonthChange,
         };
-    },
+    }
+
 };
 </script>
