@@ -20,6 +20,10 @@
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3"
             style="border-radius: 30px;">Create
             Branch</v-list-item>
+          <v-list-item prepend-icon="mdi-account-cog-outline" class="bg-brown-darken-3"
+            style="border-radius: 30px;">Settings</v-list-item>
+          <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3"
+            style="border-radius: 30px;">Help</v-list-item>
 
           <v-divider class="mt-4"></v-divider>
 
@@ -29,12 +33,8 @@
             style="border-radius: 30px;" />
             
           <v-divider class="mt-4"></v-divider>
-
-          <v-list-subheader size="30">More</v-list-subheader>
-          <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3"
-            style="border-radius: 30px;">Help</v-list-item>
-          <v-list-item prepend-icon="mdi-information-outline" @click="toAbout" class="bg-brown-darken-3"
-            style="border-radius: 30px;">About</v-list-item>
+          <v-list-item prepend-icon="mdi-logout" v-if="showLogout" @click="authStore.logout" class="bg-brown-darken-3 mt-2"
+            style="border-radius: 30px;">Signout</v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-layout>

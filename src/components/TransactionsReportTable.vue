@@ -242,6 +242,7 @@ export default {
                             <h5>${this.formatCurrentDate}</h5>
                         </div>
                         <p><strong>Transactions Report for ${this.branchName} Branch</strong></p>
+                        <p>As of ${ this.selectedFilterLabel }</p>
                         <table>
                             <tr>
                                 <th>Reference #</th>
@@ -249,12 +250,12 @@ export default {
                                 <th>Cash render</th>
                                 <th>Charge</th>
                                 <th>Change</th>
-                                <th>Last Update</th>
+                                <th>Date</th>
                             </tr>
                             ${this.transactStore.transactions.map(order => `
                                 <tr>
                                     <td>${order.reference_number}</td>
-                                    <td>${order.total_quantity}</td>
+                                    <td>${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}</td>
                                     <td>₱${order.customer_cash}</td>
                                     <td>₱${order.customer_charge}</td>
                                     <td>₱${order.customer_change}</td>

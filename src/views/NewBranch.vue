@@ -30,7 +30,7 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" lg="6" md="6">
-                                    <v-btn prepend-icon="mdi-check" color="primary" variant="tonal"
+                                    <v-btn prepend-icon="mdi-check" color="green" variant="tonal"
                                         :disabled="!isFormValid || validatingBranch" @click="showConfirmDialog">
                                         Confirm
                                     </v-btn>

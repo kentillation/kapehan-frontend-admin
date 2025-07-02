@@ -1,6 +1,6 @@
 <template>
     <v-container class="px-4">
-        <h1 class="text-brown-lighten-1">{{ branchDetails.branch_name || branchName }} Branch</h1>
+        <h1 class="text-brown-lighten-2">{{ branchDetails.branch_name || branchName }} Branch</h1>
 
         <template v-if="branchDetails.branch_name">
             <v-card>
@@ -26,7 +26,7 @@
                                                 </v-col>
                                                 <v-col cols="6">
                                                     <div class="d-flex flex-column">
-                                                        <h2 class="text-brown-lighten-1 ms-3">Sales</h2>
+                                                        <h2 class="text-brown-lighten-2 ms-3">Sales</h2>
                                                         <p class="ms-3" style="font-size: 40px;">2,000</p>
                                                         <div class="d-flex justify-end">
                                                             <h4 class="bg-brown-darken-1 pa-1 rounded"
@@ -49,7 +49,7 @@
                                                 </v-col>
                                                 <v-col cols="6">
                                                     <div class="d-flex align-items-center flex-column">
-                                                        <h2 class="text-brown-lighten-1 ms-3">Products</h2>
+                                                        <h2 class="text-brown-lighten-2 ms-3">Products</h2>
                                                         <p class="ms-3" style="font-size: 40px;">500</p>
                                                         <div class="d-flex justify-end">
                                                             <h4 class="bg-brown-darken-1 pa-1 rounded"
@@ -72,7 +72,7 @@
                                                 </v-col>
                                                 <v-col cols="6">
                                                     <div class="d-flex align-items-center flex-column">
-                                                        <h2 class="text-brown-lighten-1 ms-3">Stocks</h2>
+                                                        <h2 class="text-brown-lighten-2 ms-3">Stocks</h2>
                                                         <p class="ms-3" style="font-size: 40px;">400</p>
                                                         <div class="d-flex justify-end">
                                                             <h4 class="bg-brown-darken-1 pa-1 rounded"
