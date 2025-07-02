@@ -178,7 +178,7 @@
                                         v-else-if="activeReportsTab === 'products'"
                                         :products="productReports"
                                         :loading="loadingProductReports"
-                                        @refresh="onRefreshProductsReport"
+                                        @refresh="fetchProductsReport"
                                         :shop-id="branchDetails.shop_id"
                                         :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
@@ -193,7 +193,7 @@
                                         v-else-if="activeReportsTab === 'stocks'"
                                         :stocks="stockReports"
                                         :loading="loadingStockReports"
-                                        @refresh="onRefreshStocksReport"
+                                        @refresh="fetchStocksReport"
                                         :shop-id="branchDetails.shop_id"
                                         :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
@@ -209,7 +209,7 @@
                                         v-else-if="activeReportsTab === 'transactions'"
                                         :transactions="transactStore.transactions"
                                         :loading="loadingTransactionsReports"
-                                        @refresh="onRefreshTransactionsReport"
+                                        @refresh="fetchTransactionsReport"
                                         :shop-id="branchDetails.shop_id"
                                         :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
@@ -223,9 +223,9 @@
                                     <SalesReportsTableSkeleton v-if="loadingTransactionOrdersReports && activeReportsTab === 'sales'" />
                                     <SalesReportTable
                                         v-else-if="activeReportsTab === 'sales'"
-                                        :transaction-orders="transactStore.salesData"
+                                        :sales-data="transactStore.salesData"
                                         :loading="loadingTransactionOrdersReports"
-                                        @refresh="onRefreshTransactionsReport"
+                                        @refresh="fetchSalesReport"
                                         :shop-id="branchDetails.shop_id"
                                         :shop-name="branchDetails.shop_name"
                                         :branch-id="branchDetails.branch_id"
@@ -866,33 +866,12 @@ export default {
             }, 1000);
         },
 
-        onRefreshProductsReport() {
-            this.loadingProductReports = true;
-            setTimeout(() => {
-                this.fetchProductsReport();
-            }, 1000);
-        },
-
-        onRefreshStocksReport() {
-            this.loadingStockReports = true;
-            setTimeout(() => {
-                this.fetchStocksReport();
-            }, 1000);
-        },
-
-        onRefreshTransactionsReport() {
-            this.loadingTransactionsReports = true;
-            setTimeout(() => {
-                this.fetchTransactionsReport();
-            }, 1000);
-        },
-
-        onRefreshTransactionsoOrdersReport() {
-            this.loadingTransactionOrdersReports = true;
-            setTimeout(() => {
-                this.fetchSalesReport();
-            }, 1000);
-        },
+        // onRefreshTransactionsoOrdersReport() {
+        //     this.loadingTransactionOrdersReports = true;
+        //     setTimeout(() => {
+        //         this.fetchSalesReport();
+        //     }, 1000);
+        // },
         
     }
 };

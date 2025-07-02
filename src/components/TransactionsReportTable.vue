@@ -55,7 +55,7 @@ export default {
                 { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
                 { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
                 { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
-                { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: 'Transaction date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
@@ -166,7 +166,7 @@ export default {
         async downloadTransactions(dateFilterId = null) {
             await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
-                alert('No transactions available to download.');
+                this.showError("No transactions available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading transactions...');
@@ -177,7 +177,7 @@ export default {
                 'Cash render': order.customer_cash,
                 'Charge': order.customer_charge,
                 'Change': order.customer_change,
-                'Last Update': this.formatDateTime(order.updated_at),
+                'Transaction date': this.formatDateTime(order.updated_at),
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
@@ -207,7 +207,7 @@ export default {
         async printTransactions(dateFilterId = null) {
             await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
-                alert('No transactions available to print.');
+                this.showError("No transactions available to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -227,6 +227,7 @@ export default {
                             h2 { margin: 0; }
                             h2, h4, h5 { text-align: center; }
                             h4, h5 { font-weight: normal; margin: 5px; }
+                            p { margin-top: 25px; }
                             .headings { display: flex; align-items: center; justify-content: space-between;}
                         </style>
                     </head>
@@ -241,8 +242,7 @@ export default {
                             </div>
                             <h5>${this.formatCurrentDate}</h5>
                         </div>
-                        <p><strong>Transactions Report for ${this.branchName} Branch</strong></p>
-                        <p>As of ${ this.selectedFilterLabel }</p>
+                        <p><strong>Transactions Report for ${this.branchName} Branch | ${ this.selectedFilterLabel }</strong></p>
                         <table>
                             <tr>
                                 <th>Reference #</th>
@@ -250,7 +250,7 @@ export default {
                                 <th>Cash render</th>
                                 <th>Charge</th>
                                 <th>Change</th>
-                                <th>Date</th>
+                                <th>Transaction date</th>
                             </tr>
                             ${this.transactStore.transactions.map(order => `
                                 <tr>

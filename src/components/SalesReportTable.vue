@@ -50,12 +50,12 @@ export default {
             mappedSales: [],
             dateFilter: null,
             salesReportHeaders: [
-                { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
                 { title: 'Product', value: 'product_name', sortable: 'true', width: '15%' },
                 { title: 'Price', value: 'display_product_price', sortable: 'true', width: '15%' },
                 { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
                 { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
                 { title: 'Sales', value: 'display_sales', sortable: 'true', width: '15%' },
+                { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
@@ -72,12 +72,12 @@ export default {
     watch: {
         salesData: {
             handler(newVal) {
-                this.mappedSales = newVal.map(t_order => this.formatTransactionOrders(t_order));
+                this.mappedSales = newVal.map(sale => this.formatSales(sale));
             },
             immediate: true
         },
         dateFilter(newVal) {
-            this.fetchTransactionOrdersReport(newVal);
+            this.fetchSalesReport(newVal);
         },
     },
     computed: {
@@ -154,10 +154,10 @@ export default {
         };
     },
     methods: {
-        async fetchTransactionOrdersReport(dateFilterId = null) {
+        async fetchSalesReport(dateFilterId = null) {
             try {
                 await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
-                this.mappedSales = this.transactStore.salesData.map(t_order => this.formatTransactionOrders(t_order));
+                this.mappedSales = this.transactStore.salesData.map(t_order => this.formatSales(t_order));
             } catch (error) {
                 this.showError("Error fetching sales!");
             }
@@ -166,17 +166,18 @@ export default {
         async downloadSales(dateFilterId = null) {
             await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
             if (this.transactStore.salesData.length === 0) {
-                alert('No sales available to download.');
+                this.showError("No sales available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading sales...');
             }
             const salesData = this.transactStore.salesData.map(t_order => ({
-                'Last Update': this.formatDateTime(t_order.updated_at),
-                'Product': t_order.product_name,
-                'Price': t_order.product_price,
-                'Total_quantity': t_order.total_quantity,
-                'Total_price': t_order.total_price,
+                'Product name': t_order.product_name,
+                'Product price': t_order.product_price,
+                'Total quantity': t_order.total_quantity,
+                'Product category': t_order.category_label,
+                'Sales': t_order.sales,
+                'Date': this.formatDateTime(t_order.updated_at),
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
@@ -206,7 +207,7 @@ export default {
         async printSales(dateFilterId = null) {
             await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
             if (this.transactStore.salesData.length === 0) {
-                alert('No salesData available to print.');
+                this.showError("No sales available to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -226,6 +227,7 @@ export default {
                             h2 { margin: 0; }
                             h2, h4, h5 { text-align: center; }
                             h4, h5 { font-weight: normal; margin: 5px; }
+                            p { margin-top: 25px; }
                             .headings { display: flex; align-items: center; justify-content: space-between;}
                         </style>
                     </head>
@@ -240,25 +242,24 @@ export default {
                             </div>
                             <h5>${this.formatCurrentDate}</h5>
                         </div>
-                        <p><strong>Sales Report for ${this.branchName} Branch</strong></p>
-                        <p>As of ${ this.selectedFilterLabel }</p>
+                        <p><strong>Sales Report for ${this.branchName} Branch | ${ this.selectedFilterLabel }</strong></p>
                         <table>
                             <tr>
-                                <th>Date</th>
                                 <th>Product</th>
                                 <th>Price</th>
                                 <th>Quantiy</th>
                                 <th>Category</th>
                                 <th>Sales</th>
+                                <th>Date</th>
                             </tr>
                             ${this.transactStore.salesData.map(t_order => `
                                 <tr>
-                                    <td>${this.formatDateTime(t_order.updated_at)}</td>
                                     <td>${t_order.product_name}</td>
                                     <td>₱${t_order.product_price}</td>
                                     <td>${t_order.total_quantity } ${ t_order.total_quantity > 1 ? 'items' : 'item'} </td>
                                     <td>${t_order.category_label}</td>
                                     <td>₱${t_order.sales}</td>
+                                    <td>${this.formatDateTime(t_order.updated_at)}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -285,12 +286,12 @@ export default {
             });
         },
 
-        formatTransactionOrders(t_order) {
+        formatSales(sale) {
             return {
-                ...t_order,
-                updated_at: this.formatDateTime(t_order.updated_at),
-                display_product_price: `₱${t_order.product_price}`,
-                display_sales: `₱${t_order.sales}`,
+                ...sale,
+                updated_at: this.formatDateTime(sale.updated_at),
+                display_product_price: `₱${sale.product_price}`,
+                display_sales: `₱${sale.sales}`,
             };
         },
 
