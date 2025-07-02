@@ -50,7 +50,7 @@ export default {
             mappedSales: [],
             dateFilter: null,
             salesReportHeaders: [
-                { title: 'Product', value: 'product_name', sortable: 'true', width: '15%' },
+                { title: 'Product', value: 'display_product_name', sortable: 'true', width: '15%' },
                 { title: 'Price', value: 'display_product_price', sortable: 'true', width: '15%' },
                 { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
                 { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
@@ -254,7 +254,7 @@ export default {
                             </tr>
                             ${this.transactStore.salesData.map(t_order => `
                                 <tr>
-                                    <td>${t_order.product_name}</td>
+                                    <td>${t_order.product_name}${t_order.temp_label}${t_order.size_label}</td>
                                     <td>₱${t_order.product_price}</td>
                                     <td>${t_order.total_quantity } ${ t_order.total_quantity > 1 ? 'items' : 'item'} </td>
                                     <td>${t_order.category_label}</td>
@@ -289,6 +289,7 @@ export default {
         formatSales(sale) {
             return {
                 ...sale,
+                display_product_name: `${sale.product_name}${sale.temp_label}${sale.size_label}`,
                 updated_at: this.formatDateTime(sale.updated_at),
                 display_product_price: `₱${sale.product_price}`,
                 display_sales: `₱${sale.sales}`,

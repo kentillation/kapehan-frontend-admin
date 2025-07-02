@@ -32,9 +32,9 @@ export default {
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '15%' },
                 { title: 'Unit', value: 'unit_label', sortable: 'true', width: '15%' },
-                { title: 'Stock_quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
-                { title: 'Unit_cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
-                { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: 'Stock quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
+                { title: 'Unit cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
+                { title: 'Last update', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
         }
     },
@@ -117,7 +117,7 @@ export default {
             const stocks = this.stocksStore.stocks.map(stock => ({
                 'Ingredients': stock.stock_ingredient,
                 'Unit': stock.unit_label,
-                'Stock_quantity': stock.stock_in,
+                'Stock_quantity': stock.stock_in + (stock.stock_in > 1 ? ' items' : ' item'),
                 'Unit_cost': stock.stock_cost_per_unit,
                 'Last Update': this.formatDateTime(stock.updated_at),
             }));
@@ -196,7 +196,7 @@ export default {
                                 <tr>
                                     <td>${stock.stock_ingredient}</td>
                                     <td>${stock.unit_label}</td>
-                                    <td>${stock.stock_in}</td>
+                                    <td>${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}</td>
                                     <td>₱${stock.stock_cost_per_unit}</td>
                                     <td>${this.formatDateTime(stock.updated_at)}</td>
                                 </tr>`).join('')}

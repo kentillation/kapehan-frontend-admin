@@ -64,10 +64,11 @@ export default {
             stockHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '20%' },
-                { title: 'Stock_quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
-                { title: 'Unit_cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
+                { title: 'Unit', value: 'unit_label', sortable: 'true', width: '15%' },
+                { title: 'Stock quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
+                { title: 'Unit cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
                 { title: 'Availability', value: 'availability_label', sortable: 'true', width: '10%' },
-                { title: 'Last_update', value: 'updated_at', sortable: 'true', width: '20%' },
+                { title: 'Last update', value: 'updated_at', sortable: 'true', width: '20%' },
                 { title: '', value: 'actions', width: '15%' },
             ],
         }

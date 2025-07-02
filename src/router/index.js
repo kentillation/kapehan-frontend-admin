@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from '../views/Login.vue';
 import Register from '../views/Register.vue';
-import Dashboard from '../views/Dashboard.vue';
+import Home from '../views/Home.vue';
 import NewBranch from '../views/NewBranch.vue';
 import AddStock from '../views/AddStock.vue';
 import AddProduct from '../views/AddProduct.vue';
@@ -16,7 +16,7 @@ import { useAuthStore } from '@/stores/auth';
 const routes = [
     { path: '/', name: 'LoginPage', component: LoginPage, meta: { requiresAuth: false } },
     { path: '/register', name: 'Register', component: Register },
-    { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
+    { path: '/home', name: 'Home', component: Home, meta: { requiresAuth: true } },
     { path: '/new-branch', name: 'NewBranch', component: NewBranch, meta: { requiresAuth: true } },
     { path: '/branch/:branchName', name: 'BranchView', component: () => import('../views/BranchView.vue'), props: true, meta: { requiresAuth: true } },
     { path: '/add-stock', name: 'AddStock', component: AddStock, meta: { requiresAuth: true } },
@@ -43,7 +43,7 @@ router.beforeEach(async (to) => {
     }
     
     if (to.path === '/' && authStore.isAuthenticated) {
-        return '/dashboard';
+        return '/home';
     }
 });
 

@@ -1,38 +1,33 @@
 <template>
     <v-container>
-        <v-row justify="center" style="width: 100%;">
-            <v-col cols="12" lg="6" md="6" sm="6">
-                <img src="" alt="Logo" class="mx-auto d-block mb-4" style="max-width: 200px;">
-            </v-col>
-            <v-col cols="12" lg="6" md="6" sm="6">
-                <v-card class="pa-10" elevation="8" rounded="lg">
-                    <v-card-title>
-                        <h1 class="text-center">Sign-in</h1>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid">
-                            <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                            <v-text-field v-model="admin_email" :rules="[requiredRule, emailFormatRule]"
-                                placeholder="Type here..." prepend-inner-icon="mdi-email-outline" variant="outlined"
-                                autocomplete="username" />
+        <v-sheet class="py-8 px-6 mx-auto ma-4" elevation="3" max-width="500" rounded="lg" width="100%">
+            <h1 class="text-center">Poofsa .vent</h1>
+            <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
+                <div class="text-subtitle-1 text-medium-emphasis">Email</div>
+                <v-text-field v-model="admin_email" 
+                    :rules="[requiredRule, emailFormatRule]"
+                    placeholder="Type here..."
+                    prepend-inner-icon="mdi-email-outline"
+                    variant="outlined"
+                    autocomplete="username" />
 
-                            <div class="text-subtitle-1 text-medium-emphasis mt-2">Password</div>
-                            <v-text-field v-model="admin_password" :rules="[requiredRule]"
-                                :type="showPassword ? 'text' : 'password'"
-                                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"
-                                placeholder="Type here..." prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                                autocomplete="current-password" @click:append-inner="showPassword = !showPassword" />
+                <div class="text-subtitle-1 text-medium-emphasis mt-2">Password</div>
+                <v-text-field v-model="admin_password" 
+                    :rules="[requiredRule]"
+                    placeholder="Type here..."
+                    prepend-inner-icon="mdi-lock-outline" 
+                    variant="outlined" 
+                    autocomplete="current-password"
+                    :type="showPassword ? 'text' : 'password'"
+                    :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'" 
+                    @click:append-inner="showPassword = !showPassword" />
 
-                            <v-btn type="submit" color="brown-darken-3" :loading="loading"
-                                :disabled="!isFormValid || loading" block size="large" class="mt-5" height="45" rounded>
-                                Proceed
-                            </v-btn>
-                        </v-form>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-
+                <v-btn type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
+                    Proceed
+                </v-btn>
+            </v-form>
+            <h6 class="text-center text-grey mt-5">Poofsa .vent UAT Version v1.0.0</h6>
+        </v-sheet>
         <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="4000" top>
             {{ snackbar.message }}
         </v-snackbar>
@@ -41,9 +36,18 @@
 
 <script>
 import { useAuthStore } from '@/stores/auth';
+import { useLoadingStore } from '@/stores/loading';
+import { shallowRef } from 'vue';
 
 export default {
     name: 'LoginPage',
+    setup() {
+        const loadingStore = useLoadingStore();
+        return {
+            mpin: shallowRef(''),
+            loadingStore,
+        };
+    },
     data() {
         return {
             admin_email: '',
@@ -72,12 +76,13 @@ export default {
 
             this.loading = true;
             try {
+                this.loadingStore.show('Logging in...');
                 const authStore = useAuthStore();
                 await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
-
-                // this.$router.push('/dashboard');
-                window.location.href = '/dashboard';
+                this.loadingStore.hide();
+                window.location.href = '/home';
             } catch (error) {
+                this.loadingStore.hide();
                 this.showSnackbar(error || 'Login failed. Please try again!', 'error');
             } finally {
                 this.loading = false;
@@ -97,9 +102,6 @@ export default {
     display: grid;
     place-items: center;
     height: 100vh;
-}
-
-.text-center {
-    text-align: center;
+    background-color: var(--v-theme-background);
 }
 </style>

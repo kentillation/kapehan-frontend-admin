@@ -15,7 +15,7 @@
       <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
         <v-list density="compact" nav>
           <v-list-subheader size="30">Menu</v-list-subheader>
-          <v-list-item prepend-icon="mdi-home" @click="toDashboard" class="bg-brown-darken-3"
+          <v-list-item prepend-icon="mdi-home" @click="toHome" class="bg-brown-darken-3"
             style="border-radius: 30px;">Home</v-list-item>
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3"
             style="border-radius: 30px;">Create
@@ -103,8 +103,8 @@ export default {
         console.error('Error fetching branches:', error);
       }
     },
-    toDashboard() {
-      this.$router.push('/dashboard');
+    toHome() {
+      this.$router.push('/home');
     },
     toNewBranch() {
       this.$router.push('/new-branch');
@@ -119,7 +119,7 @@ export default {
       const encodedName = encodeURIComponent(branchName);
       this.$router.push({
         path: `/branch/${encodedName}`,
-        query: { activeTab: 'dashboard' }
+        query: { activeTab: 'home' }
       });
     },
   }

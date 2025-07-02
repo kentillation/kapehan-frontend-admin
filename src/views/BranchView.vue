@@ -1,9 +1,8 @@
 <template>
-    <v-container class="px-4">
+    <v-container>
         <h1 class="text-brown-lighten-2">{{ branchDetails.branch_name || branchName }} Branch</h1>
-
         <template v-if="branchDetails.branch_name">
-            <v-card>
+            <v-card class="pa-4 mt-3">
                 <v-tabs v-model="activeTab" class="mt-5" align-tabs="center" color="white" show-arrows>
                     <v-tab v-for="tab in tabs" :key="tab.value" class="rounded" :value="tab.value"
                         :class="{ 'active-tab': activeTab === tab.value }"
@@ -471,11 +470,11 @@ export default {
                 if (response.status === 200) {
                     this.branchDetails = response.data;
                 } else {
-                    this.$router.push('/dashboard');
+                    this.$router.push('/home');
                 }
             } catch (error) {
                 console.error('Error fetching branch details:', error);
-                this.$router.push('/dashboard');
+                this.$router.push('/home');
             } finally {
                 this.loadingBranchDetails = false;
             }
@@ -821,7 +820,7 @@ export default {
             return {
                 ...stock,
                 stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
-                display_stock_in: `${stock.stock_in}${stock.unit_avb}`,
+                display_stock_in: `${stock.stock_in} ${ stock.stock_in > 1 ? 'items' : 'item'}`,
                 display_unit_cost: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),
             };

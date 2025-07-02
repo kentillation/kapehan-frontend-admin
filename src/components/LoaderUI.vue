@@ -38,10 +38,11 @@ export default {
 }
 
 .loader-content {
-    background: white;
-    padding: 25px 50px;
+    background: #462a0a;
+    padding: 25px 40px;
     border-radius: 8px;
     text-align: center;
+    z-index: 9999;
 }
 
 .loader {
@@ -69,8 +70,8 @@ export default {
     border-top: 0;
     box-sizing: content-box;
     border-radius: 0 0 40% 40%;
-    -webkit-mask: linear-gradient(#000 0 0) bottom/4px 2px no-repeat,
-        linear-gradient(#000 0 0);
+    /* -webkit-mask: linear-gradient(#000 0 0) bottom/4px 2px no-repeat,
+        linear-gradient(#000 0 0); */
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
     background: linear-gradient(var(--d, 0deg), var(--c2) 50%, #0000 0) bottom /100% 205%,
@@ -89,7 +90,7 @@ export default {
 
 .loader-message {
     margin-top: 15px;
-    color: var(--c1);
+    color: #eba76c;
 }
 
 @keyframes l5-0 {
@@ -113,5 +114,9 @@ export default {
     100% {
         background-position: top, center
     }
+}
+
+p {
+    font-family: 'Poppins', Arial;
 }
 </style>

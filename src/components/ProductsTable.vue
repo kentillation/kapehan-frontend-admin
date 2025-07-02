@@ -88,11 +88,11 @@ export default {
             addProductDialog: false,
             productHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Product', value: 'display_product_name', sortable: true, width: '20%' },
+                { title: 'Product name', value: 'display_product_name', sortable: true, width: '20%' },
                 { title: 'Price', value: 'display_product_price', sortable: true, width: '10%' },
                 { title: 'Category', value: 'category_label', sortable: true, width: '15%' },
                 { title: 'Availability', value: 'availability_label', sortable: true, width: '15%' },
-                { title: 'Last_update', value: 'updated_at', sortable: true, width: '20%' },
+                { title: 'Last update', value: 'updated_at', sortable: true, width: '20%' },
                 { title: '', value: 'actions', sortable: false, width: '15%' }
             ],
         };

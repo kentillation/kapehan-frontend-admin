@@ -40,12 +40,10 @@ export default {
         return {
             productsHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Product', value: 'product_name', sortable: true, width: '10%' },
-                { title: 'Temperature', value: 'temp_label', sortable: true, width: '10%' },
-                { title: 'Size', value: 'size_label', sortable: true, width: '10%' },
-                { title: 'Price', value: 'display_product_price', sortable: true, width: '10%' },
-                { title: 'Category', value: 'category_label', sortable: true, width: '10%' },
-                { title: 'Last_update', value: 'updated_at', sortable: true, width: '20%' },
+                { title: 'Product name', value: 'display_product_name', sortable: true, width: '20%' },
+                { title: 'Price', value: 'display_product_price', sortable: true, width: '20%' },
+                { title: 'Category', value: 'category_label', sortable: true, width: '20%' },
+                { title: 'Last update', value: 'updated_at', sortable: true, width: '25%' },
             ],
         }
     },
@@ -125,9 +123,7 @@ export default {
                 this.loadingStore.show('Downloading products...');
             }
             const products = this.productsStore.products.map(product => ({
-                'Product Name': product.product_name,
-                'Temperature': product.temp_label,
-                'Size': product.size_label,
+                'Product Name': product.product_name + product.temp_label + product.size_label,
                 'Price': product.product_price,
                 'Category': product.category_label,
                 'Last Update': this.formatDateTime(product.updated_at),
@@ -200,17 +196,13 @@ export default {
                         <table>
                             <tr>
                                 <th>Product Name</th>
-                                <th>Temperature</th>
-                                <th>Size</th>
                                 <th>Price</th>
                                 <th>Category</th>
                                 <th>Last Update</th>
                             </tr>
                             ${this.productsStore.products.map(product => `
                                 <tr>
-                                    <td>${product.product_name}</td>
-                                    <td>${product.temp_label}</td>
-                                    <td>${product.size_label}</td>
+                                    <td>${product.product_name}${product.temp_label}${product.size_label}</td>
                                     <td>₱${product.product_price}</td>
                                     <td>${product.category_label}</td>
                                     <td>${this.formatDateTime(product.updated_at)}</td>
