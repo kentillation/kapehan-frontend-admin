@@ -5,6 +5,7 @@ export const useTransactStore = defineStore('transactions', {
     state: () => ({
         transactions: [],
         salesByDate: [],
+        salesOnly: '',
         loading: false,
         error: null
     }),
@@ -28,13 +29,33 @@ export const useTransactStore = defineStore('transactions', {
                 this.loading = false;
             }
         },
-        async fetchSalesStore(branchId, dateFilterId = null) {
+
+        async fetchSalesByDateStore(branchId, dateFilterId = null) {
             this.loading = true;
             this.error = null;
             try {
-                const response = await TRANSACT_API.fetchSalesApi(branchId, dateFilterId);
+                const response = await TRANSACT_API.fetchSalesByDateApi(branchId, dateFilterId);
                 if (response && response.status === true) {
                     this.salesByDate = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch sales');
+                }
+            } catch (error) {
+                console.error('Error in fetchSalesByDateApi:', error);
+                this.error = error.message || 'Failed to fetch sales';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+        
+        async fetchSalesStore(branchId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await TRANSACT_API.fetchSalesApi(branchId);
+                if (response && response.status === true) {
+                    this.salesOnly = response.data;
                 } else {
                     throw new Error(response?.message || 'Failed to fetch sales');
                 }

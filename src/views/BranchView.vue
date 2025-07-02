@@ -322,7 +322,8 @@ export default {
             loadingBranchDetails: false,
 
             // Dashboard
-            totalSales: '100,226',
+            totalSales: '',
+            loadingSales: false,
             totalOrders: '1,655',
             totalProducts: '356',
             totalStocks: '1,112',
@@ -439,7 +440,7 @@ export default {
         }
     },
     mounted() {
-        this.totalSales = '100,226';
+        this.fetchSalesOnly();
         this.totalOrders = '1,655';
         this.totalProducts = '356';
         this.totalStocks = '1,112';
@@ -458,7 +459,7 @@ export default {
         },
         activeTab(newTab) {
             if (newTab === 'dashboard') {
-                this.totalSales = '100,226';
+                this.fetchSalesOnly();
                 this.totalOrders = '1,655';
                 this.totalProducts = '356';
                 this.totalStocks = '1,112';
@@ -677,11 +678,11 @@ export default {
                     this.salesByDateReports = [];
                     return;
                 }
-                await this.transactStore.fetchSalesStore(this.branchDetails.branch_id);
+                await this.transactStore.fetchSalesByDateStore(this.branchDetails.branch_id);
                 if (this.transactStore.salesByDate.length === 0) {
                     this.salesByDateReports = [];
                 } else {
-                    this.salesByDateReports = this.transactStore.salesByDate.map(t_orders => this.formatSales(t_orders));
+                    this.salesByDateReports = this.transactStore.salesByDate.map(t_orders => this.formatSalesByDate(t_orders));
                 }
                 this.salesByDateReportsLoaded = true;
                 this.loadingTransactionOrdersReports = false;
@@ -690,6 +691,29 @@ export default {
                 this.showError("Error fetching sales!");
             } finally {
                 this.loadingTransactionOrdersReports = false;
+            }
+        },
+
+        async fetchSalesOnly() {
+            this.loadingSales = true;
+            try {
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.totalSales = '';
+                    return;
+                }
+                await this.transactStore.fetchSalesStore(this.branchDetails.branch_id);
+                if (this.transactStore.salesOnly.length === 0) {
+                    this.totalSales = '';
+                } else {
+                    this.totalSales = this.transactStore.salesOnly.total_sales;
+                }
+                this.loadingSales = false;
+            } catch (error) {
+                console.error('Error fetching sales:', error);
+                this.showError("Error fetching sales!");
+            } finally {
+                this.loadingSales = false;
             }
         },
 
@@ -851,7 +875,7 @@ export default {
             };
         },
 
-        formatSales(sale) {
+        formatSalesByDate(sale) {
             return {
                 ...sale,
                 display_product_name: `${sale.product_name}${sale.temp_label}${sale.size_label}`,

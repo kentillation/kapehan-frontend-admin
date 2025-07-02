@@ -3,7 +3,8 @@ import apiClient from '../axios';
 export const TRANSACT_API = {
     ENDPOINTS: {
         FETCH: '/transactions',
-        FETCH_SALES: '/sales-by-date',
+        FETCH_SALES_BY_DATE: '/sales-by-date',
+        FETCH_SALES: '/sales',
     },
 
     async fetchAllTransactionsApi(branchId, dateFilterId = null) {
@@ -31,16 +32,40 @@ export const TRANSACT_API = {
             throw error;
         }
     },
-    async fetchSalesApi(branchId, dateFilterId = null) {
+    
+    async fetchSalesByDateApi(branchId, dateFilterId = null) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            let endpoint = `${this.ENDPOINTS.FETCH_SALES_BY_DATE}/${branchId}`;
+            if (dateFilterId) {
+                endpoint += `?date_filter=${dateFilterId}`;
+            }
+            const response = await apiClient.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[fetchSalesByDateApi] Error fetching sales:', error);
+            throw error;
+        }
+    },
+
+    async fetchSalesApi(branchId) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
             let endpoint = `${this.ENDPOINTS.FETCH_SALES}/${branchId}`;
-            if (dateFilterId) {
-                endpoint += `?date_filter=${dateFilterId}`;
-            }
             const response = await apiClient.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${authToken}`,

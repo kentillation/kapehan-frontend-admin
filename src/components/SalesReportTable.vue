@@ -156,7 +156,7 @@ export default {
     methods: {
         async fetchSalesReport(dateFilterId = null) {
             try {
-                await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
+                await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
                 this.mappedSales = this.transactStore.salesByDate.map(t_order => this.formatSales(t_order));
             } catch (error) {
                 this.showError("Error fetching sales!");
@@ -164,7 +164,7 @@ export default {
         },
 
         async downloadSales(dateFilterId = null) {
-            await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
+            await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
             if (this.transactStore.salesByDate.length === 0) {
                 this.showError("No sales available to download.");
                 return;
@@ -205,7 +205,7 @@ export default {
         },
 
         async printSales(dateFilterId = null) {
-            await this.transactStore.fetchSalesStore(this.branchId, dateFilterId);
+            await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
             if (this.transactStore.salesByDate.length === 0) {
                 this.showError("No sales available to print.");
                 return;
