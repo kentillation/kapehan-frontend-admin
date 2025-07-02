@@ -323,10 +323,13 @@ export default {
 
             // Dashboard
             totalSales: '',
-            loadingSales: false,
             totalOrders: '',
             totalProducts: '',
             totalStocks: '',
+            loadingSalesOnly: false,
+            loadingOrdersOnly: false,
+            loadingProductsOnly: false,
+            loadingStocksOnly: false,
 
             // Products
             products: [],
@@ -691,7 +694,7 @@ export default {
         },
 
         async fetchSalesOnly() {
-            this.loadingSales = true;
+            this.loadingSalesOnly = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
@@ -704,12 +707,12 @@ export default {
                 } else {
                     this.totalSales = this.transactStore.salesOnly.total_sales;
                 }
-                this.loadingSales = false;
+                this.loadingSalesOnly = false;
             } catch (error) {
                 console.error('Error fetching total sales:', error);
                 this.showError("Error fetching total sales!");
             } finally {
-                this.loadingSales = false;
+                this.loadingSalesOnly = false;
             }
         },
 
@@ -737,7 +740,7 @@ export default {
         },
 
         async fetchProductsOnly() {
-            this.loadingOrdersOnly = true;
+            this.loadingProductsOnly = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
@@ -750,17 +753,17 @@ export default {
                 } else {
                     this.totalProducts = this.transactStore.productsOnly.total_products;
                 }
-                this.loadingOrdersOnly = false;
+                this.loadingProductsOnly = false;
             } catch (error) {
                 console.error('Error fetching total products:', error);
                 this.showError("Error fetching total products!");
             } finally {
-                this.loadingOrdersOnly = false;
+                this.loadingProductsOnly = false;
             }
         },
 
         async fetchStocksOnly() {
-            this.loadingOrdersOnly = true;
+            this.loadingStocksOnly = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
@@ -773,12 +776,12 @@ export default {
                 } else {
                     this.totalStocks = this.transactStore.stocksOnly.total_stocks;
                 }
-                this.loadingOrdersOnly = false;
+                this.loadingStocksOnly = false;
             } catch (error) {
                 console.error('Error fetching total stocks:', error);
                 this.showError("Error fetching total stocks!");
             } finally {
-                this.loadingOrdersOnly = false;
+                this.loadingStocksOnly = false;
             }
         },
 
