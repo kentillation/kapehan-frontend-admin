@@ -22,7 +22,7 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-grey-lighten-1 ma-0 rounded">
+                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
                                                                 <v-icon class="text-brown-darken-1" size="100">mdi-account-cash</v-icon>
                                                             </div>
@@ -31,7 +31,7 @@
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
                                                                 <h3 class="text-brown-lighten-2 ms-3">Sales</h3>
-                                                                <h1 class="ms-3 mt-2">2000</h1>
+                                                                <h1 class="ms-3 mt-2">2,315</h1>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToSalesTab()">
@@ -48,7 +48,7 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-grey-lighten-1 ma-0 rounded">
+                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
                                                                 <v-icon class="text-brown-darken-1" size="100">mdi-invoice-text-outline</v-icon>
                                                             </div>
@@ -56,7 +56,7 @@
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2 ms-3">Orders</h3>
-                                                                <h1 class="ms-3 mt-2">2000</h1>
+                                                                <h1 class="ms-3 mt-2">1,665</h1>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToOrdersTab()">
@@ -73,7 +73,7 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-grey-lighten-1 ma-0 rounded">
+                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
                                                                 <v-icon class="text-brown-darken-1" size="100">mdi-food-outline</v-icon>
                                                             </div>
@@ -81,7 +81,7 @@
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2 ms-3">Products</h3>
-                                                                <h1 class="ms-3 mt-2">2000</h1>
+                                                                <h1 class="ms-3 mt-2">356</h1>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToProductsTab()">
@@ -98,15 +98,15 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-grey-lighten-1 ma-0 rounded">
+                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center">
-                                                                <v-icon class="text-brown-darken-1" size="100">mdi-dropbox</v-icon>
+                                                                <v-icon class="text-brown-darken-1" size="100">mdi-archive-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2 ms-3">Stocks</h3>
-                                                                <h1 class="ms-3 mt-2">2000</h1>
+                                                                <h1 class="ms-3 mt-2">1,112</h1>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" type="button"
