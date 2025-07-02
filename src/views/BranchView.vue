@@ -221,7 +221,7 @@
                                                 v-if="loadingTransactionsReports && activeReportsTab === 'orders'" />
                                             <TransactionsReportTable v-else-if="activeReportsTab === 'orders'"
                                                 :transactions="transactStore.transactions" :loading="loadingTransactionsReports"
-                                                @refresh="fetchTransactionsReport" :shop-id="branchDetails.shop_id"
+                                                @refresh="fetchOrdersReport" :shop-id="branchDetails.shop_id"
                                                 :shop-name="branchDetails.shop_name" :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
@@ -469,7 +469,7 @@ export default {
             } else if (newTab === 'reports') {
                 this.fetchProductsReport();
                 this.fetchStocksReport();
-                this.fetchTransactionsReport();
+                this.fetchOrdersReport();
                 this.fetchSalesReport();
             }
         }
@@ -643,7 +643,7 @@ export default {
             }
         },
 
-        async fetchTransactionsReport() {
+        async fetchOrdersReport() {
             this.loadingTransactionsReports = true;
             try {
                 this.isSaving = false;
@@ -681,7 +681,7 @@ export default {
                 if (this.transactStore.salesByDate.length === 0) {
                     this.salesByDateReports = [];
                 } else {
-                    this.salesByDateReports = this.transactStore.salesByDate.map(t_orders => this.formatTransactions(t_orders));
+                    this.salesByDateReports = this.transactStore.salesByDate.map(t_orders => this.formatSales(t_orders));
                 }
                 this.salesByDateReportsLoaded = true;
                 this.loadingTransactionOrdersReports = false;
@@ -840,23 +840,25 @@ export default {
             };
         },
 
-        formatTransactions(transaction) {
+        formatTransactions(orders) {
             return {
-                ...transaction,
-                display_customer_cash: `₱${transaction.customer_cash}`,
-                display_customer_charge: `₱${transaction.customer_charge}`,
-                display_customer_change: `₱${transaction.customer_change}`,
-                display_total_quantity: transaction.total_quantity,
-                updated_at: this.formatDateTime(transaction.updated_at),
+                ...orders,
+                display_customer_cash: `₱${orders.customer_cash}`,
+                display_customer_charge: `₱${orders.customer_charge}`,
+                display_customer_change: `₱${orders.customer_change}`,
+                display_total_quantity: orders.total_quantity,
+                updated_at: this.formatDateTime(orders.updated_at),
             };
         },
 
-        formatReport(productReport) {
+        formatSales(sale) {
             return {
-                ...productReport,
-                display_product_name: `${this.capitalizeFirstLetter(productReport.product_name)}${productReport.temp_label}${productReport.size_label}`,
-                display_product_price: `₱${productReport.product_price}`,
-                updated_at: this.formatDateTime(productReport.updated_at),
+                ...sale,
+                display_product_name: `${sale.product_name}${sale.temp_label}${sale.size_label}`,
+                updated_at: this.formatDateTime(sale.updated_at),
+                display_product_price: `₱${sale.product_price}`,
+                display_total_quantity: sale.total_quantity,
+                display_sales: `₱${sale.sales}`,
             };
         },
 
