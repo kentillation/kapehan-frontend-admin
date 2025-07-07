@@ -49,7 +49,7 @@ export default {
         const selectedMonth = ref(new Date().getMonth());
 
         const handleMonthChange = (monthIndex) => {
-            emit('month-changed', monthIndex + 1); // Send 1-based month to backend
+            emit('month-changed', monthIndex + 1);
         };
 
         const filteredSales = computed(() => {
@@ -75,7 +75,18 @@ export default {
                 datasets: [
                     {
                         label: 'Sales (₱)',
-                        backgroundColor: '#795548',
+                        backgroundColor: [
+                            '#7FB3D5', // medium blue
+                            '#76D7C4', // medium teal
+                            '#F7CA18', // medium yellow
+                            '#F1948A', // medium pink
+                            '#BB8FCE', // medium purple
+                            '#F8C471', // medium orange
+                            '#85C1E9', // medium sky blue
+                            '#73C6B6', // medium aqua
+                            '#F0B27A', // medium tan
+                            '#E59866', // medium brown-orange
+                        ],
                         data: salesPerDay,
                     },
                 ],

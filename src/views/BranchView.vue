@@ -17,19 +17,20 @@
                             <v-tabs-window-item value="dashboard">
                                 <v-container>
                                     <v-row>
+                                        <!-- Sales -->
                                         <v-col cols="12" lg="3" md="6" sm="12">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center">
+                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0">
+                                                            <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1" size="80">mdi-account-cash</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
                                                                 <h3 class="text-brown-lighten-2">Sales</h3>
-                                                                <h2 class="mt-2">₱{{ totalSales }}</h2>
+                                                                <h2 class="mt-2">₱{{  totalSales }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToSalesTab()">
@@ -42,19 +43,20 @@
                                             </v-card>
                                         </v-col>
 
+                                        <!-- Orders -->
                                         <v-col cols="12" lg="3" md="6" sm="12">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center">
+                                                            <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1" size="80">mdi-invoice-text-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Orders</h3>
-                                                                <h2 class="mt-2">{{ totalOrders }}</h2>
+                                                                <h2 class="mt-2">{{ totalOrders }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToOrdersTab()">
@@ -67,19 +69,20 @@
                                             </v-card>
                                         </v-col>
 
+                                        <!-- Products -->
                                         <v-col cols="12" lg="3" md="6" sm="12">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center">
+                                                            <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1" size="80">mdi-food-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Products</h3>
-                                                                <h2 class="mt-2">{{ totalProducts }}</h2>
+                                                                <h2 class="mt-2">{{ totalProducts }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" @click="switchToProductsTab()">
@@ -92,19 +95,20 @@
                                             </v-card>
                                         </v-col>
 
+                                        <!-- Stocks -->
                                         <v-col cols="12" lg="3" md="6" sm="12">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center">
+                                                            <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1" size="80">mdi-archive-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Stocks</h3>
-                                                                <h2 class="mt-2">{{ totalStocks }}</h2>
+                                                                <h2 class="mt-2">{{ totalStocks }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" type="button"
@@ -740,7 +744,7 @@ export default {
                 if (this.transactStore.salesOnly.length === 0) {
                     this.totalSales = '';
                 } else {
-                    this.totalSales = this.transactStore.salesOnly.total_sales;
+                    this.totalSales = Number(this.transactStore.salesOnly.total_sales).toLocaleString('en-PH');
                 }
                 this.loadingSalesOnly = false;
             } catch (error) {

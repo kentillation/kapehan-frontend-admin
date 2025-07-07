@@ -28,13 +28,26 @@
           <v-divider class="mt-4"></v-divider>
 
           <v-list-subheader size="30">Branch</v-list-subheader>
-          <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="branch[0]"
-            :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3"
-            style="border-radius: 30px;" />
-            
+          <!-- Display loader while branches are being fetched -->
+          <template v-if="branchStore.getBranchNames === null || branchStore.getBranchNames === undefined">
+            <v-progress-circular indeterminate color="brown" class="ma-4"></v-progress-circular>
+          </template>
+
+          <!-- Display branches when available -->
+          <template v-else>
+            <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="branch[0]"
+              :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3"
+              style="border-radius: 30px;" />
+          </template>
+
+          <!-- If no branches after fetch -->
+          <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
+            <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;"><em>No branch available</em></span>
+          </template>
+
           <v-divider class="mt-4"></v-divider>
-          <v-list-item prepend-icon="mdi-logout" v-if="showLogout" @click="authStore.logout" class="bg-brown-darken-3 mt-2"
-            style="border-radius: 30px;">Signout</v-list-item>
+          <v-list-item prepend-icon="mdi-logout" v-if="showLogout" @click="authStore.logout"
+            class="bg-brown-darken-3 mt-2" style="border-radius: 30px;">Signout</v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-layout>
