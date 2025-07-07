@@ -5,6 +5,9 @@
             @update:modelValue="handleMonthChange" />
         <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px" />
     </div>
+    <div>
+        <!-- Donut Chart -->
+    </div>
 </template>
 
 <script>
@@ -76,16 +79,18 @@ export default {
                     {
                         label: 'Sales (₱)',
                         backgroundColor: [
-                            '#7FB3D5', // medium blue
-                            '#76D7C4', // medium teal
-                            '#F7CA18', // medium yellow
-                            '#F1948A', // medium pink
-                            '#BB8FCE', // medium purple
-                            '#F8C471', // medium orange
-                            '#85C1E9', // medium sky blue
-                            '#73C6B6', // medium aqua
-                            '#F0B27A', // medium tan
-                            '#E59866', // medium brown-orange
+                            '#7FB3D5',
+                            '#76D7C4',
+                            '#F7CA18',
+                            '#F1948A',
+                            '#BB8FCE',
+                            '#F8C471',
+                            '#85C1E9',
+                            '#73C6B6',
+                            '#F0B27A',
+                            '#E59866',
+                            '#66D2E5',
+                            '#70E566',
                         ],
                         data: salesPerDay,
                     },

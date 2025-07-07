@@ -5,6 +5,9 @@
         <v-app-bar-nav-icon v-if="showMenu" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <h3>{{ authStore.shopName }}</h3>
         <v-spacer></v-spacer>
+        <v-btn icon>
+          <v-icon>mdi-account-circle-outline</v-icon>
+        </v-btn>
         <v-btn icon @click="toggleTheme" :title="themeText">
           <v-icon>mdi-theme-light-dark</v-icon>
         </v-btn>

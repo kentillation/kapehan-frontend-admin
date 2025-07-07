@@ -30,9 +30,17 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
-        <template v-slot:item.availability_label="{ item }">
+        <!-- <template v-slot:item.availability_label="{ item }">
             <v-chip :color="item.availability_id === 1 ? 'green' : 'red'" size="small" variant="flat">
                 {{ item.availability_label }}
+            </v-chip>
+        </template> -->
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.availability_label="{ item }">
+            <v-chip :color="item.availability_id === 1 && item.stock_in > 0 ? 'green' : 'red'" size="small" variant="flat">
+                <!-- {{ item.availability_label }} -->
+                {{ item.availability_id === 1 && item.stock_in > 0 ? 'Available' : 'Unavailable' }}
             </v-chip>
         </template>
 
