@@ -1,31 +1,39 @@
 <template>
-    <div>
-        <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
-            label="Select Month" class="mb-4" dense outlined style="max-width: 200px"
-            @update:modelValue="handleMonthChange" />
-        <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px" />
-    </div>
-    <div>
-        <!-- Donut Chart -->
-    </div>
+    <v-row>
+        <v-col cols="12" lg="6" md="6" sm="12">
+            <v-container>
+                <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
+                    label="Select Month" class="mb-4" dense outlined style="max-width: 200px"
+                    @update:modelValue="handleMonthChange" />
+                <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px" />
+            </v-container>
+        </v-col>
+        <v-col cols="12" lg="6" md="6" sm="12">
+            <v-container class="mt-10">
+                <!-- <h4 class="mb-2">Sales by Month (Donut Chart)</h4> -->
+                <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="max-width: 600px; max-height: 1000px; margin: auto;" />
+            </v-container>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
 import { ref, computed } from 'vue';
-import { Bar } from 'vue-chartjs';
+import { Bar, Doughnut } from 'vue-chartjs';
 import {
     Chart,
     BarElement,
+    ArcElement,
     CategoryScale,
     LinearScale,
     Tooltip,
     Legend,
 } from 'chart.js';
 
-Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+Chart.register(BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 export default {
-    components: { Bar },
+    components: { Bar, Doughnut },
     props: {
         salesByMonth: {
             type: Array,
@@ -79,24 +87,52 @@ export default {
                     {
                         label: 'Sales (₱)',
                         backgroundColor: [
-                            '#7FB3D5',
-                            '#76D7C4',
-                            '#F7CA18',
-                            '#F1948A',
-                            '#BB8FCE',
-                            '#F8C471',
-                            '#85C1E9',
-                            '#73C6B6',
-                            '#F0B27A',
-                            '#E59866',
-                            '#66D2E5',
-                            '#70E566',
+                            '#be4343', '#be6a43', '#c27e00', '#9dbe43', 
+                            '#43be7a', '#00a1a1', '#4387be', '#4360be', 
+                            '#5a00c2', '#d34a8f', '#c25063', '#852a2a',
                         ],
                         data: salesPerDay,
                     },
                 ],
             };
         });
+
+        // Donut Chart Data: total sales per month for the current year
+        const donutData = computed(() => {
+            if (!props.salesByMonth.length) return null;
+            const now = new Date();
+            const year = now.getFullYear();
+            const salesPerMonth = Array(12).fill(0);
+            props.salesByMonth.forEach(sale => {
+                const date = new Date(sale.updated_at);
+                if (date.getFullYear() === year) {
+                    const month = date.getMonth();
+                    salesPerMonth[month] += Number(sale.sales || sale.total_sales || 0);
+                }
+            });
+            return {
+                labels: monthOptions.map(m => m.title),
+                datasets: [
+                    {
+                        label: 'Sales (₱)',
+                        backgroundColor: [
+                            '#be4343', '#be6a43', '#c27e00', '#9dbe43', 
+                            '#43be7a', '#00a1a1', '#4387be', '#4360be', 
+                            '#5a00c2', '#d34a8f', '#c25063', '#852a2a',
+                        ],
+                        data: salesPerMonth,
+                    },
+                ],
+            };
+        });
+
+        const donutOptions = {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'right' },
+                tooltip: { enabled: true },
+            },
+        };
 
         const chartOptions = {
             responsive: true,
@@ -115,8 +151,9 @@ export default {
             chartData,
             chartOptions,
             handleMonthChange,
+            donutData,
+            donutOptions,
         };
     }
-
 };
 </script>
