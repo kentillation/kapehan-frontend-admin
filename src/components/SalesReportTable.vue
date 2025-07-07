@@ -292,7 +292,7 @@ export default {
                 display_product_name: `${sale.product_name}${sale.temp_label}${sale.size_label}`,
                 updated_at: this.formatDateTime(sale.updated_at),
                 display_product_price: `₱${sale.product_price}`,
-                display_total_quantity: sale.total_quantity,
+                display_total_quantity: `${sale.total_quantity} ${ sale.total_quantity > 1 ? 'items' : 'item'}`,
                 display_sales: `₱${sale.sales}`,
             };
         },

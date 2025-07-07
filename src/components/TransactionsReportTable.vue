@@ -166,7 +166,7 @@ export default {
         async downloadTransactions(dateFilterId = null) {
             await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
-                this.showError("No transactions available to download.");
+                this.showError("No orders available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading transactions...');
@@ -207,7 +207,7 @@ export default {
         async printTransactions(dateFilterId = null) {
             await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
-                this.showError("No transactions available to print.");
+                this.showError("No orders available to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');
@@ -292,7 +292,7 @@ export default {
                 display_customer_cash: `₱${order.customer_cash}`,
                 display_customer_charge: `₱${order.customer_charge}`,
                 display_customer_change: `₱${order.customer_change}`,
-                display_total_quantity: order.total_quantity,
+                display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
                 updated_at: this.formatDateTime(order.updated_at),
             };
         },

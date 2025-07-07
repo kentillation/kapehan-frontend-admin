@@ -117,7 +117,7 @@ export default {
         async downloadProducts(){
             await this.productsStore.fetchAllProductsStore(this.branchId);
             if (this.productsStore.products.length === 0) {
-                alert('No products available to download.');
+                this.showError("No products available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading products...');
@@ -158,7 +158,7 @@ export default {
         async printProducts() {
             await this.productsStore.fetchAllProductsStore(this.branchId);
             if (this.productsStore.products.length === 0) {
-                alert('No products available to print.');
+                this.showError("No products available to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');

@@ -109,7 +109,7 @@ export default {
         async downloadStocks() {
             await this.stocksStore.fetchAllStocksStore(this.branchId);
             if (this.stocksStore.stocks.length === 0) {
-                alert('No stocks available to download.');
+                this.showError("No stocks available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading stocks...');
@@ -117,7 +117,7 @@ export default {
             const stocks = this.stocksStore.stocks.map(stock => ({
                 'Ingredients': stock.stock_ingredient,
                 'Unit': stock.unit_label,
-                'Stock_quantity': stock.stock_in + (stock.stock_in > 1 ? ' items' : ' item'),
+                'Stock_quantity': stock.stock_in,
                 'Unit_cost': stock.stock_cost_per_unit,
                 'Last Update': this.formatDateTime(stock.updated_at),
             }));
@@ -149,7 +149,7 @@ export default {
         async printStocks() {
             await this.stocksStore.fetchAllStocksStore(this.branchId);
             if (this.stocksStore.stocks.length === 0) {
-                alert('No stocks available to print.');
+                this.showError("No stocks available to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');

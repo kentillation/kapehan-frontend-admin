@@ -121,7 +121,7 @@
 
                                 <!-- Sales Visualization -->
                                  <v-container class="mt-5">
-                                    <h3>Sales Analytics</h3>
+                                    <h3>Sales Trends</h3>
                                     <v-card>
                                         <v-card-text>
                                             <SalesChart :sales-by-month="salesByMonthReports" @month-changed="fetchSalesByMonthReport" />
@@ -134,7 +134,7 @@
                             <v-tabs-window-item value="products">
                                 <v-container>
                                     <ProductsTableSkeleton v-if="loadingProducts" />
-                                    <ProductsTable v-else @refresh="onRefreshProducts" @edit-product="editProductDialog"
+                                    <ProductsTable v-else @refresh="fetchProducts" @edit-product="editProductDialog"
                                         @view-ingredients="ingredientsDialog" :products="products" :loading="loadingProducts"
                                         :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id"
                                         :branch-name="branchDetails.branch_name" />
@@ -171,7 +171,7 @@
                             <v-tabs-window-item value="stocks">
                                 <v-container>
                                     <StocksTableSkeleton v-if="loadingStocks" />
-                                    <StocksTable v-else :stocks="stocks" @refresh="onRefreshStocks"
+                                    <StocksTable v-else :stocks="stocks" @refresh="fetchStocks"
                                         @edit-stock="openEditStockDialog" :branch-id="branchDetails.branch_id"
                                         :branch-name="branchDetails.branch_name" :shop-id="branchDetails.shop_id"
                                         :loading="loadingStocks" />
@@ -836,7 +836,7 @@ export default {
                 this.confirmUpdatingStockDialog = false;
                 await this.stocksStore.updateStockStore(stockData);
                 this.stockEditDialog = false;
-                this.onRefreshStocks();
+                this.fetchStocks();
                 this.showSuccess("Stock updated successfully!");
             } catch (error) {
                 console.error('Failed to update stock:', error);
@@ -863,7 +863,7 @@ export default {
                 this.confirmUpdatingProductDialog = false;
                 await this.productsStore.updateProductStore(productData);
                 this.productEditDialog = false;
-                this.onRefreshProducts();
+                this.fetchProducts();
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
                 console.error('Failed to update product:', error);
@@ -886,7 +886,7 @@ export default {
                 console.log(ingredientData);
                 // await this.productsStore.updateIngredientStore(ingredientData);
                 // this.ingredientEditDialog = false;
-                // this.onRefreshProducts();
+                // this.fetchProducts();
                 // this.showSuccess("Ingredient updated successfully!");
             } catch (error) {
                 console.error('Failed to update ingredient:', error);
@@ -1021,20 +1021,6 @@ export default {
 
         showSuccess(message) {
             this.$refs.snackbarRef.showSnackbar(message, "success");
-        },
-
-        onRefreshProducts() {
-            this.loadingProducts = true;
-            setTimeout(() => {
-                this.fetchProducts();
-            }, 1000);
-        },
-
-        onRefreshStocks() {
-            this.loadingStocks = true;
-            setTimeout(() => {
-                this.fetchStocks();
-            }, 1000);
         },
 
         // onRefreshTransactionsoOrdersReport() {
