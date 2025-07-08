@@ -87,14 +87,17 @@ export const TRANSACT_API = {
             throw error;
         }
     },
-    
-    async fetchOrdersOnlyApi(branchId) {
+
+    async fetchOrdersOnlyApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
             let endpoint = `${this.ENDPOINTS.FETCH_ORDERS}/${branchId}`;
+            if (dateFilterId) {
+                endpoint += `?date_filter=${dateFilterId}`;
+            }
             const response = await apiClient.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${authToken}`,

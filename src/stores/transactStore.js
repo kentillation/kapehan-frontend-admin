@@ -74,11 +74,11 @@ export const useTransactStore = defineStore('transactions', {
             }
         },
 
-        async fetchOrdersOnlyStore(branchId) {
+        async fetchOrdersOnlyStore(branchId, dateFilterId = null) {
             this.loading = true;
             this.error = null;
             try {
-                const response = await TRANSACT_API.fetchOrdersOnlyApi(branchId);
+                const response = await TRANSACT_API.fetchOrdersOnlyApi(branchId, dateFilterId);
                 if (response && response.status === true) {
                     this.ordersOnly = response.data;
                 } else {

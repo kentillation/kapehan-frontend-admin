@@ -59,6 +59,7 @@ export default {
             const month = monthIndex + 1;
             emit('month-changed', month);
             emit('sales-changed', month);
+            emit('orders-changed', month);
         };
 
         const filteredSalesByMonth = computed(() => {

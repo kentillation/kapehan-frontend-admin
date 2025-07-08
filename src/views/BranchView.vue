@@ -138,8 +138,11 @@
                                             <SalesChart 
                                             :sales-by-month="salesByMonthReports" 
                                             :sales-only="totalSales"
+                                            :orders-only="totalOrders"
                                             @month-changed="fetchSalesByMonthReport"
-                                            @sales-changed="fetchSalesOnly" />
+                                            @sales-changed="fetchSalesOnly" 
+                                            @orders-changed="fetchOrdersOnly" />
+                                            <!-- added (:orders-only="totalOrders" and @orders-changed="fetchOrdersOnly -->
                                         </v-card-text>
                                     </v-card>
                                 </v-container>
@@ -360,9 +363,9 @@ export default {
 
             // Dashboard
             totalSales: null,
-            totalOrders: '',
-            totalProducts: '',
-            totalStocks: '',
+            totalOrders: null,
+            totalProducts: null,
+            totalStocks: null,
             loadingSalesOnly: false,
             loadingOrdersOnly: false,
             loadingProductsOnly: false,
@@ -491,7 +494,7 @@ export default {
                     this.activeTab = "dashboard";
                     const currentMonth = new Date().getMonth() + 1;
                     this.fetchSalesOnly(currentMonth);
-                    this.fetchOrdersOnly();
+                    this.fetchOrdersOnly(currentMonth); // added "currentMonth"
                     this.fetchProductsOnly();
                     this.fetchStocksOnly();
                     this.fetchSalesByMonthReport(currentMonth);
@@ -502,7 +505,7 @@ export default {
             if (newTab === 'dashboard') {
                 const currentMonth = new Date().getMonth() + 1;
                 this.fetchSalesOnly(currentMonth);
-                this.fetchOrdersOnly();
+                this.fetchOrdersOnly(currentMonth); // added "currentMonth"
                 this.fetchProductsOnly();
                 this.fetchStocksOnly();
                 this.fetchSalesByMonthReport(currentMonth);
@@ -755,27 +758,8 @@ export default {
             }
         },
 
-        async fetchSalesByMonthReport(month = null) {
-            this.loadingSalesByMonthReports = true;
-            try {
-                this.isSaving = false;
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.salesByMonthReports = [];
-                    return;
-                }
-                await this.transactStore.fetchSalesByMonthStore(this.branchDetails.branch_id, month);
-                this.salesByMonthReports = this.transactStore.salesByMonth || [];
-                this.loadingSalesByMonthReports = true;
-            } catch (error) {
-                console.error('Error fetching sales:', error);
-                this.showError("Error fetching sales!");
-            } finally {
-                this.loadingSalesByMonthReports = false;
-            }
-        },
-
-        async fetchOrdersOnly() {
+        // month = null is added
+        async fetchOrdersOnly(month = null) {
             this.loadingOrdersOnly = true;
             try {
                 if (!this.branchDetails.branch_id) {
@@ -783,13 +767,9 @@ export default {
                     this.totalOrders = '';
                     return;
                 }
-                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id);
-                if (this.transactStore.ordersOnly.length === 0) {
-                    this.totalOrders = '';
-                } else {
-                    this.totalOrders = this.transactStore.ordersOnly.total_orders;
-                }
-                this.loadingOrdersOnly = false;
+                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id, month);
+                // added (Number(THIS_IS_THE_DATA))
+                this.totalOrders = Number(this.transactStore.ordersOnly.total_orders).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching total orders:', error);
                 this.showError("Error fetching total orders!");
@@ -841,6 +821,26 @@ export default {
                 this.showError("Error fetching total stocks!");
             } finally {
                 this.loadingStocksOnly = false;
+            }
+        },
+
+        async fetchSalesByMonthReport(month = null) {
+            this.loadingSalesByMonthReports = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.salesByMonthReports = [];
+                    return;
+                }
+                await this.transactStore.fetchSalesByMonthStore(this.branchDetails.branch_id, month);
+                this.salesByMonthReports = this.transactStore.salesByMonth || [];
+                this.loadingSalesByMonthReports = true;
+            } catch (error) {
+                console.error('Error fetching sales:', error);
+                this.showError("Error fetching sales!");
+            } finally {
+                this.loadingSalesByMonthReports = false;
             }
         },
 
