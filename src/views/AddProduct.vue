@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
+        <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
         <h1 class="text-brown-lighten-1">Add Product ( {{ branchName }} Branch )</h1>
         <v-form ref="productForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productRows" :key="index"
@@ -131,6 +132,9 @@ export default {
         },
     },
     methods: {
+        back () {
+            this.$router.go(-1);
+        },
         removeRow(index) {
             if (this.productRows.length > 1) {
                 this.productRows.splice(index, 1);

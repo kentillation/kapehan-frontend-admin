@@ -6,16 +6,13 @@
         <h3>{{ authStore.shopName }}</h3>
         <v-spacer></v-spacer>
         <v-btn icon>
-          <v-icon class="ms-5">mdi-account-circle-outline</v-icon>
-        </v-btn>
-        <v-btn v-if="showLogout" icon @click="authStore.logout" title="Signout">
-          <v-icon>mdi-power</v-icon>
+          <v-icon>mdi-account-circle-outline</v-icon>
         </v-btn>
       </v-app-bar>
       <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
         <v-list density="compact" nav>
           <v-list-subheader size="30">Menu</v-list-subheader>
-          <v-list-item prepend-icon="mdi-home" @click="toHome" class="bg-brown-darken-3 ps-5"
+          <v-list-item prepend-icon="mdi-home-outline" @click="toHome" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Home</v-list-item>
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Create
@@ -49,7 +46,7 @@
           </template>
 
           <v-divider class="mt-4"></v-divider>
-          <v-list-item prepend-icon="mdi-logout" v-if="showLogout" @click="authStore.logout"
+          <v-list-item prepend-icon="mdi-power" v-if="showLogout" @click="authStore.logout"
             class="bg-brown-darken-3 ps-5 mt-2" style="border-radius: 30px;">Signout</v-list-item>
         </v-list>
       </v-navigation-drawer>
