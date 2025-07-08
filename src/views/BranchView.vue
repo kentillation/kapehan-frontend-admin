@@ -24,28 +24,22 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1" size="80">mdi-account-cash</v-icon>
+                                                                <v-icon class="text-brown-darken-1"
+                                                                    size="80">mdi-account-cash</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
-                                                                <div class="d-flex align-center justify-space-between" style="position: relative;">
+                                                                <div class="d-flex align-center justify-space-between">
                                                                     <h3 class="text-brown-lighten-2">Sales</h3>
-                                                                    <v-icon @click="viewFilterCard">mdi-dots-vertical</v-icon>
-                                                                    <div class="filter-card" v-show="showFilterCard">
-                                                                        <v-btn class="bg-grey text-white" size="small">Today</v-btn>
-                                                                        <v-btn class="bg-grey text-white" size="small">Yesterday</v-btn>
-                                                                        <v-btn class="bg-grey text-white" size="small">Last 7 days</v-btn>
-                                                                        <v-btn class="bg-grey text-white" size="small">This Week</v-btn>
-                                                                        <v-btn class="bg-grey text-white" size="small">Last 30 days</v-btn>
-                                                                        <v-btn class="bg-grey text-white" size="small">This Month</v-btn>
-                                                                        <v-btn class="bg-grey text-white" size="small">Last Month</v-btn>
-                                                                    </div>
+                                                                    <v-icon
+                                                                        @click="viewFilterCard">mdi-dots-vertical</v-icon>
                                                                 </div>
-                                                                <h2 class="mt-2">₱{{  totalSales }}</h2>
+                                                                <h2 class="mt-2">₱{{ totalSales }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;" @click="switchToSalesTab()">
+                                                                        style="cursor: pointer;"
+                                                                        @click="switchToSalesTab()">
                                                                         View</h4>
                                                                 </div>
                                                             </div>
@@ -62,7 +56,8 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1" size="80">mdi-invoice-text-outline</v-icon>
+                                                                <v-icon class="text-brown-darken-1"
+                                                                    size="80">mdi-invoice-text-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
@@ -71,7 +66,8 @@
                                                                 <h2 class="mt-2">{{ totalOrders }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;" @click="switchToOrdersTab()">
+                                                                        style="cursor: pointer;"
+                                                                        @click="switchToOrdersTab()">
                                                                         View</h4>
                                                                 </div>
                                                             </div>
@@ -88,7 +84,8 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1" size="80">mdi-food-outline</v-icon>
+                                                                <v-icon class="text-brown-darken-1"
+                                                                    size="80">mdi-food-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
@@ -97,7 +94,8 @@
                                                                 <h2 class="mt-2">{{ totalProducts }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;" @click="switchToProductsTab()">
+                                                                        style="cursor: pointer;"
+                                                                        @click="switchToProductsTab()">
                                                                         View</h4>
                                                                 </div>
                                                             </div>
@@ -114,7 +112,8 @@
                                                     <v-row>
                                                         <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1" size="80">mdi-archive-outline</v-icon>
+                                                                <v-icon class="text-brown-darken-1"
+                                                                    size="80">mdi-archive-outline</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
@@ -136,14 +135,15 @@
                                 </v-container>
 
                                 <!-- Sales Visualization -->
-                                 <v-container class="mt-5">
+                                <v-container class="mt-5">
                                     <h3>Sales Trends</h3>
                                     <v-card>
                                         <v-card-text>
-                                            <SalesChart :sales-by-month="salesByMonthReports" @month-changed="fetchSalesByMonthReport" />
+                                            <SalesChart :sales-by-month="salesByMonthReports"
+                                                @month-changed="fetchSalesByMonthReport" />
                                         </v-card-text>
                                     </v-card>
-                                 </v-container>
+                                </v-container>
                             </v-tabs-window-item>
 
                             <!-- Products -->
@@ -151,21 +151,22 @@
                                 <v-container>
                                     <ProductsTableSkeleton v-if="loadingProducts" />
                                     <ProductsTable v-else @refresh="fetchProducts" @edit-product="editProductDialog"
-                                        @view-ingredients="ingredientsDialog" :products="products" :loading="loadingProducts"
-                                        :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id"
-                                        :branch-name="branchDetails.branch_name" />
+                                        @view-ingredients="ingredientsDialog" :products="products"
+                                        :loading="loadingProducts" :shop-id="branchDetails.shop_id"
+                                        :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
                                     <ProductEditDialog v-model="productEditDialog"
                                         @update:modelValue="productEditDialog = $event"
                                         @update:product="currentProduct = $event"
-                                        @update:confirm="confirmUpdatingProductDialog = $event" :product="currentProduct"
-                                        @save="updatingProduct" :valid="formValid" :loading="isSaving"
-                                        :confirm="confirmUpdatingProductDialog"
+                                        @update:confirm="confirmUpdatingProductDialog = $event"
+                                        :product="currentProduct" @save="updatingProduct" :valid="formValid"
+                                        :loading="isSaving" :confirm="confirmUpdatingProductDialog"
                                         :selected-product="currentProduct?.product_name || ''" />
-                                    <ProductIngredientsDialog v-model="dialogIngredients" :product-ingredients="ingredients"
-                                        :loading="loadingIngredient" @edit-ingredient="editIngredientDialog"
-                                        :shop-id="branchDetails.shop_id" :branch-id="branchDetails.branch_id"
-                                        :branch-name="branchDetails.branch_name" :product-id="productId"
-                                        :product-name="productName" :product-temp="productTemp" :product-size="productSize" />
+                                    <ProductIngredientsDialog v-model="dialogIngredients"
+                                        :product-ingredients="ingredients" :loading="loadingIngredient"
+                                        @edit-ingredient="editIngredientDialog" :shop-id="branchDetails.shop_id"
+                                        :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
+                                        :product-id="productId" :product-name="productName" :product-temp="productTemp"
+                                        :product-size="productSize" />
                                     <IngredientEditDialog v-model="ingredientEditDialog"
                                         @update:modelValue="ingredientEditDialog = $event"
                                         @update:ingredient="currentIngredient = $event"
@@ -175,8 +176,8 @@
                                     <!-- :selected-ingredient="currentIngredient?.product_name || ''" -->
                                     <ProductsHistoryDialog v-model="productsHistoryDialog"
                                         :branch-id="branchDetails.branch_id" />
-                                    <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray" class="mt-3"
-                                        variant="tonal">
+                                    <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray"
+                                        class="mt-3" variant="tonal">
                                         <span class="to-hide">Products History</span>
                                         <span class="to-show">History</span>
                                     </v-btn>
@@ -191,7 +192,8 @@
                                         @edit-stock="openEditStockDialog" :branch-id="branchDetails.branch_id"
                                         :branch-name="branchDetails.branch_name" :shop-id="branchDetails.shop_id"
                                         :loading="loadingStocks" />
-                                    <StockEditDialog v-model="stockEditDialog" @update:modelValue="stockEditDialog = $event"
+                                    <StockEditDialog v-model="stockEditDialog"
+                                        @update:modelValue="stockEditDialog = $event"
                                         @update:stock="currentStock = $event"
                                         @update:confirm="confirmUpdatingStockDialog = $event" :stock="currentStock"
                                         @save="updatingStock" :valid="formValid" :loading="isSaving"
@@ -199,9 +201,10 @@
                                         :selected-stock="currentStock?.stock_ingredient || ''"
                                         :availability-stock-options="availabilityOptions" />
 
-                                    <StocksHistoryDialog v-model="stockHistoryDialog" :branch-id="branchDetails.branch_id" />
-                                    <v-btn @click="openStockHistory" prepend-icon="mdi-history" color="gray" class="mt-3"
-                                        variant="tonal">
+                                    <StocksHistoryDialog v-model="stockHistoryDialog"
+                                        :branch-id="branchDetails.branch_id" />
+                                    <v-btn @click="openStockHistory" prepend-icon="mdi-history" color="gray"
+                                        class="mt-3" variant="tonal">
                                         <span class="to-hide">Stocks History</span>
                                         <span class="to-show">History</span>
                                     </v-btn>
@@ -211,8 +214,8 @@
                             <!-- Branch Info -->
                             <v-tabs-window-item value="branch_info">
                                 <v-container>
-                                    <div class="d-flex flex-column" v-for="(detail, i) in branchDetailItems" :key="i" cols="12"
-                                        lg="3" md="4" sm="6" xs="12">
+                                    <div class="d-flex flex-column" v-for="(detail, i) in branchDetailItems" :key="i"
+                                        cols="12" lg="3" md="4" sm="6" xs="12">
                                         <p class="text-grey-darken-1">{{ detail.label }}</p>
                                         <h4 class="mb-5">{{ detail.value }}</h4>
                                     </div>
@@ -222,10 +225,10 @@
                             <!-- Reports -->
                             <v-tabs-window-item value="reports">
                                 <v-container>
-                                    <v-tabs v-model="activeReportsTab" class="bg-brown-lighten-2 d-flex px-4 rounded" align-tabs="left" color="white"
-                                        stacked>
-                                        <v-tab v-for="tab in reportsTabs" :key="tab.value" class="rounded mt-4 mx-2" :value="tab.value"
-                                            :class="{ 'active-tab': activeReportsTab === tab.value }"
+                                    <v-tabs v-model="activeReportsTab" class="bg-brown-lighten-2 d-flex px-4 rounded"
+                                        align-tabs="left" color="white" stacked>
+                                        <v-tab v-for="tab in reportsTabs" :key="tab.value" class="rounded mt-4 mx-2"
+                                            :value="tab.value" :class="{ 'active-tab': activeReportsTab === tab.value }"
                                             @click="tab.clickHandler ? tab.clickHandler() : null">
                                             {{ tab.label }}
                                         </v-tab>
@@ -235,23 +238,27 @@
                                             <SalesReportsTableSkeleton
                                                 v-if="loadingTransactionOrdersReports && activeReportsTab === 'sales'" />
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
-                                                :sales-by-date="transactStore.salesByDate" :loading="loadingTransactionOrdersReports"
-                                                @refresh="fetchSalesReport" :shop-id="branchDetails.shop_id"
-                                                :shop-name="branchDetails.shop_name" :branch-id="branchDetails.branch_id"
+                                                :sales-by-date="transactStore.salesByDate"
+                                                :loading="loadingTransactionOrdersReports" @refresh="fetchSalesReport"
+                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
+                                                :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
-                                                :contact="branchDetails.contact" :shop-logo-link="branchDetails.shop_logo_link"
+                                                :contact="branchDetails.contact"
+                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
-                                            
+
                                             <TransactionsReportsTableSkeleton
                                                 v-if="loadingTransactionsReports && activeReportsTab === 'orders'" />
                                             <TransactionsReportTable v-else-if="activeReportsTab === 'orders'"
-                                                :transactions="transactStore.transactions" :loading="loadingTransactionsReports"
-                                                @refresh="fetchOrdersReport" :shop-id="branchDetails.shop_id"
-                                                :shop-name="branchDetails.shop_name" :branch-id="branchDetails.branch_id"
+                                                :transactions="transactStore.transactions"
+                                                :loading="loadingTransactionsReports" @refresh="fetchOrdersReport"
+                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
+                                                :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
-                                                :contact="branchDetails.contact" :shop-logo-link="branchDetails.shop_logo_link"
+                                                :contact="branchDetails.contact"
+                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                             <ProductsReportsTableSkeleton
@@ -259,20 +266,25 @@
                                             <ProductsReportTable v-else-if="activeReportsTab === 'products'"
                                                 :products="productReports" :loading="loadingProductReports"
                                                 @refresh="fetchProductsReport" :shop-id="branchDetails.shop_id"
-                                                :shop-name="branchDetails.shop_name" :branch-id="branchDetails.branch_id"
+                                                :shop-name="branchDetails.shop_name"
+                                                :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
-                                                :contact="branchDetails.contact" :shop-logo-link="branchDetails.shop_logo_link"
+                                                :contact="branchDetails.contact"
+                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                             <StocksReportsTableSkeleton
                                                 v-if="loadingStockReports && activeReportsTab === 'stocks'" />
-                                            <StocksReportTable v-else-if="activeReportsTab === 'stocks'" :stocks="stockReports"
-                                                :loading="loadingStockReports" @refresh="fetchStocksReport"
-                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
-                                                :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name"
+                                            <StocksReportTable v-else-if="activeReportsTab === 'stocks'"
+                                                :stocks="stockReports" :loading="loadingStockReports"
+                                                @refresh="fetchStocksReport" :shop-id="branchDetails.shop_id"
+                                                :shop-name="branchDetails.shop_name"
+                                                :branch-id="branchDetails.branch_id"
+                                                :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
-                                                :contact="branchDetails.contact" :shop-logo-link="branchDetails.shop_logo_link"
+                                                :contact="branchDetails.contact"
+                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                         </div>
@@ -356,7 +368,6 @@ export default {
             loadingOrdersOnly: false,
             loadingProductsOnly: false,
             loadingStocksOnly: false,
-            showFilterCard: false,
 
             // Products
             products: [],
@@ -978,7 +989,7 @@ export default {
             return {
                 ...stock,
                 stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
-                display_stock_in: `${stock.stock_in} ${ stock.stock_in > 1 ? 'items' : 'item'}`,
+                display_stock_in: `${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}`,
                 display_unit_cost: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),
             };
@@ -1040,10 +1051,6 @@ export default {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
 
-        viewFilterCard() {
-            this.showFilterCard = !this.showFilterCard;
-        },
-
         // onRefreshTransactionsoOrdersReport() {
         //     this.loadingTransactionOrdersReports = true;
         //     setTimeout(() => {
@@ -1054,21 +1061,3 @@ export default {
     }
 };
 </script>
-
-<style>
-.filter-card {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    background-color: #3a3a3a;
-    padding: 15px;
-    gap: 5px;
-    z-index: 9999;
-    right: 0;
-    top: 40px;
-    border-radius: 8px;
-    min-width: 180px;
-    max-height: 320px;
-    overflow-y: auto;
-}
-</style>
