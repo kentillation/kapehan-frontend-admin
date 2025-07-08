@@ -5,6 +5,7 @@ export const useTransactStore = defineStore('transactions', {
     state: () => ({
         transactions: [],
         salesByDate: [],
+        total_sales: null,
         salesByMonth: [],
         salesOnly: '',
         ordersOnly: '',
@@ -41,6 +42,7 @@ export const useTransactStore = defineStore('transactions', {
                 const response = await TRANSACT_API.fetchSalesByDateApi(branchId, dateFilterId);
                 if (response && response.status === true) {
                     this.salesByDate = response.data;
+                    this.total_sales = response.total_sales
                 } else {
                     throw new Error(response?.message || 'Failed to fetch sales');
                 }

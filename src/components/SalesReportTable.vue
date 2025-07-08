@@ -17,7 +17,7 @@
                     <div class="d-flex">
                         <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
                             item-value="filter_date_id" label="Date Filter" class="w-75 me-2" clearable></v-autocomplete>
-                        <v-text-field readonly>{{ totalSales }}</v-text-field>
+                        <v-text-field readonly>₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field>
                     </div>
                 </v-col>
             </v-row>
@@ -50,6 +50,7 @@ export default {
     name: 'SalesReportTable',
     data() {
         return {
+            totalSales: null,
             mappedSales: [],
             dateFilter: null,
             salesReportHeaders: [
@@ -161,6 +162,7 @@ export default {
             try {
                 await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
                 this.mappedSales = this.transactStore.salesByDate.map(t_order => this.formatSales(t_order));
+                this.totalSales = this.transactStore.total_sales;
             } catch (error) {
                 this.showError("Error fetching sales!");
             }

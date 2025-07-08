@@ -489,21 +489,23 @@ export default {
                 if (newBranchName) {
                     await this.fetchBranchDetails();
                     this.activeTab = "dashboard";
-                    this.fetchSalesOnly();
+                    const currentMonth = new Date().getMonth() + 1;
+                    this.fetchSalesOnly(currentMonth);
                     this.fetchOrdersOnly();
                     this.fetchProductsOnly();
                     this.fetchStocksOnly();
-                    this.fetchSalesByMonthReport();
+                    this.fetchSalesByMonthReport(currentMonth);
                 }
             }
         },
         activeTab(newTab) {
             if (newTab === 'dashboard') {
-                this.fetchSalesOnly();
+                const currentMonth = new Date().getMonth() + 1;
+                this.fetchSalesOnly(currentMonth);
                 this.fetchOrdersOnly();
                 this.fetchProductsOnly();
                 this.fetchStocksOnly();
-                this.fetchSalesByMonthReport();
+                this.fetchSalesByMonthReport(currentMonth);
             } else if (newTab === 'products') {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {

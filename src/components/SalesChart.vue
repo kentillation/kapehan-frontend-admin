@@ -56,8 +56,9 @@ export default {
         const selectedMonth = ref(new Date().getMonth());
 
         const handleMonthChange = (monthIndex) => {
-            emit('month-changed', monthIndex + 1),
-            emit('sales-changed', monthIndex + 1);
+            const month = monthIndex + 1;
+            emit('month-changed', month);
+            emit('sales-changed', month);
         };
 
         const filteredSalesByMonth = computed(() => {
