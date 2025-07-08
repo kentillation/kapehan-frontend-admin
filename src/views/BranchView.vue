@@ -30,11 +30,7 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
-                                                                <div class="d-flex align-center justify-space-between">
-                                                                    <h3 class="text-brown-lighten-2">Sales</h3>
-                                                                    <v-icon
-                                                                        @click="viewFilterCard">mdi-dots-vertical</v-icon>
-                                                                </div>
+                                                                <h3 class="text-brown-lighten-2">Sales</h3>
                                                                 <h2 class="mt-2">₱{{ totalSales }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
@@ -139,8 +135,11 @@
                                     <h3>Sales Trends</h3>
                                     <v-card>
                                         <v-card-text>
-                                            <SalesChart :sales-by-month="salesByMonthReports"
-                                                @month-changed="fetchSalesByMonthReport" />
+                                            <SalesChart 
+                                            :sales-by-month="salesByMonthReports" 
+                                            :sales-only="totalSales"
+                                            @month-changed="fetchSalesByMonthReport"
+                                            @sales-changed="fetchSalesOnly" />
                                         </v-card-text>
                                     </v-card>
                                 </v-container>
@@ -360,7 +359,7 @@ export default {
             loadingBranchDetails: false,
 
             // Dashboard
-            totalSales: '',
+            totalSales: null,
             totalOrders: '',
             totalProducts: '',
             totalStocks: '',
@@ -736,6 +735,24 @@ export default {
             }
         },
 
+        async fetchSalesOnly(month = null) {
+            this.loadingSalesOnly = true;
+            try {
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.totalSales = '';
+                    return;
+                }
+                await this.transactStore.fetchSalesOnlyStore(this.branchDetails.branch_id, month);
+                this.totalSales = Number(this.transactStore.salesOnly.total_sales).toLocaleString('en-PH') || '';
+            } catch (error) {
+                console.error('Error fetching total sales:', error);
+                this.showError("Error fetching total sales!");
+            } finally {
+                this.loadingSalesOnly = false;
+            }
+        },
+
         async fetchSalesByMonthReport(month = null) {
             this.loadingSalesByMonthReports = true;
             try {
@@ -747,35 +764,12 @@ export default {
                 }
                 await this.transactStore.fetchSalesByMonthStore(this.branchDetails.branch_id, month);
                 this.salesByMonthReports = this.transactStore.salesByMonth || [];
-                this.salesByMonthReportsLoaded = true;
+                this.loadingSalesByMonthReports = true;
             } catch (error) {
                 console.error('Error fetching sales:', error);
                 this.showError("Error fetching sales!");
             } finally {
                 this.loadingSalesByMonthReports = false;
-            }
-        },
-
-        async fetchSalesOnly() {
-            this.loadingSalesOnly = true;
-            try {
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.totalSales = '';
-                    return;
-                }
-                await this.transactStore.fetchSalesOnlyStore(this.branchDetails.branch_id);
-                if (this.transactStore.salesOnly.length === 0) {
-                    this.totalSales = '';
-                } else {
-                    this.totalSales = Number(this.transactStore.salesOnly.total_sales).toLocaleString('en-PH');
-                }
-                this.loadingSalesOnly = false;
-            } catch (error) {
-                console.error('Error fetching total sales:', error);
-                this.showError("Error fetching total sales!");
-            } finally {
-                this.loadingSalesOnly = false;
             }
         },
 

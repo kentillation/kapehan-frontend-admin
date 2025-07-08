@@ -64,29 +64,6 @@ export const TRANSACT_API = {
         }
     },
 
-    async fetchSalesApi(branchId) {
-        try {
-            const authToken = localStorage.getItem('auth_token');
-            if (!authToken) {
-                throw new Error('No authentication token found');
-            }
-            let endpoint = `${this.ENDPOINTS.FETCH_SALES}/${branchId}`;
-            const response = await apiClient.get(endpoint, {
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-            if (!response.data) {
-                throw new Error('Invalid response from server');
-            }
-            return response.data;
-        } catch (error) {
-            console.error('[fetchSalesApi] Error fetching sales:', error);
-            throw error;
-        }
-    },
-
     async fetchOrdersApi(branchId) {
         try {
             const authToken = localStorage.getItem('auth_token');
@@ -152,6 +129,30 @@ export const TRANSACT_API = {
             return response.data;
         } catch (error) {
             console.error('[fetchProductsOnlyApi] Error fetching sales:', error);
+            throw error;
+        }
+    },
+
+    async fetchSalesApi(branchId, dateFilterId = null) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) throw new Error('No authentication token found');
+            let endpoint = `${this.ENDPOINTS.FETCH_SALES}/${branchId}`;
+            if (dateFilterId) {
+                endpoint += `?date_filter=${dateFilterId}`;
+            }
+            const response = await apiClient.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[fetchSalesApi] Error fetching sales:', error);
             throw error;
         }
     },

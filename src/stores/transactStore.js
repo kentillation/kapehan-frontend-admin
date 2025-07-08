@@ -53,25 +53,6 @@ export const useTransactStore = defineStore('transactions', {
             }
         },
 
-        async fetchSalesOnlyStore(branchId) {
-            this.loading = true;
-            this.error = null;
-            try {
-                const response = await TRANSACT_API.fetchSalesApi(branchId);
-                if (response && response.status === true) {
-                    this.salesOnly = response.data;
-                } else {
-                    throw new Error(response?.message || 'Failed to fetch sales');
-                }
-            } catch (error) {
-                console.error('Error in fetchSalesApi:', error);
-                this.error = error.message || 'Failed to fetch sales';
-                throw error;
-            } finally {
-                this.loading = false;
-            }
-        },
-
         async fetchOrdersOnlyStore(branchId) {
             this.loading = true;
             this.error = null;
@@ -123,6 +104,25 @@ export const useTransactStore = defineStore('transactions', {
             } catch (error) {
                 console.error('Error in fetchStocksOnlyApi:', error);
                 this.error = error.message || 'Failed to fetch products';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchSalesOnlyStore(branchId, dateFilterId = null) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await TRANSACT_API.fetchSalesApi(branchId, dateFilterId);
+                if (response && response.status === true) {
+                    this.salesOnly = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch sales');
+                }
+            } catch (error) {
+                console.error('Error in fetchSalesApi:', error);
+                this.error = error.message || 'Failed to fetch sales';
                 throw error;
             } finally {
                 this.loading = false;

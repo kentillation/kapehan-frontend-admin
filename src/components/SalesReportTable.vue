@@ -14,8 +14,11 @@
                     </div>
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
-                    <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
-                        item-value="filter_date_id" label="Date Filter" class="mx-3" clearable></v-autocomplete>
+                    <div class="d-flex">
+                        <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
+                            item-value="filter_date_id" label="Date Filter" class="w-75 me-2" clearable></v-autocomplete>
+                        <v-text-field readonly>{{ totalSales }}</v-text-field>
+                    </div>
                 </v-col>
             </v-row>
         </template>

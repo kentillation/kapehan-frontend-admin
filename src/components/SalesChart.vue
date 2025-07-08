@@ -56,10 +56,11 @@ export default {
         const selectedMonth = ref(new Date().getMonth());
 
         const handleMonthChange = (monthIndex) => {
-            emit('month-changed', monthIndex + 1);
+            emit('month-changed', monthIndex + 1),
+            emit('sales-changed', monthIndex + 1);
         };
 
-        const filteredSales = computed(() => {
+        const filteredSalesByMonth = computed(() => {
             return props.salesByMonth.filter(sale => {
                 const date = new Date(sale.updated_at);
                 return date.getMonth() === selectedMonth.value;
@@ -67,11 +68,11 @@ export default {
         });
 
         const chartData = computed(() => {
-            if (!filteredSales.value.length) return null;
-            const year = new Date(filteredSales.value[0].updated_at).getFullYear();
+            if (!filteredSalesByMonth.value.length) return null;
+            const year = new Date(filteredSalesByMonth.value[0].updated_at).getFullYear();
             const daysInMonth = new Date(year, selectedMonth.value + 1, 0).getDate();
             const salesPerDay = Array(daysInMonth).fill(0);
-            filteredSales.value.forEach(sale => {
+            filteredSalesByMonth.value.forEach(sale => {
                 const date = new Date(sale.updated_at);
                 const day = date.getDate();
                 salesPerDay[day - 1] += Number(sale.sales || sale.total_sales || 0);
