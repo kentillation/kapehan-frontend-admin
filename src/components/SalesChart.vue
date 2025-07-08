@@ -1,25 +1,21 @@
 <template>
-    <v-row>
-        <v-col cols="12" lg="6" md="6" sm="12">
-            <v-container>
-                <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
-                    label="Select Month" class="mb-4" dense outlined style="max-width: 200px"
-                    @update:modelValue="handleMonthChange" />
-                <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px" />
-            </v-container>
-        </v-col>
-        <v-col cols="12" lg="6" md="6" sm="12">
+    <v-container>
+        <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
+            label="Select Month" class="mb-4" dense outlined style="max-width: 200px;"
+            @update:modelValue="handleMonthChange" />
+        <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px;" />
+    </v-container>
+    <!-- <v-col cols="12" lg="6" md="6" sm="12">
             <v-container class="mt-10">
-                <!-- <h4 class="mb-2">Sales by Month (Donut Chart)</h4> -->
-                <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="max-width: 600px; max-height: 1000px; margin: auto;" />
+                <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="margin: auto;" />
             </v-container>
-        </v-col>
-    </v-row>
+        </v-col> -->
 </template>
 
 <script>
 import { ref, computed } from 'vue';
-import { Bar, Doughnut } from 'vue-chartjs';
+import { Bar } from 'vue-chartjs';
+// import { Doughnut } from 'vue-chartjs';
 import {
     Chart,
     BarElement,
@@ -33,7 +29,7 @@ import {
 Chart.register(BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 export default {
-    components: { Bar, Doughnut },
+    components: { Bar },
     props: {
         salesByMonth: {
             type: Array,
@@ -87,10 +83,15 @@ export default {
                     {
                         label: 'Sales (₱)',
                         backgroundColor: [
-                            '#be4343', '#be6a43', '#c27e00', '#9dbe43', 
-                            '#43be7a', '#00a1a1', '#4387be', '#4360be', 
-                            '#5a00c2', '#d34a8f', '#c25063', '#852a2a',
+                            '#be43435d', '#be6a4350', '#c27e005b', '#9dbe4357',
+                            '#00a1a15d', '#00a1a180',
                         ],
+                        borderColor: [
+                            '#ff9191', '#ffb695', '#ffd993', '#e2ff94',
+                            '#8fffc2', '#95ffff',
+                        ],
+                        borderWidth: 3,
+                        borderRadius: 8,
                         data: salesPerDay,
                     },
                 ],
@@ -116,9 +117,9 @@ export default {
                     {
                         label: 'Sales (₱)',
                         backgroundColor: [
-                            '#be4343', '#be6a43', '#c27e00', '#9dbe43', 
-                            '#43be7a', '#00a1a1', '#4387be', '#4360be', 
-                            '#5a00c2', '#d34a8f', '#c25063', '#852a2a',
+                            '#be43435d', '#be6a4350', '#c27e005b', '#9dbe4357',
+                            '#00a1a1', '#4387be62', '#4360be5e', '#4360be',
+                            '#5b00c259', '#d34a8e5b', '#c2506359', '#852a2a5b',
                         ],
                         data: salesPerMonth,
                     },

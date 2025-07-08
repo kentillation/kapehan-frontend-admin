@@ -840,7 +840,7 @@ export default {
                 this.confirmUpdatingStockDialog = false;
                 await this.stocksStore.updateStockStore(stockData);
                 this.stockEditDialog = false;
-                this.fetchStocks();
+                // this.fetchStocks();
                 this.showSuccess("Stock updated successfully!");
             } catch (error) {
                 console.error('Failed to update stock:', error);

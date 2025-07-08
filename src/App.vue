@@ -8,24 +8,23 @@
         <v-btn icon>
           <v-icon>mdi-account-circle-outline</v-icon>
         </v-btn>
-        <v-btn icon @click="toggleTheme" :title="themeText">
-          <v-icon>mdi-theme-light-dark</v-icon>
-        </v-btn>
         <v-btn v-if="showLogout" icon @click="authStore.logout" title="Signout">
-          <v-icon>mdi-logout</v-icon>
+          <v-icon>mdi-door-open</v-icon>
         </v-btn>
       </v-app-bar>
       <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
         <v-list density="compact" nav>
           <v-list-subheader size="30">Menu</v-list-subheader>
-          <v-list-item prepend-icon="mdi-home" @click="toHome" class="bg-brown-darken-3"
+          <v-list-item prepend-icon="mdi-home" @click="toHome" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Home</v-list-item>
-          <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3"
+          <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Create
             Branch</v-list-item>
-          <v-list-item prepend-icon="mdi-account-cog-outline" class="bg-brown-darken-3"
+          <v-list-item prepend-icon="mdi-account-cog-outline" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Settings</v-list-item>
-          <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3"
+          <v-list-item prepend-icon="mdi-theme-light-dark" @click="toggleTheme" class="bg-brown-darken-3 ps-5"
+            style="border-radius: 30px;">Theme</v-list-item>
+          <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Help</v-list-item>
 
           <v-divider class="mt-4"></v-divider>
@@ -39,7 +38,7 @@
           <!-- Display branches when available -->
           <template v-else>
             <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="branch[0]"
-              :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3"
+              :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-5"
               style="border-radius: 30px;" />
           </template>
 
@@ -50,7 +49,7 @@
 
           <v-divider class="mt-4"></v-divider>
           <v-list-item prepend-icon="mdi-logout" v-if="showLogout" @click="authStore.logout"
-            class="bg-brown-darken-3 mt-2" style="border-radius: 30px;">Signout</v-list-item>
+            class="bg-brown-darken-3 ps-5 mt-2" style="border-radius: 30px;">Signout</v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-layout>
