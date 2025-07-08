@@ -87,8 +87,8 @@ export default {
                             '#00a1a15d', '#00a1a180',
                         ],
                         borderColor: [
-                            '#ff9191', '#ffb695', '#ffd993', '#e2ff94',
-                            '#8fffc2', '#95ffff',
+                            '#ff6666', '#ff9a6b', '#ffcc6d', '#a4c251',
+                            '#54c587', '#4ab6b6',
                         ],
                         borderWidth: 3,
                         borderRadius: 8,

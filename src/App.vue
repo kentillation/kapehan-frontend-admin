@@ -6,10 +6,10 @@
         <h3>{{ authStore.shopName }}</h3>
         <v-spacer></v-spacer>
         <v-btn icon>
-          <v-icon>mdi-account-circle-outline</v-icon>
+          <v-icon class="ms-5">mdi-account-circle-outline</v-icon>
         </v-btn>
         <v-btn v-if="showLogout" icon @click="authStore.logout" title="Signout">
-          <v-icon>mdi-door-open</v-icon>
+          <v-icon>mdi-power</v-icon>
         </v-btn>
       </v-app-bar>
       <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">

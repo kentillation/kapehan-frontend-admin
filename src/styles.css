@@ -5,6 +5,9 @@ body {
 .v-icon {
     min-width: 0 !important;
 }
+.v-icon--size-default {
+    font-size: calc(var(--v-icon-size-multiplier) * 1.2em) !important;
+}
 .v-tab.v-tab.v-btn {
     height: 40px !important;
 }
