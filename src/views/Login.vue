@@ -4,22 +4,14 @@
             <h1 class="text-center">Poofsa .vent</h1>
             <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                <v-text-field v-model="admin_email" 
-                    :rules="[requiredRule, emailFormatRule]"
-                    placeholder="Type here..."
-                    prepend-inner-icon="mdi-email-outline"
-                    variant="outlined"
-                    autocomplete="username" />
+                <v-text-field v-model="admin_email" :rules="[requiredRule, emailFormatRule]" placeholder="Type here..."
+                    prepend-inner-icon="mdi-email-outline" variant="outlined" autocomplete="username" />
 
                 <div class="text-subtitle-1 text-medium-emphasis mt-2">Password</div>
-                <v-text-field v-model="admin_password" 
-                    :rules="[requiredRule]"
-                    placeholder="Type here..."
-                    prepend-inner-icon="mdi-lock-outline" 
-                    variant="outlined" 
-                    autocomplete="current-password"
+                <v-text-field v-model="admin_password" :rules="[requiredRule]" placeholder="Type here..."
+                    prepend-inner-icon="mdi-lock-outline" variant="outlined" autocomplete="current-password"
                     :type="showPassword ? 'text' : 'password'"
-                    :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'" 
+                    :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"
                     @click:append-inner="showPassword = !showPassword" />
 
                 <v-btn type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
@@ -78,14 +70,25 @@ export default {
             try {
                 this.loadingStore.show('Logging in...');
                 const authStore = useAuthStore();
-                await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
-                this.loadingStore.hide();
-                window.location.href = '/home';
+                // await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
+                // this.loadingStore.hide();
+                // window.location.href = '/home';
+
+                const loginSuccess = await authStore.login({
+                    admin_email: this.admin_email,
+                    admin_password: this.admin_password
+                });
+
+                if (loginSuccess) {
+                    // Only redirect after successful login
+                    this.$router.push('/home');
+                }
             } catch (error) {
                 this.loadingStore.hide();
                 this.showSnackbar(error || 'Login failed. Please try again!', 'error');
             } finally {
                 this.loading = false;
+                this.loadingStore.hide();
             }
         },
         showSnackbar(message, color) {

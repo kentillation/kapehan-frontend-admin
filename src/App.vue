@@ -44,7 +44,8 @@
 
           <!-- If no branches after fetch -->
           <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
-            <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;"><em>No branch available</em></span>
+            <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;"><em>No branch
+                available</em></span>
           </template>
 
           <v-divider class="mt-4"></v-divider>
@@ -106,8 +107,15 @@ export default {
       return this.theme.global.name.value === 'light' ? 'Dark Mode' : 'Light Mode';
     }
   },
-  mounted() {
-    this.fetchBranches();
+  watch: {
+    '$route': {
+      immediate: true,
+      handler(newRoute) {
+        if (this.authStore.isAuthenticated && newRoute.name !== 'LoginPage') {
+          this.fetchBranches();
+        }
+      }
+    }
   },
   methods: {
     async fetchBranches() {

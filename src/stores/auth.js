@@ -31,7 +31,8 @@ export const useAuthStore = defineStore('auth', () => {
                 localStorage.setItem('shop_id', shopId.value);
                 localStorage.setItem('shop_name', shopName.value);
 
-                router.push('/home');
+                // router.push('/home');
+                return true;
             }
         } catch (err) {
             error.value = err.response?.data?.message ||
