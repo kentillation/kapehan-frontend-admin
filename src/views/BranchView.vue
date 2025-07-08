@@ -22,14 +22,26 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0">
+                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1" size="80">mdi-account-cash</v-icon>
                                                             </div>
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
-                                                                <h3 class="text-brown-lighten-2">Sales</h3>
+                                                                <div class="d-flex align-center justify-space-between" style="position: relative;">
+                                                                    <h3 class="text-brown-lighten-2">Sales</h3>
+                                                                    <v-icon @click="viewFilterCard">mdi-dots-vertical</v-icon>
+                                                                    <div class="filter-card" v-show="showFilterCard">
+                                                                        <v-btn class="bg-grey text-white" size="small">Today</v-btn>
+                                                                        <v-btn class="bg-grey text-white" size="small">Yesterday</v-btn>
+                                                                        <v-btn class="bg-grey text-white" size="small">Last 7 days</v-btn>
+                                                                        <v-btn class="bg-grey text-white" size="small">This Week</v-btn>
+                                                                        <v-btn class="bg-grey text-white" size="small">Last 30 days</v-btn>
+                                                                        <v-btn class="bg-grey text-white" size="small">This Month</v-btn>
+                                                                        <v-btn class="bg-grey text-white" size="small">Last Month</v-btn>
+                                                                    </div>
+                                                                </div>
                                                                 <h2 class="mt-2">₱{{  totalSales }}</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
@@ -344,6 +356,7 @@ export default {
             loadingOrdersOnly: false,
             loadingProductsOnly: false,
             loadingStocksOnly: false,
+            showFilterCard: false,
 
             // Products
             products: [],
@@ -1027,6 +1040,10 @@ export default {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
 
+        viewFilterCard() {
+            this.showFilterCard = !this.showFilterCard;
+        },
+
         // onRefreshTransactionsoOrdersReport() {
         //     this.loadingTransactionOrdersReports = true;
         //     setTimeout(() => {
@@ -1037,3 +1054,21 @@ export default {
     }
 };
 </script>
+
+<style>
+.filter-card {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: #3a3a3a;
+    padding: 15px;
+    gap: 5px;
+    z-index: 9999;
+    right: 0;
+    top: 40px;
+    border-radius: 8px;
+    min-width: 180px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+</style>

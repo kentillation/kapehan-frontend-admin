@@ -50,10 +50,10 @@ export default {
             mappedTransactions: [],
             dateFilter: null,
             transactionsHeaders: [
-                { title: 'Reference_number', value: 'reference_number', sortable: 'true', width: '15%' },
+                { title: 'Reference', value: 'reference_number', sortable: 'true', width: '25%' },
                 { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '15%' },
-                { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '15%' },
-                { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '15%' },
+                { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '10%' },
+                { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '10%' },
                 { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
                 { title: 'Transaction date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
@@ -172,7 +172,7 @@ export default {
                 this.loadingStore.show('Downloading transactions...');
             }
             const transactions = this.transactStore.transactions.map(order => ({
-                'Reference Number': order.reference_number,
+                'Reference': order.reference_number,
                 'Quantity': order.total_quantity,
                 'Cash render': order.customer_cash,
                 'Charge': order.customer_charge,
@@ -290,7 +290,7 @@ export default {
             return {
                 ...order,
                 display_customer_cash: `₱${order.customer_cash}`,
-                display_customer_charge: `₱${order.customer_charge}`,
+                display_customer_charge: `₱${Number(order.customer_charge).toLocaleString('en-PH')}`,
                 display_customer_change: `₱${order.customer_change}`,
                 display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
                 updated_at: this.formatDateTime(order.updated_at),

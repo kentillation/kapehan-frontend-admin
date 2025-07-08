@@ -50,9 +50,9 @@ export default {
             mappedSales: [],
             dateFilter: null,
             salesReportHeaders: [
-                { title: 'Product', value: 'display_product_name', sortable: 'true', width: '15%' },
-                { title: 'Price', value: 'display_product_price', sortable: 'true', width: '15%' },
-                { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '15%' },
+                { title: 'Product', value: 'display_product_name', sortable: 'true', width: '25%' },
+                { title: 'Price', value: 'display_product_price', sortable: 'true', width: '10%' },
+                { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '10%' },
                 { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
                 { title: 'Sales', value: 'display_sales', sortable: 'true', width: '15%' },
                 { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
@@ -293,7 +293,7 @@ export default {
                 updated_at: this.formatDateTime(sale.updated_at),
                 display_product_price: `₱${sale.product_price}`,
                 display_total_quantity: `${sale.total_quantity} ${ sale.total_quantity > 1 ? 'items' : 'item'}`,
-                display_sales: `₱${sale.sales}`,
+                display_sales: `₱${Number(sale.sales).toLocaleString('en-PH')}`,
             };
         },
 
