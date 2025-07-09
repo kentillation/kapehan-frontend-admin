@@ -2,13 +2,13 @@ import apiClient from '../axios';
 
 export const TRANSACT_API = {
     ENDPOINTS: {
-        FETCH: '/transactions',
-        FETCH_SALES_BY_DATE: '/sales-by-date',
-        FETCH_SALES: '/sales-only',
-        FETCH_ORDERS: '/orders-only',
-        FETCH_PRODUCTS: '/products-only',
-        FETCH_STOCKS: '/stocks-only',
-        FETCH_SALES_BY_MONTH: '/sales-by-month',
+        FETCH: '/admin/transactions',
+        FETCH_SALES_BY_DATE: '/admin/sales-by-date',
+        FETCH_SALES: '/admin/sales-only',
+        FETCH_ORDERS: '/admin/orders-only',
+        FETCH_PRODUCTS: '/admin/products-only',
+        FETCH_STOCKS: '/admin/stocks-only',
+        FETCH_SALES_BY_MONTH: '/admin/sales-by-month',
 
     },
 
