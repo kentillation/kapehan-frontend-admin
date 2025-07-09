@@ -34,7 +34,7 @@
 
           <!-- Display branches when available -->
           <template v-else>
-            <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="branch[0]"
+            <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
               :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-5"
               style="border-radius: 30px;" />
           </template>

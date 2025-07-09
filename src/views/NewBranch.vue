@@ -8,23 +8,23 @@
                         <v-form ref="newBranchForm" @submit.prevent="showConfirmDialog">
                             <v-row>
                                 <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="branch_name" label="Branch name"
+                                    <v-text-field v-model="branch_name" label="Branch name" placeholder="e.g. Manila"
                                         :rules="[v => !!v || 'Required']" variant="outlined" />
                                 </v-col>
                                 <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="branch_location" label="Branch location"
+                                    <v-text-field v-model="branch_location" label="Branch location" placeholder="e.g. Manila City, Philippines"
                                         :rules="[v => !!v || 'Required']" variant="outlined" />
                                 </v-col>
                                 <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="m_name" label="Branch manager name"
+                                    <v-text-field v-model="m_name" label="Branch manager name" placeholder="e.g. Juan Dela Cruz"
                                         :rules="[v => !!v || 'Required']" variant="outlined" />
                                 </v-col>
                                 <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="m_email" label="Branch manager email"
+                                    <v-text-field v-model="m_email" label="Branch manager email" placeholder="e.g. yourname@example.com"
                                         :rules="[v => !!v || 'Required']" variant="outlined" />
                                 </v-col>
                                 <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="contact" label="Branch manager contact"
+                                    <v-text-field v-model="contact" label="Branch manager contact" placeholder="e.g. 09123456789"
                                         :rules="[v => !!v || 'Required']" variant="outlined" />
                                 </v-col>
                             </v-row>
@@ -152,11 +152,11 @@ export default {
             }
         },
         resetForm() {
-            this.branch_name = '-';
-            this.branch_location = '-';
-            this.m_name = '-';
-            this.m_email = '-';
-            this.contact = '-';
+            this.branch_name = ' ';
+            this.branch_location = ' ';
+            this.m_name = ' ';
+            this.m_email = ' ';
+            this.contact = ' ';
             if (this.newBranchForm.resetValidation) {
                 this.newBranchForm.resetValidation();
             }

@@ -27,7 +27,7 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No transactions found
+                <span>&nbsp; No orders found for this branch
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>

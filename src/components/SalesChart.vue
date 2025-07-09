@@ -3,13 +3,9 @@
         <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
             label="Select Month" class="mb-4" dense outlined style="max-width: 200px;"
             @update:modelValue="handleMonthChange" />
-        <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px;" />
+            <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px;" />
+            <!-- <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="max-width: 500px; max-height: 350px;" /> -->
     </v-container>
-    <!-- <v-col cols="12" lg="6" md="6" sm="12">
-            <v-container class="mt-10">
-                <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="margin: auto;" />
-            </v-container>
-        </v-col> -->
 </template>
 
 <script>
