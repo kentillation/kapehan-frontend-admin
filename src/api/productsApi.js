@@ -2,10 +2,10 @@ import apiClient from '../axios';
 
 export const PRODUCTS_API = {
     ENDPOINTS: {
-        FETCH: '/products',
-        SAVE: '/save-product',
-        SAVE_PRODUCT_INGREDIENTS: '/save-product-ingredients',
-        UPDATE: '/update-product'
+        FETCH: '/admin/products',
+        SAVE: '/admin/save-product',
+        SAVE_PRODUCT_INGREDIENTS: '/admin/save-product-ingredients',
+        UPDATE: '/admin/update-product'
     },
 
     /**
