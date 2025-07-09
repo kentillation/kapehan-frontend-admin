@@ -14,7 +14,7 @@
                     :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"
                     @click:append-inner="showPassword = !showPassword" />
 
-                <v-btn type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
+                <v-btn :disabled="!isFormValid || loading"  type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
                     Proceed
                 </v-btn>
             </v-form>
@@ -70,19 +70,8 @@ export default {
             try {
                 this.loadingStore.show('Logging in...');
                 const authStore = useAuthStore();
-                // await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
-                // this.loadingStore.hide();
-                // window.location.href = '/home';
-
-                const loginSuccess = await authStore.login({
-                    admin_email: this.admin_email,
-                    admin_password: this.admin_password
-                });
-
-                if (loginSuccess) {
-                    // Only redirect after successful login
-                    this.$router.push('/home');
-                }
+                await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
+                window.location.href = '/home';
             } catch (error) {
                 this.loadingStore.hide();
                 this.showSnackbar(error || 'Login failed. Please try again!', 'error');
