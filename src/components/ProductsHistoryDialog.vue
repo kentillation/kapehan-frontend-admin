@@ -98,7 +98,7 @@ export default {
         async fetchProductsHistory() {
             this.loading = true;
             try {
-                const response = await apiClient.get(`/products-history/${this.branchId}`, {
+                const response = await apiClient.get(`/admin/products-history/${this.branchId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('auth_token')}`
                     }

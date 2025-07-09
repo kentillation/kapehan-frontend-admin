@@ -99,7 +99,7 @@ export default {
         async fetchStocksHistory() {
             this.loading = true;
             try {
-                const response = await apiClient.get(`/stocks-history/${this.branchId}`, {
+                const response = await apiClient.get(`/admin/stocks-history/${this.branchId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('auth_token')}`
                     }

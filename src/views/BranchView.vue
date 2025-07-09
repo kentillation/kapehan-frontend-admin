@@ -584,7 +584,7 @@ export default {
             this.productSize = item.size_label;
             this.loadingIngredient = true;
             try {
-                const response = await apiClient.get(`/ingredients/${item.product_id}`, {
+                const response = await apiClient.get(`/admin/ingredients/${item.product_id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('auth_token')}`
                     }

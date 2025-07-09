@@ -185,7 +185,7 @@ export default {
             }
         },
         getStockOption() {
-            this.getOptions(`/stocks-name/${ this.branchID }`, 'stocksOption', 'Failed to fetch stocks');
+            this.getOptions(`/admin/stocks-name/${ this.branchID }`, 'stocksOption', 'Failed to fetch stocks');
         },
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
