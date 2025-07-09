@@ -30,8 +30,15 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
-                                                                <h3 class="text-brown-lighten-2">Sales</h3>
-                                                                <h2 class="mt-2">₱{{ totalSales }}</h2>
+                                                                <h3 class="text-brown-lighten-2">Total sales</h3>
+                                                                <div class="mt-2" style="min-height: 32px;">
+                                                                <template v-if="textSkeleton">
+                                                                    <v-skeleton-loader type="button" width="100" />
+                                                                </template>
+                                                                <template v-else>
+                                                                    <h2>₱{{ totalSales }}</h2>
+                                                                </template>
+                                                                </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;"
@@ -58,8 +65,13 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Orders</h3>
-                                                                <h2 class="mt-2">{{ totalOrders }} items</h2>
+                                                                <h3 class="text-brown-lighten-2">Total orders</h3>
+                                                                <template v-if="textSkeleton">
+                                                                    <v-skeleton-loader type="button" width="100" />
+                                                                </template>
+                                                                <template v-else>
+                                                                    <h2>₱{{ totalOrders }}</h2>
+                                                                </template>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;"
@@ -86,7 +98,7 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Products</h3>
+                                                                <h3 class="text-brown-lighten-2">All products</h3>
                                                                 <h2 class="mt-2">{{ totalProducts }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
@@ -114,7 +126,7 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Stocks</h3>
+                                                                <h3 class="text-brown-lighten-2">All stocks</h3>
                                                                 <h2 class="mt-2">{{ totalStocks }} items</h2>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
@@ -135,13 +147,9 @@
                                     <h3>Sales Trends</h3>
                                     <v-card>
                                         <v-card-text>
-                                            <SalesChart 
-                                            :sales-by-month="salesByMonthReports" 
-                                            :sales-only="totalSales"
-                                            :orders-only="totalOrders"
-                                            @month-changed="fetchSalesByMonthReport"
-                                            @sales-changed="fetchSalesOnly" 
-                                            @orders-changed="fetchOrdersOnly" />
+                                            <SalesChart :sales-by-month="salesByMonthReports" :sales-only="totalSales"
+                                                :orders-only="totalOrders" @month-changed="fetchSalesByMonthReport"
+                                                @sales-changed="fetchSalesOnly" @orders-changed="fetchOrdersOnly" />
                                             <!-- added (:orders-only="totalOrders" and @orders-changed="fetchOrdersOnly -->
                                         </v-card-text>
                                     </v-card>
@@ -362,6 +370,7 @@ export default {
             loadingBranchDetails: false,
 
             // Dashboard
+            textSkeleton: false,
             totalSales: null,
             totalOrders: null,
             totalProducts: null,
@@ -495,7 +504,7 @@ export default {
                     const currentMonth = new Date().getMonth() + 1;
                     this.fetchSalesOnly(currentMonth);
                     this.fetchOrdersOnly(currentMonth); // added "currentMonth"
-                    this.fetchProductsOnly();
+                    this.fetchProductsOnly(currentMonth);
                     this.fetchStocksOnly();
                     this.fetchSalesByMonthReport(currentMonth);
                 }
@@ -506,7 +515,7 @@ export default {
                 const currentMonth = new Date().getMonth() + 1;
                 this.fetchSalesOnly(currentMonth);
                 this.fetchOrdersOnly(currentMonth); // added "currentMonth"
-                this.fetchProductsOnly();
+                this.fetchProductsOnly(currentMonth);
                 this.fetchStocksOnly();
                 this.fetchSalesByMonthReport(currentMonth);
             } else if (newTab === 'products') {
@@ -742,10 +751,12 @@ export default {
 
         async fetchSalesOnly(month = null) {
             this.loadingSalesOnly = true;
+            this.textSkeleton = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
                     this.totalSales = '';
+                    this.textSkeleton = false;
                     return;
                 }
                 await this.transactStore.fetchSalesOnlyStore(this.branchDetails.branch_id, month);
@@ -755,19 +766,22 @@ export default {
                 this.showError("Error fetching total sales!");
             } finally {
                 this.loadingSalesOnly = false;
+                this.textSkeleton = false;
             }
         },
 
         // month = null is added
         async fetchOrdersOnly(month = null) {
             this.loadingOrdersOnly = true;
+            this.textSkeleton = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
                     this.totalOrders = '';
+                    this.textSkeleton = false;
                     return;
                 }
-                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id, month);
+                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id, month); // month added
                 // added (Number(THIS_IS_THE_DATA))
                 this.totalOrders = Number(this.transactStore.ordersOnly.total_orders).toLocaleString('en-PH') || '';
             } catch (error) {
@@ -775,6 +789,7 @@ export default {
                 this.showError("Error fetching total orders!");
             } finally {
                 this.loadingOrdersOnly = false;
+                this.textSkeleton = false;
             }
         },
 
@@ -787,12 +802,7 @@ export default {
                     return;
                 }
                 await this.transactStore.fetchProductsOnlyStore(this.branchDetails.branch_id);
-                if (this.transactStore.productsOnly.length === 0) {
-                    this.totalProducts = '';
-                } else {
-                    this.totalProducts = this.transactStore.productsOnly.total_products;
-                }
-                this.loadingProductsOnly = false;
+                this.totalProducts = Number(this.transactStore.productsOnly.total_products).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching total products:', error);
                 this.showError("Error fetching total products!");
