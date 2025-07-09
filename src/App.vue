@@ -1,5 +1,13 @@
 <template>
   <v-app dark>
+    <div v-if="connectionStatus !== 'online'" class="connection-container">
+      <div class="connection-banner" :class="connectionStatus">
+        <v-icon left>
+          {{ connectionStatusIcon }}
+        </v-icon>
+        <span>&nbsp;{{ connectionStatusText }}</span>
+      </div>
+    </div>
     <v-main>
       <v-app-bar v-if="showSidebar" prominent>
         <v-app-bar-nav-icon v-if="showMenu" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -57,9 +65,10 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
+import { useLoadingStore } from '@/stores/loading';
 import GlobalLoader from '@/components/GlobalLoader.vue';
 
 export default {
@@ -69,13 +78,87 @@ export default {
   },
   setup() {
     const authStore = useAuthStore();
+    const loadingStore = useLoadingStore();
     const branchStore = useBranchStore();
+    const connectionStatus = ref('online');
+
+    const updateStatus = () => {
+      if (!navigator.onLine) {
+        connectionStatus.value = 'offline';
+      } else {
+        connectionStatus.value = 'online';
+      }
+    };
+
+    // Optional: Simulate slow/waiting (replace with real logic as needed)
+    let waitingTimeout;
+    const simulateWaiting = () => {
+      connectionStatus.value = 'waiting';
+      waitingTimeout = setTimeout(() => {
+        connectionStatus.value = navigator.onLine ? 'online' : 'offline';
+      }, 3000);
+    };
+
+    onMounted(() => {
+      window.addEventListener('online', updateStatus);
+      window.addEventListener('offline', updateStatus);
+
+      // Example: simulate waiting for connection on mount
+      simulateWaiting();
+
+      // Optional: Check for slow connection using Network Information API
+      if ('connection' in navigator) {
+        navigator.connection.addEventListener('change', () => {
+          if (navigator.connection.downlink < 1) {
+            connectionStatus.value = 'slow';
+          } else if (navigator.onLine) {
+            connectionStatus.value = 'online';
+          }
+        });
+      }
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('online', updateStatus);
+      window.removeEventListener('offline', updateStatus);
+      if (waitingTimeout) clearTimeout(waitingTimeout);
+    });
+
+    const connectionStatusText = computed(() => {
+      switch (connectionStatus.value) {
+        case 'offline':
+          return 'No internet connection';
+        case 'slow':
+          return 'Low internet connection';
+        case 'waiting':
+          return 'Waiting for connection...';
+        default:
+          return '';
+      }
+    });
+
+    const connectionStatusIcon = computed(() => {
+      switch (connectionStatus.value) {
+        case 'offline':
+          return 'mdi-wifi-off';
+        case 'slow':
+          return 'mdi-wifi-alert';
+        case 'waiting':
+          return 'mdi-timer-sand';
+        default:
+          return '';
+      }
+    });
 
     return {
       authStore,
       branchStore,
+      loadingStore,
       drawer: ref(true),
       open: ref(false),
+      connectionStatus,
+      connectionStatusText,
+      connectionStatusIcon,
     };
   },
   computed: {
@@ -160,5 +243,38 @@ export default {
   100% {
     background-color: rgba(224, 247, 250, 0);
   }
+}
+
+.connection-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connection-banner {
+  text-align: center;
+  padding: 6px 30px;
+  border-radius: 0 0 30px 30px;
+  font-size: 12px;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.connection-banner.offline {
+  background: #8a1515;
+  color: #fffafa;
+}
+.connection-banner.slow {
+  background: #b88d20;
+  color: #fffafa;
+}
+.connection-banner.waiting {
+  background: #118aa0;
+  color: #fffafa;
 }
 </style>
