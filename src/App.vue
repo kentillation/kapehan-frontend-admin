@@ -17,10 +17,8 @@
           <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Create
             Branch</v-list-item>
-          <v-list-item prepend-icon="mdi-account-cog-outline" class="bg-brown-darken-3 ps-5"
+          <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Settings</v-list-item>
-          <v-list-item prepend-icon="mdi-theme-light-dark" @click="toggleTheme" class="bg-brown-darken-3 ps-5"
-            style="border-radius: 30px;">Theme</v-list-item>
           <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3 ps-5"
             style="border-radius: 30px;">Help</v-list-item>
 
@@ -59,7 +57,6 @@
 </template>
 
 <script>
-import { useTheme } from 'vuetify';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
@@ -71,19 +68,10 @@ export default {
     GlobalLoader,
   },
   setup() {
-    const theme = useTheme();
     const authStore = useAuthStore();
     const branchStore = useBranchStore();
 
-    const toggleTheme = () => {
-      const newTheme = theme.global.name.value === 'light' ? 'dark' : 'light';
-      theme.global.name.value = newTheme;
-      localStorage.setItem('theme', newTheme);
-    };
-
     return {
-      theme,
-      toggleTheme,
       authStore,
       branchStore,
       drawer: ref(true),
@@ -128,6 +116,9 @@ export default {
     },
     toNewBranch() {
       this.$router.push('/new-branch');
+    },
+    toSettings() {
+      this.$router.push('/settings');
     },
     toHelp() {
       this.$router.push('/help');

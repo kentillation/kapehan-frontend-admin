@@ -10,6 +10,7 @@ import EditProducts from '../views/EditProducts.vue';
 import Ingredients from '../views/Ingredients.vue';
 import Help from '../views/Help.vue';
 import About from '../views/About.vue';
+import Settings from '../views/Settings.vue';
 import LoaderUI from '../components/LoaderUI.vue';
 import { useAuthStore } from '@/stores/auth';
 
@@ -26,6 +27,7 @@ const routes = [
     { path: '/ingredients', name: 'Ingredients', component: Ingredients, meta: { requiresAuth: true } },
     { path: '/help', name: 'Help', component: Help, meta: { requiresAuth: true } },
     { path: '/about', name: 'About', component: About, meta: { requiresAuth: true } },
+    { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true } },
     { path: '/loader', name: 'LoaderUI', component: LoaderUI, meta: { requiresAuth: true } },
 ];
 

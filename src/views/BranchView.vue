@@ -304,7 +304,6 @@
                         </div>
                     </transition>
                 </v-tabs-window>
-
             </v-card>
         </template>
         <Snackbar ref="snackbarRef" />

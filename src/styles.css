@@ -9,7 +9,7 @@ h1 {
     min-width: 0 !important;
 }
 .v-icon--size-default {
-    font-size: calc(var(--v-icon-size-multiplier) * 1.2em) !important;
+    font-size: calc(var(--v-icon-size-multiplier) * 1.5em) !important;
 }
 .v-tab.v-tab.v-btn {
     height: 40px !important;
