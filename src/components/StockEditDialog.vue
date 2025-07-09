@@ -136,7 +136,7 @@ export default {
             }
         },
         getStockUnitOption() {
-            this.getOptions('/stock-unit-option', 'stockUnitOption', 'Failed to fetch stock unit');
+            this.getOptions('/admin/stock-unit-option', 'stockUnitOption', 'Failed to fetch stock unit');
         },
         formatDate(date) {
             if (!date) return 'Invalid date';
