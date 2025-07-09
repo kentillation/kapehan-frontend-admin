@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials) => {
         error.value = null;
         try {
-            const response = await apiClient.post('/login', credentials);
+            const response = await apiClient.post('/admin/login', credentials);
 
             if (response.status === 200) {
                 token.value = response.data.access_token;
@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             if (currentToken) {
                 // Use the stored token for the API call
-                await apiClient.post('/logout', null, {
+                await apiClient.post('/admin/logout', null, {
                     headers: {
                         Authorization: `Bearer ${currentToken}`
                     },
