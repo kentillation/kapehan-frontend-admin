@@ -1,11 +1,20 @@
 <template>
     <v-row>
         <v-col cols="12" lg="4" md="4" sm="6">
-            <v-text-field density="comfortable" v-model="searchProduct" placeholder="Search product here..." clearable
-                variant="outlined"></v-text-field>
+            <!-- <v-text-field density="comfortable" 
+                v-model="searchProduct" 
+                placeholder="Search product here..." 
+                variant="outlined"
+                clearable></v-text-field> -->
+            
+            <v-text-field  density="comfortable"
+                v-model="searchProduct" 
+                placeholder="Search product here..." 
+                variant="outlined" 
+                label="Search product"></v-text-field>
         </v-col>
     </v-row>
-    <v-data-table :headers="productHeaders" :items="products" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="productHeaders" :items="filteredProducts" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
@@ -132,11 +141,19 @@ export default {
         'edit-product',
         'view-ingredients',
     ],
-    // computed: {
-    //     hasCheck() {
-    //         return !this.products.some(item => item.selected);
-    //     }
-    // },
+    computed: {
+        filteredProducts() {
+            if (!this.searchProduct) {
+                return this.products;
+            }
+            return this.products.filter(product =>
+                product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+            );
+        },
+        // hasCheck() {
+        //     return !this.products.some(item => item.selected);
+        // }
+    },
     setup() {
         const loadingStore = useLoadingStore();
         return {

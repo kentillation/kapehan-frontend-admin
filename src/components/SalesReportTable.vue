@@ -187,7 +187,7 @@ export default {
             const headings = [
                 `Shop Name: ${this.shopName}`,
                 `Branch Name: ${this.branchName}`,
-                `Branch Loccation: ${this.branchLocation}`,
+                `Branch Location: ${this.branchLocation}`,
                 `Contact: ${this.contact}`,
                 `Date: ${this.formatCurrentDate}`,
                 `Prepared by : ${this.adminName}`,

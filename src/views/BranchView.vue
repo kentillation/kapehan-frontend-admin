@@ -250,7 +250,8 @@
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
                                                 :sales-by-date="transactStore.salesByDate"
                                                 :loading="loadingTransactionOrdersReports" @refresh="fetchSalesReport"
-                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
+                                                :shop-id="branchDetails.shop_id" 
+                                                :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
@@ -460,6 +461,7 @@ export default {
     computed: {
         branchDetailItems() {
             return [
+                { label: 'Store name', value: this.branchDetails.shop_name },
                 { label: 'Branch name', value: this.branchDetails.branch_name },
                 { label: 'Branch manager', value: this.branchDetails.m_name },
                 { label: 'Contact', value: this.branchDetails.contact },
@@ -533,7 +535,7 @@ export default {
         async fetchBranchDetails() {
             this.loadingBranchDetails = true;
             try {
-                const response = await apiClient.get(`/branch-details/${this.$route.params.branchName}`, {
+                const response = await apiClient.get(`/admin/branch-details/${this.$route.params.branchName}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('auth_token')}`
                     }
@@ -758,8 +760,8 @@ export default {
                     this.textSkeleton = false;
                     return;
                 }
-                await this.transactStore.fetchSalesOnlyStore(this.branchDetails.branch_id, month);
-                this.totalSales = Number(this.transactStore.salesOnly.total_sales).toLocaleString('en-PH') || '';
+                await this.transactStore.fetchGrossSalesStore(this.branchDetails.branch_id, month);
+                this.totalSales = Number(this.transactStore.grossSales.total_sales).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching total sales:', error);
                 this.showError("Error fetching total sales!");
