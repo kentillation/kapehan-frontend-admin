@@ -1,11 +1,14 @@
 <template>
     <v-row>
         <v-col cols="12" lg="4" md="4" sm="6">
-            <v-text-field density="comfortable" v-model="searchStock" placeholder="Search stock here..." clearable
-                variant="outlined"></v-text-field>
+            <v-text-field  density="comfortable"
+                v-model="searchStock" 
+                placeholder="Search product here..." 
+                variant="outlined" 
+                label="Search stock"></v-text-field>
         </v-col>
     </v-row>
-    <v-data-table :headers="stockHeaders" :items="stocks" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="stockHeaders" :items="filteredStocks" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'stock_ingredient', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
@@ -110,11 +113,19 @@ export default {
         'refresh',
         'edit-stock',
     ],
-    // computed: {
-    //     hasCheck() {
-    //         return !this.stocks.some(item => item.selected);
-    //     }
-    // },
+    computed: {
+        // hasCheck() {
+        //     return !this.stocks.some(item => item.selected);
+        // },
+        filteredStocks() {
+            if (!this.searchStock) {
+                return this.stocks;
+            }
+            return this.stocks.filter(stock =>
+                stock.stock_ingredient.toLowerCase().includes(this.searchStock.toLowerCase())
+            );
+        },
+    },
     setup() {
         const loadingStore = useLoadingStore();
         return {

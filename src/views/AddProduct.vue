@@ -191,13 +191,13 @@ export default {
             }
         },
         getProductTemperatureOption() {
-            this.getOptions('/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
+            this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
         },
         getProductSizeOption() {
-            this.getOptions('/product-size-option', 'productSizeOption', 'Failed to fetch product sizes');
+            this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product sizes');
         },
         getProductCategoryOption() {
-            this.getOptions('/product-category-option', 'productCategoryOption', 'Failed to fetch product category');
+            this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product category');
         },
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");

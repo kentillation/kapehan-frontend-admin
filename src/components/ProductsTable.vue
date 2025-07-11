@@ -1,12 +1,6 @@
 <template>
     <v-row>
         <v-col cols="12" lg="4" md="4" sm="6">
-            <!-- <v-text-field density="comfortable" 
-                v-model="searchProduct" 
-                placeholder="Search product here..." 
-                variant="outlined"
-                clearable></v-text-field> -->
-            
             <v-text-field  density="comfortable"
                 v-model="searchProduct" 
                 placeholder="Search product here..." 

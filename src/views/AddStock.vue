@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
+        <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
         <h1 class="text-brown-lighten-1">Add Stock ( {{ branchName }} Branch )</h1>
         <v-form ref="stockForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in stockRows" :key="index"
@@ -10,7 +11,7 @@
                         @click="removeRow(index)"></v-btn>
                 </v-col>
                 <v-col cols="12" lg="3" md="6" sm="6">
-                    <v-text-field v-model="row.ingredient" label="Ingredient" :rules="[v => !!v || 'Required']"
+                    <v-text-field v-model="row.ingredient" label="Stock name" :rules="[v => !!v || 'Required']"
                         variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="2" md="6" sm="6">
@@ -18,8 +19,8 @@
                         type="number" variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="3" md="6" sm="6">
-                    <v-autocomplete v-model="row.unit" label="Unit" :items="unitOptions"
-                        :rules="[v => !!v || 'Required']" item-title="unit_label" item-value="unit_id"
+                    <v-autocomplete v-model="row.unit" label="Unit" :items="unitOptions" @click="getProductTemperatureOption"
+                        :rules="[v => !!v || 'Required']" item-title="unit_avb" item-value="unit_id"
                         variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="3" md="6" sm="6">
@@ -69,6 +70,7 @@
 </template>
 
 <script>
+import apiClient from '../axios';
 import Snackbar from '@/components/Snackbar.vue';
 import LoaderUI from '@/components/LoaderUI.vue';
 import { useStocksStore } from '@/stores/stocksStore';
@@ -95,15 +97,7 @@ export default {
                     costPerUnit: '',
                 },
             ],
-            unitOptions: [
-                { unit_id: 1, unit_label: 'g' },
-                { unit_id: 2, unit_label: 'mL' },
-                { unit_id: 3, unit_label: 'pcs' },
-                { unit_id: 4, unit_label: 'kg' },
-                { unit_id: 5, unit_label: 'L' },
-                { unit_id: 6, unit_label: 'bx' },
-                { unit_id: 7, unit_label: 'btl' },
-            ],
+            unitOptions: [],
         };
     },
     setup() {
@@ -128,6 +122,9 @@ export default {
         },
     },
     methods: {
+        back () {
+            this.$router.go(-1);
+        },
         removeRow(index) {
             if (this.stockRows.length > 1) {
                 this.stockRows.splice(index, 1);
@@ -146,6 +143,21 @@ export default {
                 unit: null,
                 costPerUnit: '',
             });
+        },
+        async getOptions(endpoint, targetArray, errorMessage) {
+            try {
+                const response = await apiClient.get(endpoint, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+                    },
+                });
+                this[targetArray] = response.data;
+            } catch (error) {
+                this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
+            }
+        },
+        getProductTemperatureOption() {
+            this.getOptions('/admin/stock-unit-option', 'unitOptions', 'Failed to fetch unit options');
         },
         async submitForm() {
             this.confirmDialog = false;
