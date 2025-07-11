@@ -4,17 +4,27 @@
             <h1 class="text-center">Poofsa <span class="text-info">.vent</span></h1>
             <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                <v-text-field v-model="admin_email" :rules="[requiredRule, emailFormatRule]" placeholder="Type here..."
-                    prepend-inner-icon="mdi-email-outline" variant="outlined" autocomplete="username" />
+                <v-text-field v-model="admin_email" 
+                    :rules="[requiredRule, emailFormatRule]" 
+                    placeholder="Type here..."
+                    prepend-inner-icon="mdi-email-outline" 
+                    variant="outlined"
+                    density="compact" 
+                    autocomplete="username" />
 
                 <div class="text-subtitle-1 text-medium-emphasis mt-2">Password</div>
-                <v-text-field v-model="admin_password" :rules="[requiredRule]" placeholder="Type here..."
-                    prepend-inner-icon="mdi-lock-outline" variant="outlined" autocomplete="current-password"
+                <v-text-field v-model="admin_password" 
+                    :rules="[requiredRule]" 
+                    placeholder="Type here..."
+                    prepend-inner-icon="mdi-lock-outline" 
+                    variant="outlined" 
+                    density="compact" 
+                    autocomplete="current-password"
                     :type="showPassword ? 'text' : 'password'"
                     :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"
                     @click:append-inner="showPassword = !showPassword" />
 
-                <v-btn :disabled="!isFormValid || loading"  type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
+                <v-btn :disabled="!isFormValid || loading" type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
                     Proceed
                 </v-btn>
             </v-form>
