@@ -177,7 +177,7 @@ export default {
                 this.loadingStore.show('Downloading sales...');
             }
             const grossSalesByDate = this.transactStore.grossSalesByDate.map(t_order => ({
-                'Product name': t_order.product_name,
+                'Product name': `${t_order.product_name}${t_order.temp_label}${t_order.size_label}`,
                 'Product price': t_order.product_price,
                 'Total quantity': t_order.total_quantity,
                 'Product category': t_order.category_label,
