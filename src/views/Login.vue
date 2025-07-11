@@ -96,4 +96,8 @@ export default {
     height: 100vh;
     background-color: var(--v-theme-background);
 }
+
+.v-sheet {
+    border: 1.5px solid rgb(33, 150, 243);
+}
 </style>
