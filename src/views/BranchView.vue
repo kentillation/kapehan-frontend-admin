@@ -70,7 +70,7 @@
                                                                     <v-skeleton-loader type="button" width="100" />
                                                                 </template>
                                                                 <template v-else>
-                                                                    <h2>₱{{ totalOrders }}</h2>
+                                                                    <h2>{{ totalOrders }} {{ totalOrders > 1 ? 'items' : 'item' }}</h2>
                                                                 </template>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
