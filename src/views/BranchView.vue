@@ -989,7 +989,7 @@ export default {
                 ...ingredient,
                 stock_ingredient: this.capitalizeFirstLetter(ingredient.stock_ingredient),
                 ingredient_capital: `₱${ingredient.ingredient_capital}`,
-                unit: `${ingredient.unit_usage}`,
+                unit: `${ingredient.unit_usage}${ingredient.unit_avb}`,
                 updated_at: this.formatDateTime(ingredient.updated_at),
             };
         },
