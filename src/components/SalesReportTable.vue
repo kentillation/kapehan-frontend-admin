@@ -17,7 +17,7 @@
                     <div class="d-flex">
                         <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
                             item-value="filter_date_id" label="Date Filter" class="w-75 me-2" clearable></v-autocomplete>
-                        <v-text-field readonly>Sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field>
+                        <v-text-field readonly>Total sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field>
                     </div>
                 </v-col>
             </v-row>
@@ -58,7 +58,7 @@ export default {
                 { title: 'Price', value: 'display_product_price', sortable: 'true', width: '10%' },
                 { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '10%' },
                 { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
-                { title: 'Sales', value: 'display_sales', sortable: 'true', width: '15%' },
+                { title: 'Gross sales', value: 'display_sales', sortable: 'true', width: '15%' },
                 { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
             dateFilterItems: [
@@ -181,12 +181,12 @@ export default {
                 'Product price': t_order.product_price,
                 'Total quantity': t_order.total_quantity,
                 'Product category': t_order.category_label,
-                'Sales': t_order.gross_sales,
+                'Gross sales': t_order.gross_sales,
                 'Date': this.formatDateTime(t_order.updated_at),
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
-                `Branch Name: ${this.branchName}`,
+                `Branch Name: ${this.branchName} Branch`,
                 `Branch Location: ${this.branchLocation}`,
                 `Contact: ${this.contact}`,
                 `Date: ${this.formatCurrentDate}`,
@@ -202,7 +202,7 @@ export default {
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", `Transactions_Report_${this.branchName}.csv`);
             document.body.appendChild(link); // Required for FF
-            this.showSuccess("Transactions downloaded successfully!");
+            this.showSuccess("Sales downloaded successfully!");
             link.click();
             this.loadingStore.hide();
             document.body.removeChild(link);
@@ -257,7 +257,7 @@ export default {
                                 <th>Sales</th>
                                 <th>Date</th>
                             </tr>
-                            ${this.transactStore.salesByDate.map(t_order => `
+                            ${this.transactStore.grossSalesByDate.map(t_order => `
                                 <tr>
                                     <td>${t_order.product_name}${t_order.temp_label}${t_order.size_label}</td>
                                     <td>₱${t_order.product_price}</td>

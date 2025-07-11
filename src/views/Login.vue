@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-sheet class="py-8 px-6 mx-auto ma-4" elevation="3" max-width="500" rounded="lg" width="100%">
+        <v-sheet class="py-8 px-6 mx-auto ma-4" max-width="500" rounded="lg" width="100%">
             <h1 class="text-center">Poofsa <span class="text-info">.vent</span></h1>
             <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>

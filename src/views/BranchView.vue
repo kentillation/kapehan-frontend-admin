@@ -32,12 +32,12 @@
                                                             <div class="d-flex flex-column">
                                                                 <h3 class="text-brown-lighten-2">Total sales</h3>
                                                                 <div class="mt-2" style="min-height: 32px;">
-                                                                <template v-if="textSkeleton">
-                                                                    <v-skeleton-loader type="button" width="100" />
-                                                                </template>
-                                                                <template v-else>
-                                                                    <h2>₱{{ grossSales }}</h2>
-                                                                </template>
+                                                                    <template v-if="textSkeleton">
+                                                                        <v-skeleton-loader type="button" width="100" />
+                                                                    </template>
+                                                                    <template v-else>
+                                                                        <h2>₱{{ grossSales }}</h2>
+                                                                    </template>
                                                                 </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
@@ -66,12 +66,15 @@
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Total orders</h3>
-                                                                <template v-if="textSkeleton">
-                                                                    <v-skeleton-loader type="button" width="100" />
-                                                                </template>
-                                                                <template v-else>
-                                                                    <h2>{{ totalOrders }} {{ totalOrders > 1 ? 'items' : 'item' }}</h2>
-                                                                </template>
+                                                                <div class="mt-2">
+                                                                    <template v-if="textSkeleton">
+                                                                        <v-skeleton-loader type="button" width="100" />
+                                                                    </template>
+                                                                    <template v-else>
+                                                                        <h2>{{ totalOrders }} {{ totalOrders > 1 ? 'items' :
+                                                                            'item' }}</h2>
+                                                                    </template>
+                                                                </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;"
@@ -250,8 +253,7 @@
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
                                                 :sales-by-date="transactStore.grossSalesByDate"
                                                 :loading="loadingTransactionOrdersReports" @refresh="fetchSalesReport"
-                                                :shop-id="branchDetails.shop_id" 
-                                                :shop-name="branchDetails.shop_name"
+                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
