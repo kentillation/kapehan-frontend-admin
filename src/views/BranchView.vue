@@ -248,7 +248,7 @@
                                             <SalesReportsTableSkeleton
                                                 v-if="loadingTransactionOrdersReports && activeReportsTab === 'sales'" />
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
-                                                :sales-by-date="transactStore.salesByDate"
+                                                :sales-by-date="transactStore.grossSalesByDate"
                                                 :loading="loadingTransactionOrdersReports" @refresh="fetchSalesReport"
                                                 :shop-id="branchDetails.shop_id" 
                                                 :shop-name="branchDetails.shop_name"
@@ -734,11 +734,11 @@ export default {
                     this.salesByDateReports = [];
                     return;
                 }
-                await this.transactStore.fetchSalesByDateStore(this.branchDetails.branch_id);
-                if (this.transactStore.salesByDate.length === 0) {
+                await this.transactStore.fetchGrossSalesByDateStore(this.branchDetails.branch_id);
+                if (this.transactStore.grossSalesByDate.length === 0) {
                     this.salesByDateReports = [];
                 } else {
-                    this.salesByDateReports = this.transactStore.salesByDate.map(t_orders => this.formatSalesByDate(t_orders));
+                    this.salesByDateReports = this.transactStore.grossSalesByDate.map(t_orders => this.formatSalesByDate(t_orders));
                 }
                 this.salesByDateReportsLoaded = true;
                 this.loadingTransactionOrdersReports = false;

@@ -3,7 +3,7 @@ import apiClient from '../axios';
 export const TRANSACT_API = {
     ENDPOINTS: {
         FETCH: '/admin/transactions',
-        FETCH_SALES_BY_DATE: '/admin/sales-by-date',
+        FETCH_GROSS_SALES_BY_DATE: '/admin/gross-sales-by-date',
         FETCH_GROSS_SALES: '/admin/gross-sales-only',
         FETCH_ORDERS: '/admin/orders-only',
         FETCH_PRODUCTS: '/admin/products-only',
@@ -38,13 +38,13 @@ export const TRANSACT_API = {
         }
     },
 
-    async fetchSalesByDateApi(branchId, dateFilterId = null) {
+    async fetchGrossSalesByDateApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
-            let endpoint = `${this.ENDPOINTS.FETCH_SALES_BY_DATE}/${branchId}`;
+            let endpoint = `${this.ENDPOINTS.FETCH_GROSS_SALES_BY_DATE}/${branchId}`;
             if (dateFilterId) {
                 endpoint += `?date_filter=${dateFilterId}`;
             }
@@ -59,7 +59,7 @@ export const TRANSACT_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[fetchSalesByDateApi] Error fetching sales:', error);
+            console.error('[fetchGrossSalesByDateApi] Error fetching sales:', error);
             throw error;
         }
     },

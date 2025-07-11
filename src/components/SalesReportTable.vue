@@ -160,28 +160,28 @@ export default {
     methods: {
         async fetchSalesReport(dateFilterId = null) {
             try {
-                await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
-                this.mappedSales = this.transactStore.salesByDate.map(t_order => this.formatSales(t_order));
-                this.totalSales = this.transactStore.total_sales;
+                await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
+                this.mappedSales = this.transactStore.grossSalesByDate.map(t_order => this.formatSales(t_order));
+                this.totalSales = this.transactStore.grossSales;
             } catch (error) {
                 this.showError("Error fetching sales!");
             }
         },
 
         async downloadSales(dateFilterId = null) {
-            await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
-            if (this.transactStore.salesByDate.length === 0) {
+            await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
+            if (this.transactStore.grossSalesByDate.length === 0) {
                 this.showError("No sales available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading sales...');
             }
-            const salesByDate = this.transactStore.salesByDate.map(t_order => ({
+            const grossSalesByDate = this.transactStore.grossSalesByDate.map(t_order => ({
                 'Product name': t_order.product_name,
                 'Product price': t_order.product_price,
                 'Total quantity': t_order.total_quantity,
                 'Product category': t_order.category_label,
-                'Sales': t_order.sales,
+                'Sales': t_order.gross_sales,
                 'Date': this.formatDateTime(t_order.updated_at),
             }));
             const headings = [
@@ -195,8 +195,8 @@ export default {
             ].join('\n');
             const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(salesByDate[0]).join(",") + "\n"
-                + salesByDate.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(grossSalesByDate[0]).join(",") + "\n"
+                + grossSalesByDate.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -210,8 +210,8 @@ export default {
         },
 
         async printSales(dateFilterId = null) {
-            await this.transactStore.fetchSalesByDateStore(this.branchId, dateFilterId);
-            if (this.transactStore.salesByDate.length === 0) {
+            await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
+            if (this.transactStore.grossSalesByDate.length === 0) {
                 this.showError("No sales available to print.");
                 return;
             }
@@ -263,7 +263,7 @@ export default {
                                     <td>₱${t_order.product_price}</td>
                                     <td>${t_order.total_quantity } ${ t_order.total_quantity > 1 ? 'items' : 'item'} </td>
                                     <td>${t_order.category_label}</td>
-                                    <td>₱${t_order.sales}</td>
+                                    <td>₱${t_order.gross_sales}</td>
                                     <td>${this.formatDateTime(t_order.updated_at)}</td>
                                 </tr>`).join('')}
                         </table>
@@ -298,7 +298,7 @@ export default {
                 updated_at: this.formatDateTime(sale.updated_at),
                 display_product_price: `₱${sale.product_price}`,
                 display_total_quantity: `${sale.total_quantity} ${ sale.total_quantity > 1 ? 'items' : 'item'}`,
-                display_sales: `₱${Number(sale.sales).toLocaleString('en-PH')}`,
+                display_sales: `₱${Number(sale.gross_sales).toLocaleString('en-PH')}`,
             };
         },
 
