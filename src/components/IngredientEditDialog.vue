@@ -157,7 +157,7 @@ export default {
             }
         },
         getStocksOption() {
-            this.getOptions(`/admin/stocks-name/${this.ingredient.stock_id}`, 'stocksOption', 'Failed to fetch stock names');
+            this.getOptions(`/admin/stocks-name/${this.ingredient.branch_id}/${this.ingredient.stock_id}`, 'stocksOption', 'Failed to fetch stock names');
         },
     }
 }
