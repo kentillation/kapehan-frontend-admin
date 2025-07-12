@@ -211,8 +211,7 @@
                                         @update:confirm="confirmUpdatingStockDialog = $event" :stock="currentStock"
                                         @save="updatingStock" :valid="formValid" :loading="isSaving"
                                         :confirm="confirmUpdatingStockDialog"
-                                        :selected-stock="currentStock?.stock_ingredient || ''"
-                                        :availability-stock-options="availabilityOptions" />
+                                        :selected-stock="currentStock?.stock_ingredient || ''" />
 
                                     <StocksHistoryDialog v-model="stockHistoryDialog"
                                         :branch-id="branchDetails.branch_id" />
@@ -440,10 +439,6 @@ export default {
 
             formValid: true,
             isSaving: false,
-            availabilityOptions: [
-                { availability_id: 1, availability_label: 'Available' },
-                { availability_id: 2, availability_label: 'Not Available' },
-            ],
         };
     },
     props: {
@@ -873,7 +868,7 @@ export default {
                 this.confirmUpdatingStockDialog = false;
                 await this.stocksStore.updateStockStore(stockData);
                 this.stockEditDialog = false;
-                // this.fetchStocks();
+                this.fetchStocks();
                 this.showSuccess("Stock updated successfully!");
             } catch (error) {
                 console.error('Failed to update stock:', error);

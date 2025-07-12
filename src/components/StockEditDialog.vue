@@ -22,7 +22,7 @@
 
                     <v-select :model-value="stock.availability_id"
                         @update:modelValue="handleInputUpdate('availability_id', $event)" label="Availability"
-                        :items="availabilityStockOptions" item-title="availability_label" item-value="availability_id"
+                        :items="stockAvailabilityOption" item-title="availability_label" item-value="availability_id"
                         outlined dense />
                     <span style="font-size: small">
                         Last changes: {{ formatDate(stock.updated_at) }}
@@ -77,10 +77,12 @@ export default {
     data() {
         return {
             stockUnitOption: [],
+            stockAvailabilityOption: [],
         }
     },
     mounted() {
         this.getStockUnitOption();
+        this.getStockAvailabilityOption();
     },
     props: {
         modelValue: {
@@ -107,14 +109,6 @@ export default {
             type: String,
             default: ''
         },
-        // unitStockOptions: {
-        //     type: Array,
-        //     required: true
-        // },
-        availabilityStockOptions: {
-            type: Array,
-            required: true
-        }
     },
     emits: [
         'update:modelValue',
@@ -138,6 +132,9 @@ export default {
         getStockUnitOption() {
             this.getOptions('/admin/stock-unit-option', 'stockUnitOption', 'Failed to fetch stock unit');
         },
+        getStockAvailabilityOption() {
+            this.getOptions('/admin/product-availability-option', 'stockAvailabilityOption', 'Failed to fetch stock availability');
+        },
         formatDate(date) {
             if (!date) return 'Invalid date';
             return date
@@ -153,7 +150,6 @@ export default {
             const updatedValue = field === 'stock_unit' || field === 'availability_id'
                 ? Number(value)
                 : value;
-
             this.$emit('update:stock', {
                 ...this.stock,
                 [field]: updatedValue
