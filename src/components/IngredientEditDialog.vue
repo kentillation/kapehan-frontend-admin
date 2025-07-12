@@ -6,7 +6,7 @@
             <v-card-text>
                 <v-form ref="form" :model-value="valid">
                     <v-text-field :model-value="ingredient.product_name"
-                        @update:modelValue="handleInputUpdate('product_name', $event)" label="Product Name"
+                        @update:modelValue="handleInputUpdate('product_id', $event)" label="Product Name"
                         :rules="[v => !!v || 'Required']" class="text-grey-darken-1" outlined dense readonly />
                     <v-autocomplete :model-value="ingredient.stock_ingredient"
                         @update:modelValue="handleInputUpdate('stock_id', $event)" label="Stock Name"
@@ -133,7 +133,7 @@ export default {
             });
         },
         handleInputUpdate(field, value) {
-            const updatedValue = field === 'stock_ingredient'
+            const updatedValue = field === 'stock_id'
                 ? Number(value)
                 : value;
 
@@ -157,7 +157,7 @@ export default {
             }
         },
         getStocksOption() {
-            this.getOptions(`/admin/stocks-name/${this.ingredient.branch_id}`, 'stocksOption', 'Failed to fetch stock names');
+            this.getOptions(`/admin/stocks-name/${this.ingredient.stock_id}`, 'stocksOption', 'Failed to fetch stock names');
         },
     }
 }

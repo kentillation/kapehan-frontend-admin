@@ -96,5 +96,27 @@ export const useProductsStore = defineStore('products', {
                 this.loading = false;
             }
         },
+
+        async updateIngredientStore(ingredient) {
+            this.loading = true;
+            this.error = null;
+            try {
+                if (!PRODUCTS_API || typeof PRODUCTS_API.updateIngredientApi !== 'function') {
+                    throw new Error('PRODUCTS_API service is not properly initialized');
+                }
+                const response = await PRODUCTS_API.updateIngredientApi(ingredient);
+                if (response && (response.status === true || response.status === "true" || response.status === 1)) {
+                    return response;
+                } else {
+                    throw new Error('Failed to save ingredient');
+                }
+            } catch (error) {
+                console.error('Error in updateIngredientApi:', error);
+                this.error = 'Failed to save ingredient';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
     },
 });

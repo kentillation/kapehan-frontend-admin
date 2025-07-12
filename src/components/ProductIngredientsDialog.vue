@@ -32,14 +32,19 @@
 
                 </v-data-table>
             </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" class="ms-4 mb-2" variant="tonal" @click="toAddProductIngredients">
+            <v-card-actions class="mb-2">
+                <v-btn color="primary" class="ms-4" variant="tonal" @click="toAddProductIngredients">
                     <v-icon>mdi-plus</v-icon>
                     <span class="to-hide">&nbsp; Add Ingredients</span>
                     <span class="to-show">&nbsp;Ingredients</span>
                 </v-btn>
+                <!-- <v-btn color="gray" variant="tonal">
+                    <v-icon>mdi-history</v-icon>
+                    <span class="to-hide">&nbsp; Ingredients history</span>
+                    <span class="to-show">&nbsp;Ingredients</span>
+                </v-btn> -->
                 <v-spacer></v-spacer>
-                <v-btn color="red" class="me-4 mb-2" variant="tonal" @click="$emit('update:modelValue', false)">
+                <v-btn color="red" class="me-4" variant="tonal" @click="$emit('update:modelValue', false)">
                     <v-icon>mdi-close</v-icon>&nbsp; Close
                 </v-btn>
             </v-card-actions>

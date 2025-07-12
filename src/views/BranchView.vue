@@ -186,7 +186,6 @@
                                         @update:confirm="confirmUpdatingIngredientDialog = $event"
                                         :ingredient="currentIngredient" @save="updatingIngredient" :valid="formValid"
                                         :loading="isSaving" :confirm="confirmUpdatingIngredientDialog" />
-                                    <!-- :selected-ingredient="currentIngredient?.product_name || ''" -->
                                     <ProductsHistoryDialog v-model="productsHistoryDialog"
                                         :branch-id="branchDetails.branch_id" />
                                     <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray"
@@ -909,17 +908,21 @@ export default {
             this.isSaving = true;
             try {
                 const ingredientData = {
+                    product_ingredient_id: this.currentIngredient.product_ingredient_id,
                     product_id: this.currentIngredient.product_id,
                     stock_id: this.currentIngredient.stock_id,
                     unit_usage: this.currentIngredient.unit_usage,
                     ingredient_capital: parseFloat(this.currentIngredient.ingredient_capital),
                 };
-                this.confirmUpdatingEditDialog = false;
+                
                 console.log(ingredientData);
-                // await this.productsStore.updateIngredientStore(ingredientData);
-                // this.ingredientEditDialog = false;
-                // this.fetchProducts();
-                // this.showSuccess("Ingredient updated successfully!");
+                await this.productsStore.updateIngredientStore(ingredientData);
+                this.productEditDialog = false;
+                this.confirmUpdatingEditDialog = false;
+                this.ingredientEditDialog = false;
+                this.dialogIngredients = false;
+                this.fetchProducts();
+                this.showSuccess("Ingredient updated successfully!");
             } catch (error) {
                 console.error('Failed to update ingredient:', error);
                 this.showError("Failed to update ingredient. Please try again!");
