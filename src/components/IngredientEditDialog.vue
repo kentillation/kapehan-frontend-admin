@@ -9,17 +9,17 @@
                         @update:modelValue="handleInputUpdate('product_name', $event)" label="Product Name"
                         :rules="[v => !!v || 'Required']" class="text-grey-darken-1" outlined dense readonly />
                     <v-autocomplete :model-value="ingredient.stock_ingredient"
-                        @update:modelValue="handleInputUpdate('stock_ingredient', $event)" label="Stock Name"
+                        @update:modelValue="handleInputUpdate('stock_id', $event)" label="Stock Name"
                         item-title="stock_ingredient" item-value="stock_id"
                         :items="stocksOption" @click="getStocksOption" outlined dense>
                     </v-autocomplete>
                     
                     <v-text-field :model-value="ingredient.unit_usage"
-                        @update:modelValue="handleCostUpdate($event)" label="Unit usage"
+                        @update:modelValue="handleUnitUpdate($event)" label="Unit usage"
                         :rules="[v => !isNaN(parseFloat(v)) || 'Must be a valid number']" type="text" outlined dense />
 
                     <v-text-field :model-value="ingredient.ingredient_capital"
-                        @update:modelValue="handleCostUpdate($event)" label="Ingredient capital (₱)"
+                        @update:modelValue="handleCapitalUpdate($event)" label="Ingredient capital (₱)"
                         :rules="[v => !isNaN(parseFloat(v)) || 'Must be a valid number']" type="text" outlined dense />
                     
                     <span style="font-size: small">
@@ -109,8 +109,8 @@ export default {
     },
     emits: [
         'update:modelValue',
-        'update:ingredient',
         'update:confirm',
+        'update:ingredient',
         'save'
     ],
     methods: {
@@ -118,20 +118,27 @@ export default {
             if (!date) return 'Invalid date';
             return date
         },
-        handleCostUpdate(value) {
+        handleUnitUpdate(value) {
             const cleanedValue = value.replace(/[^0-9.]/g, '');
-            this.$emit('update:product', {
-                ...this.product,
-                ingredient_capital: cleanedValue
+            this.$emit('update:ingredient', {
+                ...this.ingredient,
+                unit_usage: cleanedValue,
+            });
+        },
+        handleCapitalUpdate(value) {
+            const cleanedValue = value.replace(/[^0-9.]/g, '');
+            this.$emit('update:ingredient', {
+                ...this.ingredient,
+                ingredient_capital: cleanedValue,
             });
         },
         handleInputUpdate(field, value) {
-            const updatedValue = field === 'product_temp_id' || field === 'product_size_id' || field === 'product_category_id'
+            const updatedValue = field === 'stock_ingredient'
                 ? Number(value)
                 : value;
 
-            this.$emit('update:product', {
-                ...this.product,
+            this.$emit('update:ingredient', {
+                ...this.ingredient,
                 [field]: updatedValue
             });
         },
@@ -150,7 +157,7 @@ export default {
             }
         },
         getStocksOption() {
-            this.getOptions(`/stocks-name/${this.ingredient.branch_id}`, 'stocksOption', 'Failed to fetch stock names');
+            this.getOptions(`/admin/stocks-name/${this.ingredient.branch_id}`, 'stocksOption', 'Failed to fetch stock names');
         },
     }
 }

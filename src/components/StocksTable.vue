@@ -41,9 +41,9 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.availability_id === 1 && item.stock_in > 0 ? 'green' : 'red'" size="small" variant="flat">
+            <v-chip :color="item.stock_in > 1 ? 'green' : 'red'" size="small" variant="flat">
                 <!-- {{ item.availability_label }} -->
-                {{ item.availability_id === 1 && item.stock_in > 0 ? 'Available' : 'Unavailable' }}
+                {{ item.stock_in > 1 ? 'Available' : 'Not available' }}
             </v-chip>
         </template>
 

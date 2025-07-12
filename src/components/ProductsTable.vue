@@ -35,11 +35,26 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
+        <template v-slot:item.display_product_name="{ item }">
+            <span :class="{ 'text-red': item.availability_id === 2 }">
+                {{ item.display_product_name }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
         <template v-slot:item.display_product_price="{ item }">
             <span :class="{ 'text-red': item.availability_id === 2 }">
                 {{ item.display_product_price }}
             </span>
         </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.category_label="{ item }">
+            <span :class="{ 'text-red': item.availability_id === 2 }">
+                {{ item.category_label }}
+            </span>
+        </template>
+        
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">

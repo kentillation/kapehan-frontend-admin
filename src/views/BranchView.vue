@@ -911,7 +911,7 @@ export default {
                 const ingredientData = {
                     product_id: this.currentIngredient.product_id,
                     stock_id: this.currentIngredient.stock_id,
-                    uni_usage: this.currentIngredient.uni_usage,
+                    unit_usage: this.currentIngredient.unit_usage,
                     ingredient_capital: parseFloat(this.currentIngredient.ingredient_capital),
                 };
                 this.confirmUpdatingEditDialog = false;
@@ -983,7 +983,7 @@ export default {
             return {
                 ...ingredient,
                 stock_ingredient: this.capitalizeFirstLetter(ingredient.stock_ingredient),
-                ingredient_capital: `₱${ingredient.ingredient_capital}`,
+                ingredient_capital: ingredient.ingredient_capital,
                 unit: `${ingredient.unit_usage}${ingredient.unit_avb}`,
                 updated_at: this.formatDateTime(ingredient.updated_at),
             };
