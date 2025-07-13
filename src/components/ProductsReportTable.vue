@@ -98,6 +98,11 @@ export default {
     setup() {
         const loadingStore = useLoadingStore();
         const productsStore = useProductsStore();
+        const today = new Date();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const currentNumberDate = `${mm}/${dd}/${yyyy}`;
         const currentDate = new Date().toLocaleDateString('en-PH', {
             year: 'numeric',
             month: 'long',
@@ -110,6 +115,7 @@ export default {
         return {
             loadingStore,
             productsStore,
+            currentNumberDate,
             formatCurrentDate,
         };
     },
@@ -146,7 +152,7 @@ export default {
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Products_Report_${this.branchName}.csv`);
+            link.setAttribute("download", `Products_Report_${this.branchName}_${this.currentNumberDate}.csv`);
             document.body.appendChild(link); // Required for FF
             this.showSuccess("Products downloaded successfully!");
             link.click();

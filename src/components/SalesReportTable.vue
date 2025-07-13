@@ -142,6 +142,11 @@ export default {
     setup() {
         const loadingStore = useLoadingStore();
         const transactStore = useTransactStore();
+        const today = new Date();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const currentNumberDate = `${mm}/${dd}/${yyyy}`;
         const currentDate = new Date().toLocaleDateString('en-PH', {
             year: 'numeric',
             month: 'long',
@@ -154,6 +159,7 @@ export default {
         return {
             loadingStore,
             transactStore,
+            currentNumberDate,
             formatCurrentDate,
         };
     },
@@ -200,7 +206,7 @@ export default {
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Transactions_Report_${this.branchName}.csv`);
+            link.setAttribute("download", `Sales_Report_${this.branchName}_${this.currentNumberDate}.csv`);
             document.body.appendChild(link); // Required for FF
             this.showSuccess("Sales downloaded successfully!");
             link.click();
@@ -223,7 +229,7 @@ export default {
             printWindow.document.write(`
                 <html>
                     <head>
-                        <title>Transactions Report</title>
+                        <title>Sales Report</title>
                         <style>
                             body { font-family: Arial, sans-serif; }
                             table { width: 100%; border-collapse: collapse; }
