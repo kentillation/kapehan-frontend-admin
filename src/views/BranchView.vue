@@ -921,6 +921,7 @@ export default {
                 this.confirmUpdatingEditDialog = false;
                 this.ingredientEditDialog = false;
                 this.dialogIngredients = false;
+                this.confirmUpdatingIngredientDialog = false
                 this.fetchProducts();
                 this.showSuccess("Ingredient updated successfully!");
             } catch (error) {

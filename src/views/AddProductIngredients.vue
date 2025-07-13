@@ -11,19 +11,19 @@
                         @click="removeRow(index)"></v-btn>
                 </v-col>
                 <v-col cols="12" lg="4" md="3" sm="6">
-                    <v-autocomplete v-model="row.stockName" @click="getStockOption" label="Ingredient Name"
+                    <v-autocomplete v-model="row.stock_id" @click="getStockOption" label="Ingredient Name"
                         :items="stocksOption" :rules="[v => !!v || 'Required']" item-title="stock_ingredient"
                         item-value="stock_id" variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="3" md="3" sm="6">
-                    <v-text-field v-model="row.unitUsage" label="Unit Usage" type="text"
+                    <v-text-field v-model="row.unit_usage" label="Unit Usage" type="text"
                         :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
-                        @input="e => row.unitUsage = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
+                        @input="e => row.unit_usage = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="3" md="3" sm="6">
-                    <v-text-field v-model="row.ingCapital" label="Ingredient Capital (₱)" type="text"
+                    <v-text-field v-model="row.ingredient_capital" label="Ingredient Capital (₱)" type="text"
                         :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
-                        @input="e => row.ingCapital = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
+                        @input="e => row.ingredient_capital = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
                 </v-col>
             </v-row>
             <v-row>
@@ -92,8 +92,8 @@ export default {
             confirmDialog: false,
             productIngredientsRows: [
                 {
-                    unitUsage: '',
-                    ingCapital: '',
+                    unit_usage: '',
+                    ingredient_capital: '',
                     productTemp: null,
                     productSize: null,
                     productCategory: null,
@@ -122,9 +122,9 @@ export default {
         isFormValid() {
             return this.productIngredientsRows.every(row => {
                 return (
-                    row.stockName &&
-                    !isNaN(parseFloat(row.unitUsage)) &&
-                    !isNaN(parseFloat(row.ingCapital))
+                    row.stock_id &&
+                    !isNaN(parseFloat(row.unit_usage)) &&
+                    !isNaN(parseFloat(row.ingredient_capital))
                 );
             });
         },
@@ -143,9 +143,9 @@ export default {
         },
         addRow() {
             this.productIngredientsRows.push({
-                stockName: null,
-                unitUsage: '',
-                ingCapital: '',
+                stock_id: null,
+                unit_usage: '',
+                ingredient_capital: '',
             });
         },
         async submitForm() {
@@ -155,9 +155,9 @@ export default {
                 this.validatingProductIngredients = true;
                 const payload = this.productIngredientsRows.map(row => ({
                     product_id: this.productID,
-                    unit_usage: parseFloat(row.unitUsage.replace(/[^0-9.]/g, '')) || 0,
-                    ingredient_capital: parseFloat(row.ingCapital.replace(/[^0-9.]/g, '')) || 0,
-                    stock_id: row.stockName,
+                    unit_usage: parseFloat(row.unit_usage.replace(/[^0-9.]/g, '')) || 0,
+                    ingredient_capital: parseFloat(row.ingredient_capital.replace(/[^0-9.]/g, '')) || 0,
+                    stock_id: row.stock_id,
                     shop_id: this.shopID,
                     branch_id: this.branchID,
                 }));
@@ -185,7 +185,7 @@ export default {
             }
         },
         getStockOption() {
-            this.getOptions(`/admin/stocks-name/${ this.branchID }`, 'stocksOption', 'Failed to fetch stocks');
+            this.getOptions(`/admin/stocks-name-only/${ this.branchID }`, 'stocksOption', 'Failed to fetch stocks');
         },
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");

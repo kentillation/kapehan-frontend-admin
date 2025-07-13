@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="modelValue" @update:modelValue="$emit('update:modelValue', $event)" max-width="800px">
+    <v-dialog :model-value="modelValue" @update:modelValue="$emit('update:modelValue', $event)" max-width="1000px">
         <v-card>
             <v-card-title class="text-h6">{{ productName }}{{ productTemp }}{{ productSize }}</v-card-title>
             <v-card-text>
@@ -132,20 +132,20 @@ export default {
                 }
             });
         },
-        getAvailabilityIdColor(availabilityId) {
-            const colors = {
-                1: 'green',
-                2: 'blue',
-            };
-            return colors[availabilityId] || 'grey';
-        },
-        formatAvailabilityId(availabilityId) {
-            const actions = {
-                1: 'Save',
-                2: 'Update',
-            };
-            return actions[availabilityId] || `Action ${availabilityId}`;
-        },
+        // getAvailabilityIdColor(availabilityId) {
+        //     const colors = {
+        //         1: 'green',
+        //         2: 'blue',
+        //     };
+        //     return colors[availabilityId] || 'grey';
+        // },
+        // formatAvailabilityId(availabilityId) {
+        //     const actions = {
+        //         1: 'Save',
+        //         2: 'Update',
+        //     };
+        //     return actions[availabilityId] || `Action ${availabilityId}`;
+        // },
     }
 }
 </script>
