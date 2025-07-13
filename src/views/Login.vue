@@ -19,7 +19,7 @@
                     prepend-inner-icon="mdi-lock-outline" 
                     variant="outlined" 
                     density="compact" 
-                    autocomplete="current-password"
+                    autocomplete="admin_password"
                     :type="showPassword ? 'text' : 'password'"
                     :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"
                     @click:append-inner="showPassword = !showPassword" />
@@ -30,19 +30,19 @@
             </v-form>
             <h6 class="text-center text-grey mt-5">Poofsa .vent UAT Version v1.0.0</h6>
         </v-sheet>
-        <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="4000" top>
-            {{ snackbar.message }}
-        </v-snackbar>
+        <Snackbar ref="snackbarRef" />
     </v-container>
 </template>
 
 <script>
+import Snackbar from '@/components/Snackbar.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoadingStore } from '@/stores/loading';
 import { shallowRef } from 'vue';
 
 export default {
     name: 'LoginPage',
+    components: { Snackbar },
     setup() {
         const loadingStore = useLoadingStore();
         return {
@@ -84,7 +84,8 @@ export default {
                 window.location.href = '/home';
             } catch (error) {
                 this.loadingStore.hide();
-                this.showSnackbar(error || 'Login failed. Please try again!', 'error');
+                console.error('Error fetching ingredients:', error);
+                this.showError(error);
             } finally {
                 this.loading = false;
                 this.loadingStore.hide();
@@ -94,7 +95,10 @@ export default {
             this.snackbar.message = message;
             this.snackbar.color = color;
             this.snackbar.visible = true;
-        }
+        },
+        showError(message) {
+            this.$refs.snackbarRef.showSnackbar(message, "error");
+        },
     }
 };
 </script>
