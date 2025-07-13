@@ -1,10 +1,10 @@
 {
-  "appId": "com.example.poofsa",
+  "appId": "com.example.poofsa_vent",
   "appName": "Poofsa",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://poofsa-admin.kentillation.com",
+    "url": "https://poofsa-vent.vercel.app",
     "cleartext": true
   }
 }
