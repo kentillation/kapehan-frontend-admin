@@ -16,7 +16,7 @@
         <v-btn icon>
             <v-icon>mdi-bell-outline</v-icon>
           </v-btn>
-        <v-btn icon>
+        <v-btn @click="toSettings" icon>
           <v-icon>mdi-account-circle-outline</v-icon>
         </v-btn>
       </v-app-bar>

@@ -22,13 +22,13 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
+                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1"
-                                                                    size="80">mdi-account-cash</v-icon>
+                                                                    size="70">mdi-account-cash</v-icon>
                                                             </div>
                                                         </v-col>
-                                                        <v-col cols="6">
+                                                        <v-col cols="7">
                                                             <div class="d-flex flex-column">
                                                                 <h3 class="text-brown-lighten-2">Net sales</h3>
                                                                 <div class="mt-2" style="min-height: 32px;">
@@ -57,13 +57,13 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
+                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1"
-                                                                    size="80">mdi-invoice-text-outline</v-icon>
+                                                                    size="70">mdi-invoice-text-outline</v-icon>
                                                             </div>
                                                         </v-col>
-                                                        <v-col cols="6">
+                                                        <v-col cols="7">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Orders</h3>
                                                                 <div class="mt-2">
@@ -73,7 +73,7 @@
                                                                     <template v-else>
                                                                         <div class="d-flex align-center">
                                                                             <h2>{{ totalOrders }}</h2> &nbsp;
-                                                                            <span style="font-size: 15px;">{{ totalOrders > 1 ? 'items' : 'item' }}</span>
+                                                                            <span style="font-size: 18px;">{{ totalOrders > 1 ? 'items' : 'item' }}</span>
                                                                         </div>
                                                                     </template>
                                                                 </div>
@@ -95,18 +95,18 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
+                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1"
-                                                                    size="80">mdi-food-outline</v-icon>
+                                                                    size="70">mdi-food-outline</v-icon>
                                                             </div>
                                                         </v-col>
-                                                        <v-col cols="6">
+                                                        <v-col cols="7">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Products</h3>
                                                                 <div class="mt-2 d-flex align-center">
                                                                     <h2>{{ totalProducts }}</h2> &nbsp;
-                                                                    <span style="font-size: 15px;">{{ totalProducts > 1 ? 'items' : 'item' }}</span>
+                                                                    <span style="font-size: 18px;">{{ totalProducts > 1 ? 'items' : 'item' }}</span>
                                                                 </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
@@ -126,18 +126,18 @@
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col cols="6" class="bg-brown-lighten-4 ma-0 rounded">
+                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
                                                             <div class="d-flex justify-center mt-3">
                                                                 <v-icon class="text-brown-darken-1"
-                                                                    size="80">mdi-archive-outline</v-icon>
+                                                                    size="70">mdi-archive-outline</v-icon>
                                                             </div>
                                                         </v-col>
-                                                        <v-col cols="6">
+                                                        <v-col cols="7">
                                                             <div class="d-flex align-items-center flex-column">
                                                                 <h3 class="text-brown-lighten-2">Stocks</h3>
                                                                 <div class="mt-2 d-flex align-center">
                                                                     <h2>{{ totalStocks }}</h2> &nbsp;
-                                                                    <span style="font-size: 15px;">{{ totalStocks > 1 ? 'items' : 'item' }}</span>
+                                                                    <span style="font-size: 18px;">{{ totalStocks > 1 ? 'items' : 'item' }}</span>
                                                                 </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
