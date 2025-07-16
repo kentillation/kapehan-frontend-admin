@@ -1,12 +1,18 @@
 <template>
     <v-container>
-        <v-sheet>
-            <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
-                label="Select Month" class="mb-4" dense outlined style="max-width: 200px;"
-                @update:modelValue="handleMonthChange" />
-                <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px;" />
-                <!-- <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="max-width: 500px; max-height: 350px;" /> -->
-        </v-sheet>   
+        <v-select v-model="selectedMonth" :items="monthOptions" item-title="title" item-value="value"
+            label="Select Month" class="mb-4" dense outlined style="max-width: 200px;"
+            @update:modelValue="handleMonthChange" />
+        <Bar v-if="chartData" :data="chartData" :options="chartOptions" style="max-height: 350px;" />
+        <!-- <Doughnut v-if="donutData" :data="donutData" :options="donutOptions" style="max-width: 500px; max-height: 350px;" /> -->
+        <v-container v-else class="d-flex flex-column align-center text-center mx-auto mt-10" height="250"
+            width="100%" rounded>
+            <div class="w-50 mt-10">
+                <v-icon :size="iconSize" icon="mdi-cash-off" class="text-red-darken-2 mb-3"></v-icon>
+                <h2 class="text-red-darken-2 mb-3">Sales not found!</h2>
+                <p class="text-grey mb-3">Looks like there is no sales yet from the selected month.</p>
+            </div>
+        </v-container>
     </v-container>
 </template>
 
@@ -28,6 +34,11 @@ Chart.register(BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Lege
 
 export default {
     components: { Bar },
+    data () {
+        return {
+            iconSize: "70px",
+        }
+    },
     props: {
         salesByMonth: {
             type: Array,

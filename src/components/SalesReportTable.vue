@@ -187,7 +187,7 @@ export default {
                 'Product price': t_order.product_price,
                 'Total quantity': t_order.total_quantity,
                 'Product category': t_order.category_label,
-                'Gross sales': t_order.gross_sales,
+                'Gross sales': this.formatSalesDisplay(t_order.gross_sales),
                 'Date': this.formatDateTime(t_order.updated_at),
             }));
             const headings = [
@@ -269,7 +269,7 @@ export default {
                                     <td>₱${t_order.product_price}</td>
                                     <td>${t_order.total_quantity } ${ t_order.total_quantity > 1 ? 'items' : 'item'} </td>
                                     <td>${t_order.category_label}</td>
-                                    <td>₱${t_order.gross_sales}</td>
+                                    <td>₱${this.formatSalesDisplay(t_order.gross_sales)}</td>
                                     <td>${this.formatDateTime(t_order.updated_at)}</td>
                                 </tr>`).join('')}
                         </table>
@@ -298,14 +298,25 @@ export default {
         },
 
         formatSales(sale) {
+            const value = Number(sale.gross_sales);
+            const display_sales = (Math.round(value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
             return {
                 ...sale,
                 display_product_name: `${sale.product_name}${sale.temp_label}${sale.size_label}`,
                 updated_at: this.formatDateTime(sale.updated_at),
                 display_product_price: `₱${sale.product_price}`,
                 display_total_quantity: `${sale.total_quantity} ${ sale.total_quantity > 1 ? 'items' : 'item'}`,
-                display_sales: `₱${Number(sale.gross_sales).toLocaleString('en-PH')}`,
+                display_sales: `₱${display_sales}`,
             };
+        },
+
+        formatSalesDisplay(grossSales) {
+            if (!grossSales) return '0.00';
+            const value = Number(grossSales);
+            return (Math.round(value * 100) / 100).toLocaleString('en-PH', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }) || '';
         },
 
         showError(message) {

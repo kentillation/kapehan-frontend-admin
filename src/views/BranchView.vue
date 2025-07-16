@@ -766,7 +766,9 @@ export default {
                     return;
                 }
                 await this.transactStore.fetchGrossSalesStore(this.branchDetails.branch_id, month);
-                this.grossSales = Number(this.transactStore.grossSales.gross_sales).toLocaleString('en-PH') || '';
+                const value = Number(this.transactStore.grossSales.gross_sales);
+                this.grossSales = (Math.round(value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
+                // this.grossSales = Number(this.transactStore.grossSales.gross_sales).toFixed(2).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching gross sales:', error);
                 this.showError("Error fetching gross sales!");
