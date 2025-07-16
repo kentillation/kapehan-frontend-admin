@@ -1,22 +1,27 @@
 body {
-    font-family: Poppins, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
+
 h1 {
     /* Change the size if every screen */
 }
+
 .v-list-item {
     border-radius: 30px;
 }
-.v-btn--size-default,
-.v-icon {
+
+.v-btn--size-default, .v-icon {
     min-width: 0 !important;
 }
+
 .v-icon--size-default {
     font-size: calc(var(--v-icon-size-multiplier) * 1.5em) !important;
 }
+
 .v-tab.v-tab.v-btn {
     height: 40px !important;
 }
+
 .active-tab {
     background: linear-gradient(90deg,
             rgba(128, 41, 0, 0.1) 0%,
