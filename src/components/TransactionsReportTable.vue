@@ -224,7 +224,7 @@ export default {
             printWindow.document.write(`
                 <html>
                     <head>
-                        <title>Transactions Report</title>
+                        <title>Orders Report</title>
                         <style>
                             body { font-family: Arial, sans-serif; }
                             table { width: 100%; border-collapse: collapse; }
