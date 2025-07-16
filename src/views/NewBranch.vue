@@ -1,9 +1,9 @@
 <template>
     <v-container>
-        <h1 class="text-brown-lighten-1">Create New Branch</h1>
+        <h2 class="text-brown-lighten-1">Create New Branch</h2>
         <v-row>
             <v-col cols="12" lg="6" md="6" sm="12">
-                <v-card class="pa-5">
+                <v-card class="pa-5 mt-3">
                     <v-card-text>
                         <v-form ref="newBranchForm" @submit.prevent="showConfirmDialog">
                             <v-row>

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h1 class="text-brown-lighten-1">Edit Products ( {{ branchName }} Branch )</h1>
+        <h2 class="text-brown-lighten-1">Edit Products in <span class="text-warning">{{ branchName }}</span> Branch </h2>
         <v-form ref="productForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productRows" :key="index"
                 class="d-flex align-center border rounded my-3 pt-3 mx-auto">

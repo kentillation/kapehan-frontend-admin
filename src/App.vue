@@ -20,32 +20,23 @@
       <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
         <v-list density="compact" nav>
           <v-list-subheader size="30">Menu</v-list-subheader>
-          <v-list-item prepend-icon="mdi-home-outline" @click="toHome" class="bg-brown-darken-3 ps-5"
-            style="border-radius: 30px;">Home</v-list-item>
-          <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-5"
-            style="border-radius: 30px;">Create
-            Branch</v-list-item>
-          <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
-            style="border-radius: 30px;">Settings</v-list-item>
-          <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3 ps-5"
-            style="border-radius: 30px;">Help</v-list-item>
+          <v-list-item prepend-icon="mdi-home-outline" @click="toHome" class="bg-brown-darken-3 ps-3">Home</v-list-item>
+          <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-3">Create Branch</v-list-item>
+          <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-3">Settings</v-list-item>
+          <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3 ps-3">Help</v-list-item>
 
           <v-divider class="mt-4"></v-divider>
 
           <v-list-subheader size="30">Branch</v-list-subheader>
-          <!-- Display loader while branches are being fetched -->
           <template v-if="branchStore.getBranchNames === null || branchStore.getBranchNames === undefined">
             <v-progress-circular indeterminate color="brown" class="ma-4"></v-progress-circular>
           </template>
 
-          <!-- Display branches when available -->
           <template v-else>
             <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
-              :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-5"
-              style="border-radius: 30px;" />
+              :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3"/>
           </template>
 
-          <!-- If no branches after fetch -->
           <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
             <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;"><em>No branch
                 available</em></span>
@@ -53,7 +44,7 @@
 
           <v-divider class="mt-4"></v-divider>
           <v-list-item prepend-icon="mdi-power" v-if="showLogout" @click="authStore.logout"
-            class="bg-brown-darken-3 ps-5 mt-2" style="border-radius: 30px;">Signout</v-list-item>
+            class="bg-brown-darken-3 ps-3 mt-2" >Signout</v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-layout>

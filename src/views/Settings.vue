@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h1 class="text-brown-lighten-1">Settings</h1>
-        <v-card class="pa-8">
+        <h2 class="text-brown-lighten-1">Settings</h2>
+        <v-card class="pa-8 mt-3">
             <v-row>
                 <v-col cols="12" lg="6" md="6" sm="12">
                     <h2><v-icon>mdi-account-circle-outline</v-icon>&nbsp; Account</h2>
@@ -40,7 +40,7 @@
                     <h3>Account settings</h3>
                 </v-card-title>
                 <v-card-text>
-                    <h1>Hello, World!</h1>
+                    <h2>Hello, World!</h2>
                 </v-card-text>
                 <v-spacer></v-spacer>
                 <div class="d-flex justify-space-between pa-3">

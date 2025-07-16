@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Register</h1>
+        <h2>Register</h2>
         <form @submit.prevent="register">
             <div>
                 <label for="name">Name:</label>

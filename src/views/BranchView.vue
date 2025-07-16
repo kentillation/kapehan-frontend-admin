@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h1 class="text-brown-lighten-2">{{ branchDetails.branch_name || branchName }} Branch</h1>
+        <h2 class="text-brown-lighten-2">{{ branchDetails.branch_name || branchName }} Branch</h2>
         <template v-if="branchDetails.branch_name">
             <v-card class="pa-4 mt-3">
                 <v-tabs v-model="activeTab" class="mt-5" align-tabs="center" color="white" show-arrows>
@@ -18,7 +18,7 @@
                                 <v-container>
                                     <v-row>
                                         <!-- Sales -->
-                                        <v-col cols="12" lg="3" md="6" sm="12">
+                                        <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
@@ -30,7 +30,7 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex flex-column">
-                                                                <h3 class="text-brown-lighten-2">Total sales</h3>
+                                                                <h3 class="text-brown-lighten-2">Net sales</h3>
                                                                 <div class="mt-2" style="min-height: 32px;">
                                                                     <template v-if="textSkeleton">
                                                                         <v-skeleton-loader type="button" width="100" />
@@ -53,7 +53,7 @@
                                         </v-col>
 
                                         <!-- Orders -->
-                                        <v-col cols="12" lg="3" md="6" sm="12">
+                                        <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
@@ -65,14 +65,16 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Total orders</h3>
+                                                                <h3 class="text-brown-lighten-2">Orders</h3>
                                                                 <div class="mt-2">
                                                                     <template v-if="textSkeleton">
                                                                         <v-skeleton-loader type="button" width="100" />
                                                                     </template>
                                                                     <template v-else>
-                                                                        <h2>{{ totalOrders }} {{ totalOrders > 1 ? 'items' :
-                                                                            'item' }}</h2>
+                                                                        <div class="d-flex align-center">
+                                                                            <h2>{{ totalOrders }}</h2> &nbsp;
+                                                                            <span style="font-size: 15px;">{{ totalOrders > 1 ? 'items' : 'item' }}</span>
+                                                                        </div>
                                                                     </template>
                                                                 </div>
                                                                 <div class="d-flex justify-end">
@@ -89,7 +91,7 @@
                                         </v-col>
 
                                         <!-- Products -->
-                                        <v-col cols="12" lg="3" md="6" sm="12">
+                                        <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
@@ -101,8 +103,11 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">All products</h3>
-                                                                <h2 class="mt-2">{{ totalProducts }} items</h2>
+                                                                <h3 class="text-brown-lighten-2">Products</h3>
+                                                                <div class="mt-2 d-flex align-center">
+                                                                    <h2>{{ totalProducts }}</h2> &nbsp;
+                                                                    <span style="font-size: 15px;">{{ totalProducts > 1 ? 'items' : 'item' }}</span>
+                                                                </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;"
@@ -117,7 +122,7 @@
                                         </v-col>
 
                                         <!-- Stocks -->
-                                        <v-col cols="12" lg="3" md="6" sm="12">
+                                        <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card>
                                                 <v-card-text>
                                                     <v-row>
@@ -129,8 +134,11 @@
                                                         </v-col>
                                                         <v-col cols="6">
                                                             <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">All stocks</h3>
-                                                                <h2 class="mt-2">{{ totalStocks }} items</h2>
+                                                                <h3 class="text-brown-lighten-2">Stocks</h3>
+                                                                <div class="mt-2 d-flex align-center">
+                                                                    <h2>{{ totalStocks }}</h2> &nbsp;
+                                                                    <span style="font-size: 15px;">{{ totalStocks > 1 ? 'items' : 'item' }}</span>
+                                                                </div>
                                                                 <div class="d-flex justify-end">
                                                                     <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
                                                                         style="cursor: pointer;" type="button"
@@ -543,6 +551,7 @@ export default {
                 }
             } catch (error) {
                 console.error('Error fetching branch details:', error);
+                this.showError("Error fetching branch details!");
                 this.$router.push('/home');
             } finally {
                 this.loadingBranchDetails = false;
@@ -664,8 +673,8 @@ export default {
                 }
                 this.loadingProductReports = false;
             } catch (error) {
-                console.error('Error fetching reports:', error);
-                this.showError("Error fetching reports!");
+                console.error('Error fetching products report:', error);
+                this.showError("Error fetching products report!");
             } finally {
                 this.loadingProductReports = false;
             }
@@ -689,8 +698,8 @@ export default {
                 this.stockReportsLoaded = true;
                 this.loadingStockReports = false;
             } catch (error) {
-                console.error('Error fetching stocks:', error);
-                this.showError("Error fetching stocks!");
+                console.error('Error fetching stocks report:', error);
+                this.showError("Error fetching stocks report!");
             } finally {
                 this.loadingStockReports = false;
             }
@@ -714,8 +723,8 @@ export default {
                 this.transactionReportsLoaded = true;
                 this.loadingTransactionsReports = false;
             } catch (error) {
-                console.error('Error fetching transactions:', error);
-                this.showError("Error fetching transactions!");
+                console.error('Error fetching orders report:', error);
+                this.showError("Error fetching orders report!");
             } finally {
                 this.loadingTransactionsReports = false;
             }
@@ -739,8 +748,8 @@ export default {
                 this.salesByDateReportsLoaded = true;
                 this.loadingTransactionOrdersReports = false;
             } catch (error) {
-                console.error('Error fetching sales:', error);
-                this.showError("Error fetching sales!");
+                console.error('Error fetching sales report:', error);
+                this.showError("Error fetching sales! report");
             } finally {
                 this.loadingTransactionOrdersReports = false;
             }
@@ -759,8 +768,8 @@ export default {
                 await this.transactStore.fetchGrossSalesStore(this.branchDetails.branch_id, month);
                 this.grossSales = Number(this.transactStore.grossSales.gross_sales).toLocaleString('en-PH') || '';
             } catch (error) {
-                console.error('Error fetching total sales:', error);
-                this.showError("Error fetching total sales!");
+                console.error('Error fetching gross sales:', error);
+                this.showError("Error fetching gross sales!");
             } finally {
                 this.loadingSalesOnly = false;
                 this.textSkeleton = false;
@@ -782,8 +791,8 @@ export default {
                 // added (Number(THIS_IS_THE_DATA))
                 this.totalOrders = Number(this.transactStore.ordersOnly.total_orders).toLocaleString('en-PH') || '';
             } catch (error) {
-                console.error('Error fetching total orders:', error);
-                this.showError("Error fetching total orders!");
+                console.error('Error fetching orders:', error);
+                this.showError("Error fetching orders!");
             } finally {
                 this.loadingOrdersOnly = false;
                 this.textSkeleton = false;
@@ -844,8 +853,8 @@ export default {
                 this.salesByMonthReports = this.transactStore.salesByMonth || [];
                 this.loadingSalesByMonthReports = true;
             } catch (error) {
-                console.error('Error fetching sales:', error);
-                this.showError("Error fetching sales!");
+                console.error('Error fetching sales trends:', error);
+                this.showError("Error fetching sales trends!");
             } finally {
                 this.loadingSalesByMonthReports = false;
             }

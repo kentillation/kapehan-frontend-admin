@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h1>Ingredients</h1>
+        <h2>Ingredients</h2>
         <v-data-table :headers="headers" :items="ingredients" :loading="loading" class="elevation-1 hover-table">
             <template v-slot:top>
                 <v-toolbar flat>

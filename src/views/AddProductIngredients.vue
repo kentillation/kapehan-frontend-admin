@@ -1,8 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h1 class="text-brown-lighten-1">Add Product Ingredients ( {{ branchName }} Branch )</h1>
-        <h3 class="mt-10">Add ingredients for the product: {{ productName }}{{ productTemp }}{{ productSize }}</h3>
+        <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
+        <h2 class="text-brown-lighten-1">Add Product Ingredients in <span class="text-warning">{{ branchName }}</span> Branch</h2>
+        <h3 class="mt-5">Add ingredients for {{ productName }}{{ productTemp }}{{ productSize }}</h3>
         <v-form ref="productIngredientsForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productIngredientsRows" :key="index"
                 class="d-flex align-center border rounded my-3 pt-3 mx-auto">
@@ -130,6 +131,9 @@ export default {
         },
     },
     methods: {
+        back () {
+            this.$router.go(-1);
+        },
         removeRow(index) {
             if (this.productIngredientsRows.length > 1) {
                 this.productIngredientsRows.splice(index, 1);

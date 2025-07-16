@@ -4,6 +4,9 @@ body {
 h1 {
     /* Change the size if every screen */
 }
+.v-list-item {
+    border-radius: 30px;
+}
 .v-btn--size-default,
 .v-icon {
     min-width: 0 !important;

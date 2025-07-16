@@ -2,7 +2,7 @@
 <template>
     <v-container>
         <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
-        <h1 class="text-brown-lighten-1">Add Product ( {{ branchName }} Branch )</h1>
+        <h2 class="text-brown-lighten-1">Add Product in <span class="text-warning">{{ branchName }}</span> Branch</h2>
         <v-form ref="productForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productRows" :key="index"
                 class="d-flex align-center border rounded my-3 pt-3 mx-auto">
@@ -15,23 +15,23 @@
                         variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.productPrice" label="Product price (₱)" type="text"
+                    <v-text-field v-model="row.productPrice" label="Price (₱)" type="text"
                         :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
                         @input="e => row.productPrice = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="2" md="6" sm="6">
                     <v-autocomplete v-model="row.productTemp" @click="getProductTemperatureOption"
-                        label="Product temparature" :items="productTemperatureOption" :rules="[v => !!v || 'Required']"
+                        label="Temparature" :items="productTemperatureOption" :rules="[v => !!v || 'Required']"
                         item-title="temp_label" item-value="temp_id" variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-autocomplete v-model="row.productSize" @click="getProductSizeOption" label="Product size"
+                    <v-autocomplete v-model="row.productSize" @click="getProductSizeOption" label="Size"
                         :items="productSizeOption" :rules="[v => !!v || 'Required']" item-title="size_label"
                         item-value="size_id" variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="2" md="6" sm="6">
                     <v-autocomplete v-model="row.productCategory" @click="getProductCategoryOption"
-                        label="Product category" :items="productCategoryOption" :rules="[v => !!v || 'Required']"
+                        label="Category" :items="productCategoryOption" :rules="[v => !!v || 'Required']"
                         item-title="category_label" item-value="category_id" variant="outlined" />
                 </v-col>
             </v-row>
