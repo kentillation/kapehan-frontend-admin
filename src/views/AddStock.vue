@@ -10,20 +10,24 @@
                     <v-btn color="red" class="pe-1 mb-4" variant="tonal" prepend-icon="mdi-trash-can-outline"
                         @click="removeRow(index)"></v-btn>
                 </v-col>
-                <v-col cols="12" lg="3" md="6" sm="6">
-                    <v-text-field v-model="row.ingredient" label="Stock name" :rules="[v => !!v || 'Required']"
+                <v-col cols="12" lg="2" md="6" sm="6">
+                    <v-text-field v-model="row.stockIngredient" label="Stock name" :rules="[v => !!v || 'Required']"
                         variant="outlined" />
                 </v-col>
                 <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.quantity" label="Stock In (qty)" :rules="[v => !!v || 'Required']"
+                    <v-text-field v-model="row.stockIn" label="Stock In (qty)" :rules="[v => !!v || 'Required']"
                         type="number" variant="outlined" />
                 </v-col>
-                <v-col cols="12" lg="3" md="6" sm="6">
-                    <v-autocomplete v-model="row.unit" label="Unit" :items="unitOptions" @click="getProductTemperatureOption"
+                <v-col cols="12" lg="2" md="6" sm="6">
+                    <v-text-field v-model="row.stockAlertQty" label="Stock alert (qty)" :rules="[v => !!v || 'Required']"
+                        type="number" variant="outlined" />
+                </v-col>
+                <v-col cols="12" lg="2" md="6" sm="6">
+                    <v-autocomplete v-model="row.stockUnit" label="Unit" :items="unitOptions" @click="getProductTemperatureOption"
                         :rules="[v => !!v || 'Required']" item-title="unit_avb" item-value="unit_id"
                         variant="outlined" />
                 </v-col>
-                <v-col cols="12" lg="3" md="6" sm="6">
+                <v-col cols="12" lg="2" md="6" sm="6">
                     <v-text-field v-model="row.costPerUnit" label="Cost Per Unit (₱)" type="text"
                         :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
                         @input="e => row.costPerUnit = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
@@ -91,9 +95,10 @@ export default {
             confirmDialog: false,
             stockRows: [
                 {
-                    ingredient: '',
-                    quantity: '',
-                    unit: null,
+                    stockIngredient: '',
+                    stockIn: '',
+                    stockAlertQty: '',
+                    stockUnit: null,
                     costPerUnit: '',
                 },
             ],
@@ -113,9 +118,10 @@ export default {
         isFormValid() {
             return this.stockRows.every(row => {
                 return (
-                    row.ingredient &&
-                    row.quantity &&
-                    row.unit &&
+                    row.stockIngredient &&
+                    row.stockIn &&
+                    row.stockAlertQty &&
+                    row.stockUnit &&
                     !isNaN(parseFloat(row.costPerUnit))
                 );
             });
@@ -138,9 +144,10 @@ export default {
         },
         addRow() {
             this.stockRows.push({
-                ingredient: '',
-                quantity: '',
-                unit: null,
+                stockIngredient: '',
+                stockIn: '',
+                stockAlertQty: '',
+                stockUnit: null,
                 costPerUnit: '',
             });
         },
@@ -165,9 +172,10 @@ export default {
                 if (!this.$refs.stockForm.validate()) return;
                 this.validatingStock = true;
                 const payload = this.stockRows.map(row => ({
-                    stock_ingredient: row.ingredient,
-                    stock_in: row.quantity,
-                    stock_unit: row.unit,
+                    stock_ingredient: row.stockIngredient,
+                    stock_in: row.stockIn,
+                    stock_alert_qty: row.stockAlertQty,
+                    stock_unit: row.stockUnit,
                     stock_cost_per_unit: parseFloat(row.costPerUnit.replace(/[^0-9.]/g, '')) || 0,
                     branch_id: this.branchID
                 }));
