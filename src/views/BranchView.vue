@@ -19,135 +19,110 @@
                                     <v-row>
                                         <!-- Sales -->
                                         <v-col cols="12" lg="3" md="6" sm="6">
-                                            <v-card>
+                                            <v-card elevation="5">
                                                 <v-card-text>
-                                                    <v-row>
-                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1"
-                                                                    size="70">mdi-account-cash</v-icon>
-                                                            </div>
-                                                        </v-col>
-                                                        <v-col cols="7">
-                                                            <div class="d-flex flex-column">
-                                                                <h3 class="text-brown-lighten-2">Net sales</h3>
-                                                                <div class="mt-2" style="min-height: 32px;">
-                                                                    <template v-if="textSkeleton">
-                                                                        <v-skeleton-loader type="button" width="100" />
-                                                                    </template>
-                                                                    <template v-else>
-                                                                        <h2>₱{{ grossSales }}</h2>
-                                                                    </template>
-                                                                </div>
-                                                                <div class="d-flex justify-end">
-                                                                    <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;"
-                                                                        @click="switchToSalesTab()">
-                                                                        View</h4>
-                                                                </div>
-                                                            </div>
-                                                        </v-col>
-                                                    </v-row>
+                                                    <h3 class="text-brown-lighten-2 ms-2">Net sales</h3>
+                                                    <div class="d-flex justify-center">
+                                                        <template v-if="textSkeleton">
+                                                            <v-skeleton-loader type="button" width="100" />
+                                                        </template>
+                                                        <template v-else>
+                                                            <h2>₱ {{ grossSales }}</h2>
+                                                        </template>
+                                                    </div>
+                                                    <div class="d-flex justify-end mt-3">
+                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
+                                                            style="cursor: pointer;" @click="switchToSalesTab()">
+                                                            View</h4>
+                                                    </div>
                                                 </v-card-text>
+                                                <v-icon class="text-grey-lighten-1 position-absolute" 
+                                                    style="top: 70px; left: -10px;" 
+                                                    size="80">mdi-account-cash</v-icon>
                                             </v-card>
                                         </v-col>
 
                                         <!-- Orders -->
                                         <v-col cols="12" lg="3" md="6" sm="6">
-                                            <v-card>
+                                            <v-card elevation="5">
                                                 <v-card-text>
-                                                    <v-row>
-                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1"
-                                                                    size="70">mdi-invoice-text-outline</v-icon>
+                                                    <h3 class="text-brown-lighten-2 ms-2">Orders</h3>
+                                                    <div class="d-flex justify-center">
+                                                        <template v-if="textSkeleton">
+                                                            <v-skeleton-loader type="button" width="100" />
+                                                        </template>
+                                                        <template v-else>
+                                                            <div class="d-flex align-center">
+                                                                <h2>{{ totalOrders }}</h2> &nbsp;
+                                                                <span style="font-size: 18px;">{{
+                                                                    totalOrders > 1 ? 'items' : 'item'
+                                                                }}</span>
                                                             </div>
-                                                        </v-col>
-                                                        <v-col cols="7">
-                                                            <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Orders</h3>
-                                                                <div class="mt-2">
-                                                                    <template v-if="textSkeleton">
-                                                                        <v-skeleton-loader type="button" width="100" />
-                                                                    </template>
-                                                                    <template v-else>
-                                                                        <div class="d-flex align-center">
-                                                                            <h2>{{ totalOrders }}</h2> &nbsp;
-                                                                            <span style="font-size: 18px;">{{ totalOrders > 1 ? 'items' : 'item' }}</span>
-                                                                        </div>
-                                                                    </template>
-                                                                </div>
-                                                                <div class="d-flex justify-end">
-                                                                    <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;"
-                                                                        @click="switchToOrdersTab()">
-                                                                        View</h4>
-                                                                </div>
-                                                            </div>
-                                                        </v-col>
-                                                    </v-row>
+                                                        </template>
+                                                    </div>
+                                                    <div class="d-flex justify-end mt-3">
+                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
+                                                            style="cursor: pointer;" @click="switchToOrdersTab()">
+                                                            View</h4>
+                                                    </div>
                                                 </v-card-text>
+                                                <v-icon class="text-grey-lighten-1 position-absolute" 
+                                                    style="top: 70px; left: -10px;" 
+                                                    size="80">mdi-invoice-text-outline</v-icon>
                                             </v-card>
                                         </v-col>
 
                                         <!-- Products -->
                                         <v-col cols="12" lg="3" md="6" sm="6">
-                                            <v-card>
+                                            <v-card elevation="5">
                                                 <v-card-text>
-                                                    <v-row>
-                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1"
-                                                                    size="70">mdi-food-outline</v-icon>
-                                                            </div>
-                                                        </v-col>
-                                                        <v-col cols="7">
-                                                            <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Products</h3>
-                                                                <div class="mt-2 d-flex align-center">
-                                                                    <h2>{{ totalProducts }}</h2> &nbsp;
-                                                                    <span style="font-size: 18px;">{{ totalProducts > 1 ? 'items' : 'item' }}</span>
-                                                                </div>
-                                                                <div class="d-flex justify-end">
-                                                                    <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;"
-                                                                        @click="switchToProductsTab()">
-                                                                        View</h4>
-                                                                </div>
-                                                            </div>
-                                                        </v-col>
-                                                    </v-row>
+                                                    <h3 class="text-brown-lighten-2 ms-2">Products</h3>
+                                                    <div class="d-flex  align-center justify-center">
+                                                        <template v-if="textSkeleton">
+                                                            <v-skeleton-loader type="button" width="100" />
+                                                        </template>
+                                                        <template v-else>
+                                                            <h2>₱ {{ totalProducts }}</h2> &nbsp;
+                                                            <span style="font-size: 18px;">{{ totalProducts > 1
+                                                            ? 'items' : 'item' }}</span>
+                                                        </template>
+                                                    </div>
+                                                    <div class="d-flex justify-end mt-3">
+                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
+                                                            style="cursor: pointer;" @click="switchToProductsTab()">
+                                                            View</h4>
+                                                    </div>
                                                 </v-card-text>
+                                                <v-icon class="text-grey-lighten-1 position-absolute" 
+                                                    style="top: 70px; left: -10px;" 
+                                                    size="80">mdi-food-outline</v-icon>
                                             </v-card>
                                         </v-col>
 
                                         <!-- Stocks -->
                                         <v-col cols="12" lg="3" md="6" sm="6">
-                                            <v-card>
+                                            <v-card elevation="5">
                                                 <v-card-text>
-                                                    <v-row>
-                                                        <v-col cols="5" class="bg-brown-lighten-4 ma-0 rounded">
-                                                            <div class="d-flex justify-center mt-3">
-                                                                <v-icon class="text-brown-darken-1"
-                                                                    size="70">mdi-archive-outline</v-icon>
-                                                            </div>
-                                                        </v-col>
-                                                        <v-col cols="7">
-                                                            <div class="d-flex align-items-center flex-column">
-                                                                <h3 class="text-brown-lighten-2">Stocks</h3>
-                                                                <div class="mt-2 d-flex align-center">
-                                                                    <h2>{{ totalStocks }}</h2> &nbsp;
-                                                                    <span style="font-size: 18px;">{{ totalStocks > 1 ? 'items' : 'item' }}</span>
-                                                                </div>
-                                                                <div class="d-flex justify-end">
-                                                                    <h4 class="bg-brown-darken-1 pa-2 mt-3 rounded"
-                                                                        style="cursor: pointer;" type="button"
-                                                                        @click="switchToStocksTab()">View</h4>
-                                                                </div>
-                                                            </div>
-                                                        </v-col>
-                                                    </v-row>
+                                                    <h3 class="text-brown-lighten-2 ms-2">Stocks</h3>
+                                                    <div class="d-flex align-center justify-center">
+                                                        <template v-if="textSkeleton">
+                                                            <v-skeleton-loader type="button" width="100" />
+                                                        </template>
+                                                        <template v-else>
+                                                            <h2>₱ {{ totalStocks }}</h2> &nbsp;
+                                                            <span style="font-size: 18px;">{{ totalStocks > 1
+                                                            ? 'items' : 'item' }}</span>
+                                                        </template>
+                                                    </div>
+                                                    <div class="d-flex justify-end mt-3">
+                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
+                                                            style="cursor: pointer;" @click="switchToStocksTab()">
+                                                            View</h4>
+                                                    </div>
                                                 </v-card-text>
+                                                <v-icon class="text-grey-lighten-1 position-absolute" 
+                                                    style="top: 70px; left: -10px;" 
+                                                    size="80">mdi-archive-outline</v-icon>
                                             </v-card>
                                         </v-col>
                                     </v-row>
@@ -925,7 +900,7 @@ export default {
                     unit_usage: this.currentIngredient.unit_usage,
                     ingredient_capital: parseFloat(this.currentIngredient.ingredient_capital),
                 };
-                
+
                 console.log(ingredientData);
                 await this.productsStore.updateIngredientStore(ingredientData);
                 this.productEditDialog = false;
