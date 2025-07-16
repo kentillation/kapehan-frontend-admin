@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from '../views/Login.vue';
+import NotFound from '@/views/NotFound.vue';
 import Register from '../views/Register.vue';
 import Home from '../views/Home.vue';
 import NewBranch from '../views/NewBranch.vue';
@@ -15,6 +16,7 @@ import LoaderUI from '../components/LoaderUI.vue';
 import { useAuthStore } from '@/stores/auth';
 
 const routes = [
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
     { path: '/', name: 'LoginPage', component: LoginPage, meta: { requiresAuth: false } },
     { path: '/register', name: 'Register', component: Register },
     { path: '/home', name: 'Home', component: Home, meta: { requiresAuth: true } },
