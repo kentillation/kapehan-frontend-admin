@@ -86,7 +86,6 @@ export default {
       }
     };
 
-    // Optional: Simulate slow/waiting (replace with real logic as needed)
     let waitingTimeout;
     const simulateWaiting = () => {
       connectionStatus.value = 'waiting';
@@ -99,10 +98,8 @@ export default {
       window.addEventListener('online', updateStatus);
       window.addEventListener('offline', updateStatus);
 
-      // Example: simulate waiting for connection on mount
       simulateWaiting();
 
-      // Optional: Check for slow connection using Network Information API
       if ('connection' in navigator) {
         navigator.connection.addEventListener('change', () => {
           if (navigator.connection.downlink < 1) {
