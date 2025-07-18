@@ -16,7 +16,7 @@
           <v-spacer></v-spacer>
           <!-- added -->
           <v-btn icon>
-            <v-badge v-if="this.stockNotifQty >= 1" :content="this.stockNotifQty" class="position-absolute"
+            <v-badge v-if="this.totalLowStock >= 1" :content="this.totalLowStock" class="position-absolute"
               style="top: 12px; right: 12px;" color="error"></v-badge>
             <v-icon>mdi-bell-outline</v-icon>
           </v-btn>
@@ -46,12 +46,9 @@
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
                 :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3">
-                <v-badge 
-                    v-if="lowStockBranches && lowStockBranches[branch[0]]" 
-                    :content="lowStockBranches[branch[0]].count" 
-                    class="position-absolute"
-                    style="top: 12px; right: 12px;" 
-                    color="error"></v-badge>
+                <v-badge v-if="lowStockBranches && lowStockBranches[branch[0].toString()]"
+                  :content="lowStockBranches[branch[0].toString()].count" class="position-absolute"
+                  style="top: 12px; right: 12px;" color="error"></v-badge>
               </v-list-item>
             </template>
 
@@ -91,7 +88,6 @@ export default {
   data() {
     return {
       stocks: [],
-      stockNotifQty: null, // added
       lowStockBranches: [],
       totalLowStock: null,
 
@@ -250,7 +246,12 @@ export default {
     async fetchLowStocks() {
       try {
         const response = await this.stocksStore.fetchLowStocksStore();
-        this.lowStockBranches = response.data.branches;
+        // this.lowStockBranches = response.data.branches;
+        const formattedBranches = {};
+        Object.entries(response.data.branches).forEach(([id, branch]) => {
+          formattedBranches[id.toString()] = branch;
+        });
+        this.lowStockBranches = formattedBranches;
         this.totalLowStock = response.data.total_count;
         if (this.totalLowStock > 0) {
           const branchDetails = Object.values(this.lowStockBranches).map(
