@@ -24,7 +24,7 @@
                                                     <h3 class="text-brown-lighten-2 ms-2">Net sales</h3>
                                                     <div class="d-flex justify-center">
                                                         <template v-if="textSkeleton">
-                                                            <v-skeleton-loader type="button" width="100" />
+                                                            <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <h2>₱ {{ grossSales }}</h2>
@@ -49,7 +49,7 @@
                                                     <h3 class="text-brown-lighten-2 ms-2">Orders</h3>
                                                     <div class="d-flex justify-center">
                                                         <template v-if="textSkeleton">
-                                                            <v-skeleton-loader type="button" width="100" />
+                                                            <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <div class="d-flex align-center">
@@ -494,12 +494,12 @@ export default {
         },
         activeTab(newTab) {
             if (newTab === 'dashboard') {
-                const currentMonth = new Date().getMonth() + 1;
-                this.fetchSalesOnly(currentMonth);
-                this.fetchOrdersOnly(currentMonth);
-                this.fetchProductsOnly(currentMonth);
-                this.fetchStocksOnly();
-                this.fetchSalesByMonthReport(currentMonth);
+                // const currentMonth = new Date().getMonth() + 1;
+                // this.fetchSalesOnly(currentMonth);
+                // this.fetchOrdersOnly(currentMonth);
+                // this.fetchProductsOnly(currentMonth);
+                // this.fetchStocksOnly();
+                // this.fetchSalesByMonthReport(currentMonth);
             } else if (newTab === 'products') {
                 this.fetchProducts();
             } else if (newTab === 'stocks') {
@@ -819,6 +819,7 @@ export default {
         async fetchSalesByMonthReport(month = null) {
             this.loadingSalesByMonthReports = true;
             try {
+                this.loadingStore.show("Loading sales data...");
                 this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
@@ -833,6 +834,7 @@ export default {
                 this.showError("Error fetching sales trends!");
             } finally {
                 this.loadingSalesByMonthReports = false;
+                this.loadingStore.hide();
             }
         },
 
