@@ -239,7 +239,6 @@
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
-                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                             <TransactionsReportsTableSkeleton
@@ -252,7 +251,6 @@
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
-                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                             <ProductsReportsTableSkeleton
@@ -265,7 +263,6 @@
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
-                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                             <StocksReportsTableSkeleton
@@ -278,7 +275,6 @@
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
-                                                :shop-logo-link="branchDetails.shop_logo_link"
                                                 :admin-name="branchDetails.admin_name" />
 
                                         </div>
@@ -508,9 +504,7 @@ export default {
         },
         activeReportsTab(newReportsTab) {
             if (newReportsTab === 'sales') {
-                // this.loadingStore.show("Preparing...");
-                // this.fetchSalesReport();
-                // this.loadingStore.hide();
+                console.log("Active reports tab: Sales");
             } else if (newReportsTab === 'orders') {
                 this.loadingStore.show("Preparing...");
                 this.fetchOrdersReport();

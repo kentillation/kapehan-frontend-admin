@@ -53,6 +53,7 @@ export default {
             totalSales: null,
             mappedSales: [],
             dateFilter: null,
+            shopLogoLink: '-',
             salesReportHeaders: [
                 { title: 'Product', value: 'display_product_name', sortable: 'true', width: '25%' },
                 { title: 'Price', value: 'display_product_price', sortable: 'true', width: '10%' },
@@ -126,10 +127,10 @@ export default {
             type: String,
             required: true
         },
-        shopLogoLink: {
-            type: String,
-            required: true
-        },
+        // shopLogoLink: {
+        //     type: String,
+        //     required: true
+        // },
         adminName: {
             type: String,
             required: true

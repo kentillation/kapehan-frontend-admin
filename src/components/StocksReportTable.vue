@@ -28,6 +28,7 @@ export default {
     name: 'StocksReportTable',
     data() {
         return {
+            shopLogoLink: '-',
             stocksHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '15%' },
@@ -74,10 +75,10 @@ export default {
             type: String,
             required: true
         },
-        shopLogoLink: {
-            type: String,
-            required: true
-        },
+        // shopLogoLink: {
+        //     type: String,
+        //     required: true
+        // },
         adminName: {
             type: String,
             required: true

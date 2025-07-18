@@ -38,6 +38,7 @@ export default {
     name: 'ProductsReportTable',
     data() {
         return {
+            shopLogoLink: '-',
             productsHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Product name', value: 'display_product_name', sortable: true, width: '20%' },
@@ -83,10 +84,10 @@ export default {
             type: String,
             required: true
         },
-        shopLogoLink: {
-            type: String,
-            required: true
-        },
+        // shopLogoLink: {
+        //     type: String,
+        //     required: true
+        // },
         adminName: {
             type: String,
             required: true

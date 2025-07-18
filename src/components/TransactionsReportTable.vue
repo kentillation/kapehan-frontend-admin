@@ -49,6 +49,7 @@ export default {
         return {
             mappedTransactions: [],
             dateFilter: null,
+            shopLogoLink: '-',
             transactionsHeaders: [
                 { title: 'Reference', value: 'reference_number', sortable: 'true', width: '25%' },
                 { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '15%' },
@@ -122,10 +123,10 @@ export default {
             type: String,
             required: true
         },
-        shopLogoLink: {
-            type: String,
-            required: true
-        },
+        // shopLogoLink: {
+        //     type: String,
+        //     required: true
+        // },
         adminName: {
             type: String,
             required: true
