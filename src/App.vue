@@ -14,6 +14,12 @@
           <v-app-bar-nav-icon v-if="showMenu" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <h3>{{ authStore.shopName }}</h3>
           <v-spacer></v-spacer>
+          <!-- added -->
+          <v-btn icon>
+            <v-badge v-if="this.stockNotifQty >= 1" :content="this.stockNotifQty" class="position-absolute"
+              style="top: 12px; right: 12px;" color="error"></v-badge>
+            <v-icon>mdi-bell-outline</v-icon>
+          </v-btn>
           <v-btn @click="toSettings" icon>
             <v-icon>mdi-account-circle-outline</v-icon>
           </v-btn>
@@ -21,10 +27,14 @@
         <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
           <v-list density="compact" nav>
             <v-list-subheader size="30">Menu</v-list-subheader>
-            <v-list-item prepend-icon="mdi-home-outline" @click="toHome" class="bg-brown-darken-3 ps-3">Home</v-list-item>
-            <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-3">Create Branch</v-list-item>
-            <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-3">Settings</v-list-item>
-            <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp" class="bg-brown-darken-3 ps-3">Help</v-list-item>
+            <v-list-item prepend-icon="mdi-home-outline" @click="toHome"
+              class="bg-brown-darken-3 ps-3">Home</v-list-item>
+            <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-3">Create
+              Branch</v-list-item>
+            <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings"
+              class="bg-brown-darken-3 ps-3">Settings</v-list-item>
+            <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp"
+              class="bg-brown-darken-3 ps-3">Help</v-list-item>
 
             <v-divider class="mt-4"></v-divider>
 
@@ -35,23 +45,25 @@
 
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
-                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3"/>
+                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3" />
             </template>
 
             <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
-              <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;"><em>No branch
+              <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;"><em>No
+                  branch
                   available</em></span>
             </template>
 
             <v-divider class="mt-4"></v-divider>
             <v-list-item prepend-icon="mdi-power" v-if="showLogout" @click="authStore.logout"
-              class="bg-brown-darken-3 ps-3 mt-2" >Signout</v-list-item>
+              class="bg-brown-darken-3 ps-3 mt-2">Signout</v-list-item>
           </v-list>
         </v-navigation-drawer>
       </template>
       <v-layout>
         <router-view />
         <GlobalLoader />
+        <Snackbar ref="snackbarRef" />
       </v-layout>
     </v-main>
   </v-app>
@@ -61,19 +73,33 @@
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
+import { useStocksStore } from '@/stores/stocksStore'; // added
 import { useLoadingStore } from '@/stores/loading';
-import GlobalLoader from '@/components/GlobalLoader.vue';
 import { useRoute } from 'vue-router';
+import GlobalLoader from '@/components/GlobalLoader.vue';
+import Snackbar from '@/components/Snackbar.vue';
 
 export default {
   name: 'App',
+  data() {
+    return {
+      stocks: [],
+      stockNotifQty: null, // added
+    }
+  },
   components: {
     GlobalLoader,
+    Snackbar,
+  },
+  mounted() {
+    this.fetchLowStocks(); // added
   },
   setup() {
     const authStore = useAuthStore();
     const loadingStore = useLoadingStore();
     const branchStore = useBranchStore();
+    const stocksStore = useStocksStore(); // added
+
     const connectionStatus = ref('online');
     const route = useRoute();
     const isNotFoundPage = computed(() => route.name === 'NotFound');
@@ -146,6 +172,7 @@ export default {
     return {
       authStore,
       branchStore,
+      stocksStore,
       loadingStore,
       drawer: ref(true),
       open: ref(false),
@@ -209,6 +236,29 @@ export default {
         path: `/branch/${encodedName}`,
         query: { activeTab: 'home' }
       });
+    },
+    async fetchLowStocks() {
+      try {
+        const response = await this.stocksStore.fetchLowStocksStore();
+        if (response?.data?.count === 0) {
+          this.stockNotifQty = 0;
+        } else {
+          this.stockNotifQty = response.data.count;
+          const branchNames = response.data.branch_name;
+          if (branchNames) {
+            this.showError(`Low stock alert in ${branchNames} branch`);
+          } else {
+            this.showError('Low stock alert');
+          }
+          console.log("Low stock qty:", this.stockNotifQty);
+        }
+      } catch (error) {
+        console.error('Error fetching stocks:', error);
+        this.showError('Failed to load stock levels alert');
+      }
+    },
+    showError(message) {
+      this.$refs.snackbarRef.showSnackbar(message, "error");
     },
   }
 };

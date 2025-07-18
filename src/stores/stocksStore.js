@@ -74,6 +74,29 @@ export const useStocksStore = defineStore('stocks', {
                 this.loading = false;
             }
         },
+
+        async fetchLowStocksStore() {
+            this.loading = true;
+            this.error = null;
+            try {
+                if (!STOCK_API || typeof STOCK_API.fetchLowStocksApi !== 'function') {
+                    throw new Error('STOCK_API service is not properly initialized');
+                }
+                const response = await STOCK_API.fetchLowStocksApi();
+                if (response?.status === true) {
+                    this.lowStocksData = response.data;
+                    return response;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch stocks');
+                }
+            } catch (error) {
+                console.error('Error in fetchLowStocksApi:', error);
+                this.error = error.message || 'Failed to fetch stocks';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
     },
 
     // getters: {

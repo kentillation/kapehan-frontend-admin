@@ -4,7 +4,8 @@ export const STOCK_API = {
     ENDPOINTS: {
         FETCH: '/admin/stocks',
         SAVE: '/admin/save-stock',
-        UPDATE: '/admin/update-stock'
+        UPDATE: '/admin/update-stock',
+        FETCH_LOW_STOCKS: '/admin/low-stocks',
     },
 
     /**
@@ -111,6 +112,34 @@ export const STOCK_API = {
             enhancedError.response = error.response;
             enhancedError.status = error.response?.status;
             enhancedError.isApiError = true;
+            throw enhancedError;
+        }
+    },
+
+    async fetchLowStocksApi() {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            };
+            const response = await apiClient.get(
+                this.ENDPOINTS.FETCH_LOW_STOCKS,
+                config
+            );
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[StocksAPI] Error fetching stocks:', error);
+
+            const enhancedError = new Error('Failed to fetch stocks');
             throw enhancedError;
         }
     },
