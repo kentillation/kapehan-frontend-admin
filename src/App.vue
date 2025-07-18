@@ -46,8 +46,8 @@
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
                 :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3">
-                <v-badge :content="totalLowStock" class="position-absolute"
-                  style="top: 12px; right: 12px;" color="error"></v-badge>
+                <!-- <v-badge :content="totalLowStock" class="position-absolute"
+                  style="top: 12px; right: 12px;" color="error"></v-badge> -->
               </v-list-item>
             </template>
 
@@ -253,7 +253,7 @@ export default {
         this.totalLowStock = response.data.total_count;
         if (this.totalLowStock > 0) {
           const branchDetails = Object.values(this.lowStockBranches).map(
-            branch => `${branch.name} (${branch.count} item${branch.count !== 1 ? 's' : ''})`
+            branch => `${branch.name} branch (${branch.count} item${branch.count !== 1 ? 's' : ''})`
           );
           const message = `Low stock alert: ${branchDetails.join(', ')}`;
           this.showError(message);

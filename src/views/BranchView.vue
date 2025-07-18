@@ -479,14 +479,16 @@ export default {
             immediate: true,
             async handler(newBranchName) {
                 if (newBranchName) {
+                    this.loadingStore.show("Loading...");
                     await this.fetchBranchDetails();
                     this.activeTab = "dashboard";
                     const currentMonth = new Date().getMonth() + 1;
                     this.fetchSalesOnly(currentMonth);
-                    this.fetchOrdersOnly(currentMonth); // added "currentMonth"
+                    this.fetchOrdersOnly(currentMonth);
                     this.fetchProductsOnly(currentMonth);
                     this.fetchStocksOnly();
                     this.fetchSalesByMonthReport(currentMonth);
+                    this.loadingStore.hide();
                 }
             }
         },
@@ -494,7 +496,7 @@ export default {
             if (newTab === 'dashboard') {
                 const currentMonth = new Date().getMonth() + 1;
                 this.fetchSalesOnly(currentMonth);
-                this.fetchOrdersOnly(currentMonth); // added "currentMonth"
+                this.fetchOrdersOnly(currentMonth);
                 this.fetchProductsOnly(currentMonth);
                 this.fetchStocksOnly();
                 this.fetchSalesByMonthReport(currentMonth);
@@ -743,7 +745,6 @@ export default {
                 await this.transactStore.fetchGrossSalesStore(this.branchDetails.branch_id, month);
                 const value = Number(this.transactStore.grossSales.gross_sales);
                 this.grossSales = (Math.round(value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
-                // this.grossSales = Number(this.transactStore.grossSales.gross_sales).toFixed(2).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching gross sales:', error);
                 this.showError("Error fetching gross sales!");
@@ -753,7 +754,6 @@ export default {
             }
         },
 
-        // month = null is added
         async fetchOrdersOnly(month = null) {
             this.loadingOrdersOnly = true;
             this.textSkeleton = true;
@@ -765,7 +765,6 @@ export default {
                     return;
                 }
                 await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id, month); // month added
-                // added (Number(THIS_IS_THE_DATA))
                 this.totalOrders = Number(this.transactStore.ordersOnly.total_orders).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching orders:', error);
@@ -900,7 +899,6 @@ export default {
                     unit_usage: this.currentIngredient.unit_usage,
                     ingredient_capital: parseFloat(this.currentIngredient.ingredient_capital),
                 };
-
                 console.log(ingredientData);
                 await this.productsStore.updateIngredientStore(ingredientData);
                 this.productEditDialog = false;
