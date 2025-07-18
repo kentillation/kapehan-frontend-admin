@@ -1,6 +1,6 @@
 <template>
     <v-data-table :headers="productsHeaders" :items="products" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'product_name', order: 'asc' }]" class="hover-table" density="comfortable">
+        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent" class="mt-2">
                 <v-btn @click="downloadProducts" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
@@ -8,7 +8,6 @@
                 <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"
                     @click="$emit('refresh')" :loading="loading"></v-btn>
             </v-toolbar>
-            <v-divider></v-divider>
         </template>
         <!--eslint-disable-next-line -->
         <template v-slot:item.product_name="{ item }">

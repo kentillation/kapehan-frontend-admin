@@ -1,18 +1,23 @@
 <template>
     <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
         <template v-slot:top>
-            <v-toolbar flat style="background: transparent;">
-                <v-row class="mt-7">
-                    <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
-                        <div class="d-flex ms-3 mb-5">
-                            <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                            <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                            <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                        </div>
-                    </v-col>
-                </v-row>
-                
-            </v-toolbar>
+            <v-row class="mt-5">
+                <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
+                    <div class="d-flex ms-3 mb-5">
+                        <v-btn prepend-icon="mdi-download" color="primary"
+                            variant="tonal">XLS</v-btn>&nbsp;
+                        <v-btn prepend-icon="mdi-printer" color="primary"
+                            variant="tonal">PRINT</v-btn>&nbsp;
+                        <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"></v-btn>
+                    </div>
+                </v-col>
+                <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
+                    <div class="d-flex">
+                        <v-autocomplete label="Date Filter" class="w-75 ms-3 me-2" clearable></v-autocomplete>
+                        <v-text-field style="font-size: 12px;" readonly>Sales: ₱0</v-text-field>
+                    </div>
+                </v-col>
+            </v-row>
         </template>
 
         <template v-slot:[`item.reference_number`]>

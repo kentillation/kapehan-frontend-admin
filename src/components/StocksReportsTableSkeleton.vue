@@ -1,10 +1,10 @@
 <template>
     <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
         <template v-slot:top>
-            <v-toolbar flat>
-                <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1 me-3"></v-skeleton-loader>
+            <v-toolbar flat color="transparent" class="mt-2">
+                <v-btn prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
+                <v-btn prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
+                <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"></v-btn>
             </v-toolbar>
         </template>
 

@@ -1,13 +1,24 @@
 <template>
-    <v-skeleton-loader type="text" width="260" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-    <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1 mt-5">
+    <v-row>
+        <v-col cols="12" lg="4" md="4" sm="6">
+            <v-text-field  density="comfortable"
+                v-model="searchProduct" 
+                placeholder="Search product here..." 
+                variant="outlined" 
+                label="Search product"></v-text-field>
+        </v-col>
+    </v-row>
+    <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat>
-                <v-toolbar-title>
-                    <v-skeleton-loader type="text" width="200" class="bg-grey-lighten-1"></v-skeleton-loader>
-                </v-toolbar-title>
-                <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                <v-skeleton-loader type="text" width="50" class="bg-grey-lighten-1 ms-1 me-3"></v-skeleton-loader>
+                <h2 class="ms-3 to-hide">List of all Products</h2>
+                <h2 class="ms-3 to-show">List</h2>
+                <v-spacer></v-spacer>
+                <v-btn prepend-icon="mdi-plus" color="primary" class="me-2" variant="tonal">
+                    <span class="to-hide">Add products</span>
+                    <span class="to-show">products</span>
+                </v-btn>
+                <v-btn icon="mdi-refresh" color="primary" variant="tonal" size="small" class="me-3"></v-btn>
             </v-toolbar>
         </template>
 

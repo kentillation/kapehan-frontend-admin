@@ -1,6 +1,6 @@
 <template>
     <v-data-table :headers="stocksHeaders" :items="stocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'stock_ingredient', order: 'asc' }]" class="hover-table" density="comfortable">
+        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat color="transparent" class="mt-2">
                 <v-btn @click="downloadStocks" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
