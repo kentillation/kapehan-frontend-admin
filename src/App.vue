@@ -45,7 +45,14 @@
 
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
-                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3" />
+                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3">
+                <v-badge 
+                    v-if="lowStockBranches && lowStockBranches[branch[0]]" 
+                    :content="lowStockBranches[branch[0]].count" 
+                    class="position-absolute"
+                    style="top: 12px; right: 12px;" 
+                    color="error"></v-badge>
+              </v-list-item>
             </template>
 
             <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
@@ -85,6 +92,9 @@ export default {
     return {
       stocks: [],
       stockNotifQty: null, // added
+      lowStockBranches: [],
+      totalLowStock: null,
+
     }
   },
   components: {
@@ -240,17 +250,14 @@ export default {
     async fetchLowStocks() {
       try {
         const response = await this.stocksStore.fetchLowStocksStore();
-        if (response?.data?.count === 0) {
-          this.stockNotifQty = 0;
-        } else {
-          this.stockNotifQty = response.data.count;
-          const branchNames = response.data.branch_name;
-          if (branchNames) {
-            this.showError(`Low stock alert in ${branchNames} branch`);
-          } else {
-            this.showError('Low stock alert');
-          }
-          console.log("Low stock qty:", this.stockNotifQty);
+        this.lowStockBranches = response.data.branches;
+        this.totalLowStock = response.data.total_count;
+        if (this.totalLowStock > 0) {
+          const branchDetails = Object.values(this.lowStockBranches).map(
+            branch => `${branch.name} (${branch.count} item${branch.count !== 1 ? 's' : ''})`
+          );
+          const message = `Low stock alert: ${branchDetails.join(', ')}`;
+          this.showError(message);
         }
       } catch (error) {
         console.error('Error fetching stocks:', error);

@@ -4,6 +4,8 @@ import { STOCK_API } from '@/api/stocksApi';
 export const useStocksStore = defineStore('stocks', {
     state: () => ({
         stocks: [],
+        lowStockBranches: [],
+        totalLowStock: null,
         loading: false,
         error: null
     }),
@@ -84,7 +86,8 @@ export const useStocksStore = defineStore('stocks', {
                 }
                 const response = await STOCK_API.fetchLowStocksApi();
                 if (response?.status === true) {
-                    this.lowStocksData = response.data;
+                    this.lowStockBranches = response.data.branches;
+                    this.totalLowStock = response.data.total_count;
                     return response;
                 } else {
                     throw new Error(response?.message || 'Failed to fetch stocks');
