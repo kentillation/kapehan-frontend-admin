@@ -70,7 +70,7 @@
       <v-layout>
         <router-view />
         <GlobalLoader />
-        <Snackbar ref="snackbarRef" />
+        <Alert ref="snackbarRef" />
       </v-layout>
     </v-main>
   </v-app>
@@ -84,7 +84,7 @@ import { useStocksStore } from '@/stores/stocksStore'; // added
 import { useLoadingStore } from '@/stores/loading';
 import { useRoute } from 'vue-router';
 import GlobalLoader from '@/components/GlobalLoader.vue';
-import Snackbar from '@/components/Snackbar.vue';
+import Alert from '@/components/Alert.vue';
 
 export default {
   name: 'App',
@@ -99,7 +99,7 @@ export default {
   },
   components: {
     GlobalLoader,
-    Snackbar,
+    Alert,
   },
   mounted() {
     this.fetchLowStocks(); // added
