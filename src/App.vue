@@ -46,8 +46,7 @@
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
                 :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3">
-                <v-badge v-if="lowStockBranches && lowStockBranches[branch[0].toString()]"
-                  :content="lowStockBranches[branch[0].toString()].count" class="position-absolute"
+                <v-badge :content="totalLowStock" class="position-absolute"
                   style="top: 12px; right: 12px;" color="error"></v-badge>
               </v-list-item>
             </template>
@@ -246,7 +245,6 @@ export default {
     async fetchLowStocks() {
       try {
         const response = await this.stocksStore.fetchLowStocksStore();
-        // this.lowStockBranches = response.data.branches;
         const formattedBranches = {};
         Object.entries(response.data.branches).forEach(([id, branch]) => {
           formattedBranches[id.toString()] = branch;
@@ -262,7 +260,6 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching stocks:', error);
-        this.showError('Failed to load stock levels alert');
       }
     },
     showError(message) {
