@@ -64,6 +64,13 @@
         </template>
 
         <!--eslint-disable-next-line -->
+        <template v-slot:item.updated_at="{ item }">
+            <span :class="{ 'text-red': item.availability_id === 2 }">
+                {{ item.updated_at }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
             <div class="d-flex" style="gap: 8px;">
                 <v-tooltip text="View Ingredients" location="top">
