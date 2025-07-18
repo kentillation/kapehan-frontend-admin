@@ -2,16 +2,13 @@
     <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat style="background: transparent;">
-                <v-row class="mt-10">
+                <v-row class="mt-8">
                     <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
-                        <div class="d-flex ms-3 mb-5">
-                            <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                            <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-                            <v-skeleton-loader type="text" width="80" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                        <div class="d-flex ms-5 pb-5">
+                            <v-skeleton-loader type="text" width="75" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                            <v-skeleton-loader type="text" width="75" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
+                            <v-skeleton-loader type="text" width="75" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
                         </div>
-                    </v-col>
-                    <v-col cols="12" lg="6" md="6" sm="6" class="pa-0 mb-3">
-                        <v-skeleton-loader type="text" width="400" height="50" class="bg-grey-lighten-1 ms-1 mb-5"></v-skeleton-loader>
                     </v-col>
                 </v-row>
                 

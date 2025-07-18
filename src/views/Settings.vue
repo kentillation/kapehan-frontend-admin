@@ -45,7 +45,10 @@
                 <v-spacer></v-spacer>
                 <div class="d-flex justify-space-between pa-3">
                     <v-btn prepend-icon="mdi-magic-staff" color="primary" variant="tonal">Apply</v-btn>
-                    <v-btn prepend-icon="mdi-information-outline" color="error" variant="tonal" @click="accountDialog = false">Change later</v-btn>
+                    <v-btn prepend-icon="mdi-information-outline" color="error" variant="tonal" @click="accountDialog = false">
+                        <span class="to-hide">Change later</span>
+                        <span class="to-show">Later</span>
+                    </v-btn>
                 </div>
             </v-card>
         </v-dialog>
@@ -65,7 +68,10 @@
                 <v-spacer></v-spacer>
                 <div class="d-flex justify-space-between pa-3">
                     <v-btn prepend-icon="mdi-magic-staff" color="primary" variant="tonal" @click="applyTheme">Apply</v-btn>
-                    <v-btn prepend-icon="mdi-information-outline" color="error" variant="tonal" @click="themeDialog = false">Change later</v-btn>
+                    <v-btn prepend-icon="mdi-information-outline" color="error" variant="tonal" @click="themeDialog = false">
+                        <span class="to-hide">Change later</span>
+                        <span class="to-show">Later</span>
+                    </v-btn>
                 </div>
             </v-card>
         </v-dialog>

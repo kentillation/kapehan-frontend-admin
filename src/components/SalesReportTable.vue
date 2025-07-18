@@ -16,8 +16,8 @@
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
                     <div class="d-flex">
                         <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
-                            item-value="filter_date_id" label="Date Filter" class="w-75 me-2" clearable></v-autocomplete>
-                        <v-text-field readonly>Total sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field>
+                            item-value="filter_date_id" label="Date Filter" class="w-75 ms-3 me-2" clearable></v-autocomplete>
+                        <v-text-field style="font-size: 12px;" readonly>Sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field>
                     </div>
                 </v-col>
             </v-row>
