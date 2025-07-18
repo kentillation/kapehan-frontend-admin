@@ -175,44 +175,49 @@ export default {
         },
 
         async downloadSales(dateFilterId = null) {
-            await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
-            if (this.transactStore.grossSalesByDate.length === 0) {
-                this.showError("No sales available to download.");
-                return;
-            } else {
-                this.loadingStore.show('Downloading sales...');
+            try {
+                this.loadingStore.show('Preparing...');
+                await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
+                if (this.transactStore.grossSalesByDate.length === 0) {
+                    this.loadingStore.hide();
+                    this.showError("No sales available to download.");
+                    return;
+                } else {
+                    this.loadingStore.show('Downloading sales...');
+                }
+                const grossSalesByDate = this.transactStore.grossSalesByDate.map(t_order => ({
+                    'Product name': `${t_order.product_name}${t_order.temp_label}${t_order.size_label}`,
+                    'Product price': t_order.product_price,
+                    'Total quantity': t_order.total_quantity,
+                    'Product category': t_order.category_label,
+                    'Gross sales': this.formatSalesDisplay(t_order.gross_sales),
+                    'Date': this.formatDateTime(t_order.updated_at),
+                }));
+                const headings = [
+                    `Shop Name: ${this.shopName}`,
+                    `Branch Name: ${this.branchName} Branch`,
+                    `Branch Location: ${this.branchLocation}`,
+                    `Contact: ${this.contact}`,
+                    `Date: ${this.formatCurrentDate}`,
+                    `Prepared by : ${this.adminName}`,
+                    '',
+                ].join('\n');
+                const csvContent = "data:text/csv;charset=utf-8,"
+                    + headings + "\n"
+                    + Object.keys(grossSalesByDate[0]).join(",") + "\n"
+                    + grossSalesByDate.map(e => Object.values(e).join(",")).join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `Sales_Report_${this.branchName}_${this.currentNumberDate}.csv`);
+                document.body.appendChild(link);
+                this.showSuccess("Sales downloaded successfully!");
+                link.click();
+                this.loadingStore.hide();
+                document.body.removeChild(link);
+            } catch (error) {
+                this.showError("Error fetching sales!");
             }
-            const grossSalesByDate = this.transactStore.grossSalesByDate.map(t_order => ({
-                'Product name': `${t_order.product_name}${t_order.temp_label}${t_order.size_label}`,
-                'Product price': t_order.product_price,
-                'Total quantity': t_order.total_quantity,
-                'Product category': t_order.category_label,
-                'Gross sales': this.formatSalesDisplay(t_order.gross_sales),
-                'Date': this.formatDateTime(t_order.updated_at),
-            }));
-            const headings = [
-                `Shop Name: ${this.shopName}`,
-                `Branch Name: ${this.branchName} Branch`,
-                `Branch Location: ${this.branchLocation}`,
-                `Contact: ${this.contact}`,
-                `Date: ${this.formatCurrentDate}`,
-                `Prepared by : ${this.adminName}`,
-                '',
-            ].join('\n');
-            const csvContent = "data:text/csv;charset=utf-8,"
-                + headings + "\n"
-                + Object.keys(grossSalesByDate[0]).join(",") + "\n"
-                + grossSalesByDate.map(e => Object.values(e).join(",")).join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Sales_Report_${this.branchName}_${this.currentNumberDate}.csv`);
-            document.body.appendChild(link); // Required for FF
-            this.showSuccess("Sales downloaded successfully!");
-            link.click();
-            this.loadingStore.hide();
-            document.body.removeChild(link);
-            // this.$emit('refresh');
         },
 
         async printSales(dateFilterId = null) {

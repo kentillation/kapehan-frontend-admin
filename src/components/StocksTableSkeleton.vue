@@ -1,6 +1,6 @@
 <template>
     <v-skeleton-loader type="text" width="260" class="bg-grey-lighten-1 ms-1"></v-skeleton-loader>
-    <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
+    <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1 mt-5">
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>

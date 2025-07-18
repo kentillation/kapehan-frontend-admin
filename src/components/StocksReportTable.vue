@@ -2,7 +2,7 @@
     <v-data-table :headers="stocksHeaders" :items="stocks" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'stock_ingredient', order: 'asc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
-            <v-toolbar flat color="transparent">
+            <v-toolbar flat color="transparent" class="mt-2">
                 <v-btn @click="downloadStocks" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
                 <v-btn @click="printStocks" prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
                 <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"

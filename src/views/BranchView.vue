@@ -399,7 +399,7 @@ export default {
             currentStock: null,
 
             // Reports
-            activeReportsTab: 'sales',
+            // activeReportsTab: 'sales',
             productReports: [],
             productReportsLoaded: false,
             loadingProductReports: false,
@@ -435,7 +435,8 @@ export default {
         const productsStore = useProductsStore();
         const transactStore = useTransactStore();
         const activeTab = ref('dashboard');
-        return { activeTab, loadingStore, stocksStore, productsStore, transactStore };
+        const activeReportsTab = ref('sales');
+        return { loadingStore, stocksStore, productsStore, transactStore, activeTab, activeReportsTab };
     },
     computed: {
         branchDetailItems() {
@@ -479,40 +480,63 @@ export default {
             immediate: true,
             async handler(newBranchName) {
                 if (newBranchName) {
-                    this.loadingStore.show("Loading...");
-                    await this.fetchBranchDetails();
-                    this.activeTab = "dashboard";
-                    const currentMonth = new Date().getMonth() + 1;
-                    this.fetchSalesOnly(currentMonth);
-                    this.fetchOrdersOnly(currentMonth);
-                    this.fetchProductsOnly(currentMonth);
-                    this.fetchStocksOnly();
-                    this.fetchSalesByMonthReport(currentMonth);
+                    this.loadingStore.show("Preparing...");
+                    this.onDashboard();
                     this.loadingStore.hide();
                 }
             }
         },
         activeTab(newTab) {
             if (newTab === 'dashboard') {
-                // const currentMonth = new Date().getMonth() + 1;
-                // this.fetchSalesOnly(currentMonth);
-                // this.fetchOrdersOnly(currentMonth);
-                // this.fetchProductsOnly(currentMonth);
-                // this.fetchStocksOnly();
-                // this.fetchSalesByMonthReport(currentMonth);
+                this.loadingStore.show("Preparing...");
+                this.onDashboard();
+                this.loadingStore.hide();
             } else if (newTab === 'products') {
+                this.loadingStore.show("Preparing...");
                 this.fetchProducts();
+                this.loadingStore.hide();
             } else if (newTab === 'stocks') {
+                this.loadingStore.show("Preparing...");
                 this.fetchStocks();
+                this.loadingStore.hide();
             } else if (newTab === 'reports') {
-                this.fetchProductsReport();
-                this.fetchStocksReport();
-                this.fetchOrdersReport();
+                this.loadingStore.show("Preparing...");
+                this.activeReportsTab = 'sales';
                 this.fetchSalesReport();
+                this.loadingStore.hide();
+            }
+        },
+        activeReportsTab(newReportsTab) {
+            if (newReportsTab === 'sales') {
+                // this.loadingStore.show("Preparing...");
+                // this.fetchSalesReport();
+                // this.loadingStore.hide();
+            } else if (newReportsTab === 'orders') {
+                this.loadingStore.show("Preparing...");
+                this.fetchOrdersReport();
+                this.loadingStore.hide();
+            } else if (newReportsTab === 'products') {
+                this.loadingStore.show("Preparing...");
+                this.fetchProductsReport();
+                this.loadingStore.hide();
+            } else if (newReportsTab === 'stocks') {
+                this.loadingStore.show("Preparing...");
+                this.fetchStocksReport();
+                this.loadingStore.hide();
             }
         }
     },
     methods: {
+        async onDashboard () {
+            await this.fetchBranchDetails();
+            this.activeTab = "dashboard";
+            const currentMonth = new Date().getMonth() + 1;
+            this.fetchSalesOnly(currentMonth);
+            this.fetchOrdersOnly(currentMonth);
+            this.fetchProductsOnly(currentMonth);
+            this.fetchStocksOnly();
+            this.fetchSalesByMonthReport(currentMonth);
+        },
         async fetchBranchDetails() {
             this.loadingBranchDetails = true;
             try {
@@ -537,12 +561,14 @@ export default {
 
         switchToSalesTab() {
             this.activeTab = 'reports';
-            this.activeReportsTab = 'sales';
+            this.activeReportsTab = 'sales';   
+            this.fetchSalesReport();
         },
 
         switchToOrdersTab() {
             this.activeTab = 'reports';
             this.activeReportsTab = 'orders';
+            this.fetchOrdersReport();
         },
 
         switchToProductsTab() {
@@ -598,7 +624,6 @@ export default {
                     this.products = this.productsStore.products.map(product => this.formatProduct(product));
                 }
                 this.productsLoaded = true;
-                this.loadingProducts = false;
             } catch (error) {
                 console.error('Error fetching products:', error);
                 this.showError("Error fetching products!");
@@ -819,7 +844,6 @@ export default {
         async fetchSalesByMonthReport(month = null) {
             this.loadingSalesByMonthReports = true;
             try {
-                this.loadingStore.show("Loading sales data...");
                 this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
@@ -834,7 +858,6 @@ export default {
                 this.showError("Error fetching sales trends!");
             } finally {
                 this.loadingSalesByMonthReports = false;
-                this.loadingStore.hide();
             }
         },
 
