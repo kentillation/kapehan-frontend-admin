@@ -503,9 +503,7 @@ export default {
         },
         activeReportsTab(newReportsTab) {
             if (newReportsTab === 'sales') {
-                // this.loadingStore.show("Preparing...");
-                // this.fetchSalesReport();
-                // this.loadingStore.hide();
+                console.log("Current Reports Tab: ", newReportsTab);
             } else if (newReportsTab === 'orders') {
                 this.loadingStore.show("Preparing...");
                 this.fetchOrdersReport();
@@ -532,6 +530,7 @@ export default {
             this.fetchStocksOnly();
             this.fetchSalesByMonthReport(currentMonth);
         },
+
         async fetchBranchDetails() {
             this.loadingBranchDetails = true;
             try {
@@ -881,11 +880,16 @@ export default {
         },
 
         async updatingProduct() {
+            if (!this.currentProduct || !this.currentProduct.product_id) {
+                this.showError("Invalid product data!");
+                return;
+            }
             this.isSaving = true;
+            this.confirmUpdatingProductDialog = false;
             try {
                 const productData = {
                     product_id: this.currentProduct.product_id,
-                    product_name: this.currentProduct.product_name,
+                    product_name: this.currentProduct.product_name?.trim(),
                     product_price: parseFloat(this.currentProduct.product_price),
                     product_size_id: Number(this.currentProduct.product_size_id),
                     product_temp_id: Number(this.currentProduct.product_temp_id),
@@ -894,13 +898,23 @@ export default {
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
                 };
-                this.confirmUpdatingProductDialog = false;
+                // Optional: Validate critical fields
+                if (isNaN(productData.product_price)) {
+                    this.showError("Invalid product price.");
+                    return;
+                }
                 await this.productsStore.updateProductStore(productData);
+                // ✅ Update the product in your local list (if displayed in UI)
+                const index = this.products.findIndex(
+                    p => p.product_id === productData.product_id
+                );
+                if (index !== -1) {
+                    this.products[index] = { ...this.products[index], ...productData };
+                }
                 this.productEditDialog = false;
-                this.fetchProducts();
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
-                console.error('Failed to update product:', error);
+                console.error("Failed to update product:", error);
                 this.showError("Failed to update product. Please try again!");
             } finally {
                 this.isSaving = false;
