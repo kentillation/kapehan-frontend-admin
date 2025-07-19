@@ -27,7 +27,7 @@
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
-                                                            <h2>₱ {{ grossSales }}</h2>
+                                                            <h2>₱ {{ totalSales }}</h2>
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
@@ -133,7 +133,7 @@
                                     <h3>Sales Trends</h3>
                                     <v-card>
                                         <v-card-text>
-                                            <SalesChart :sales-by-month="salesByMonthReports" :sales-only="grossSales"
+                                            <SalesChart :sales-by-month="salesByMonthReports" :sales-only="totalSales"
                                                 :orders-only="totalOrders" @month-changed="fetchSalesByMonthReport"
                                                 @sales-changed="fetchSalesOnly" @orders-changed="fetchOrdersOnly" />
                                             <!-- added (:orders-only="totalOrders" and @orders-changed="fetchOrdersOnly -->
@@ -350,7 +350,7 @@ export default {
 
             // Dashboard
             textSkeleton: false,
-            grossSales: null,
+            totalSales: null,
             totalOrders: null,
             totalProducts: null,
             totalStocks: null,
@@ -757,13 +757,13 @@ export default {
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.grossSales = '';
+                    this.totalSales = '';
                     this.textSkeleton = false;
                     return;
                 }
                 await this.transactStore.fetchGrossSalesStore(this.branchDetails.branch_id, month);
-                const value = Number(this.transactStore.grossSales.gross_sales);
-                this.grossSales = (Math.round(value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
+                const value = Number(this.transactStore.grossSales.total_sales);
+                this.totalSales = (Math.round(value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
             } catch (error) {
                 console.error('Error fetching gross sales:', error);
                 this.showError("Error fetching gross sales!");

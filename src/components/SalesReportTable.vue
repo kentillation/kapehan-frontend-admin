@@ -14,10 +14,11 @@
                     </div>
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
-                    <div class="d-flex">
+                    <div class="d-flex ">
                         <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
-                            item-value="filter_date_id" label="Date Filter" class="w-75 ms-3 me-2" clearable></v-autocomplete>
-                        <v-text-field style="font-size: 12px;" readonly>Sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field>
+                            item-value="filter_date_id" label="Date Filter" class="ms-3 me-2" clearable></v-autocomplete>
+                        <!-- <v-text-field style="font-size: 12px;" readonly>Sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field> -->
+                        <span class="w-25">Net sales: <br /><h3>₱{{ Number(totalSales).toLocaleString('en-PH') }}</h3></span>
                     </div>
                 </v-col>
             </v-row>
@@ -59,7 +60,7 @@ export default {
                 { title: 'Price', value: 'display_product_price', sortable: 'true', width: '10%' },
                 { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '10%' },
                 { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
-                { title: 'Gross sales', value: 'display_sales', sortable: 'true', width: '15%' },
+                { title: 'Subtotal', value: 'display_sales', sortable: 'true', width: '15%' },
                 { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
             dateFilterItems: [
@@ -191,7 +192,7 @@ export default {
                     'Product price': t_order.product_price,
                     'Total quantity': t_order.total_quantity,
                     'Product category': t_order.category_label,
-                    'Gross sales': this.formatSalesDisplay(t_order.gross_sales),
+                    'Subtotal': this.formatSalesDisplay(t_order.gross_sales),
                     'Date': this.formatDateTime(t_order.updated_at),
                 }));
                 const headings = [
@@ -266,7 +267,7 @@ export default {
                                 <th>Price</th>
                                 <th>Quantiy</th>
                                 <th>Category</th>
-                                <th>Sales</th>
+                                <th>Subtotal</th>
                                 <th>Date</th>
                             </tr>
                             ${this.transactStore.grossSalesByDate.map(t_order => `
