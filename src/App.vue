@@ -19,7 +19,7 @@
             <v-badge v-if="stockNotificationQty >= 1" 
               :content="stockNotificationQty" 
               class="position-absolute" 
-              style="top: 5px; right: 9px;" 
+              style="top: 10px; right: 12px;" 
               color="error">
             </v-badge>
             <v-icon>mdi-bell-outline</v-icon>
@@ -80,7 +80,7 @@ import { mapState } from 'pinia';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
-import { useStocksStore } from '@/stores/stocksStore'; // added
+import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
 import { useRoute } from 'vue-router';
 import GlobalLoader from '@/components/GlobalLoader.vue';
@@ -93,21 +93,20 @@ export default {
       stocks: [],
       lowStockBranches: [],
       totalLowStock: null,
-
     }
   },
   components: {
     GlobalLoader,
     Alert,
   },
-  mounted() {
-    this.fetchLowStocks(); // added
+  async mounted() {
+    await this.fetchLowStocks();
   },
   setup() {
     const authStore = useAuthStore();
     const loadingStore = useLoadingStore();
     const branchStore = useBranchStore();
-    const stocksStore = useStocksStore(); // added
+    const stocksStore = useStocksStore();
 
     const connectionStatus = ref('online');
     const route = useRoute();
@@ -268,7 +267,7 @@ export default {
       }
     },
     showError(message) {
-      this.$refs.snackbarRef.showSnackbar(message, "error");
+      this.$refs.snackbarRef.showSnackbarAlert(message, "error");
     },
   }
 };
