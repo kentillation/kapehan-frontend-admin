@@ -1,11 +1,14 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <v-snackbar v-if="showSnackbar" v-model="snackbar.visible" :color="snackbar.color" location="bottom" timeout="10000">
-    <div class="d-flex align-items-center py-3 px-3">
-      <span><v-icon icon="mdi-information-outline"></v-icon></span>
-      <span>&nbsp; {{ snackbar.message }}</span>
-    </div>
-  </v-snackbar>
+  <v-container>
+    <v-snackbar v-model="snackbar.visible" :color="snackbar.color" location="top" class="mt-10" timeout="10000"
+      persistent>
+      <div class="d-flex align-items-center px-3">
+        <span style="font-size: 18px;"><v-icon icon="mdi-information-outline"></v-icon></span>
+        <span style="font-size: 18px;">&nbsp; {{ snackbar.message }}</span>
+      </div>
+    </v-snackbar>
+  </v-container>
 </template>
 <script>
 export default {
@@ -19,7 +22,7 @@ export default {
     };
   },
   methods: {
-    showSnackbar(message, color) {
+    showSnackbarAlert(message, color) {
       this.snackbar.message = message;
       this.snackbar.color = color;
       this.snackbar.visible = true;

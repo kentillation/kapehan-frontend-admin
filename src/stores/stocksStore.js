@@ -101,17 +101,7 @@ export const useStocksStore = defineStore('stocks', {
             }
         },
     },
-
-    // getters: {
-    //     getBranchNames: (state) => {
-    //         return state.branches.map(branch => [
-    //             typeof branch === 'object' ? branch.branch_name : branch, 
-    //             'mdi-store-outline'
-    //         ]);
-    //     },
-
-    //     getBranchById: (state) => (id) => {
-    //         return state.branches.find(branch => branch.id === id);
-    //     }
-    // }
+    getters: {
+        stockNotificationQty: (state) => state.stock_alert_qty || 0,
+    }
 });

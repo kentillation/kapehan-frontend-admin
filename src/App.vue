@@ -16,8 +16,12 @@
           <v-spacer></v-spacer>
           <!-- added -->
           <v-btn icon>
-            <v-badge v-if="this.totalLowStock >= 1" :content="this.totalLowStock" class="position-absolute"
-              style="top: 12px; right: 12px;" color="error"></v-badge>
+            <v-badge v-if="stockNotificationQty >= 1" 
+              :content="stockNotificationQty" 
+              class="position-absolute" 
+              style="top: 5px; right: 9px;" 
+              color="error">
+            </v-badge>
             <v-icon>mdi-bell-outline</v-icon>
           </v-btn>
           <v-btn @click="toSettings" icon>
@@ -72,6 +76,7 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
@@ -187,6 +192,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(useStocksStore, ['stockNotificationQty']),
     showSidebar() {
       return this.$route.name !== 'LoginPage' && !this.isNotFoundPage;
     },
