@@ -557,13 +557,11 @@ export default {
         switchToSalesTab() {
             this.activeTab = 'reports';
             this.activeReportsTab = 'sales';   
-            // this.fetchSalesReport();
         },
 
         switchToOrdersTab() {
             this.activeTab = 'reports';
             this.activeReportsTab = 'orders';
-            // this.fetchOrdersReport();
         },
 
         switchToProductsTab() {
