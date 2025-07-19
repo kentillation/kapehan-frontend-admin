@@ -1000,14 +1000,32 @@ export default {
             this.stockHistoryDialog = true;
         },
 
+        // formatProduct(product) {
+        //     return {
+        //         ...product,
+        //         display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
+        //         display_product_price: `₱${product.product_price}`,
+        //         updated_at: this.formatDateTime(product.updated_at),
+        //     };
+        // },
+
         formatProduct(product) {
+            // const temp = this.tempOptions.find(t => t.temp_id === product.product_temp_id);
+            // const size = this.sizeOptions.find(s => s.size_id === product.product_size_id);
+            // const category = this.categoryOptions.find(c => c.category_id === product.product_category_id);
+            // const availability = this.availabilityOptions.find(a => a.availability_id === product.availability_id);
             return {
                 ...product,
+                // temp_label: temp?.temp_label || '',
+                // size_label: size?.size_label || '',
+                // category_label: category?.category_label || '',
+                // availability_label: availability?.availability_label || '',
                 display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
                 display_product_price: `₱${product.product_price}`,
                 updated_at: this.formatDateTime(product.updated_at),
             };
         },
+
 
         formatIngredient(ingredient) {
             return {
