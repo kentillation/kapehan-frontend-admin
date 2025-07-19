@@ -4,6 +4,8 @@ import { PRODUCTS_API } from '@/api/productsApi';
 export const useProductsStore = defineStore('products', {
     state: () => ({
         products: [],
+        productsOnly: '',
+        productAlone: '',
         loading: false,
         error: null
     }),
@@ -25,6 +27,25 @@ export const useProductsStore = defineStore('products', {
             } catch (error) {
                 console.error('Error in fetchAllProductsApi:', error);
                 this.error = 'Failed to fetch products';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchProductAloneStore(branchId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await PRODUCTS_API.fetchProductAloneApi(branchId);
+                if (response && response.status === true) {
+                    this.productAlone = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch product alone');
+                }
+            } catch (error) {
+                console.error('Error in fetchProductAloneApi:', error);
+                this.error = error.message || 'Failed to fetch product alone';
                 throw error;
             } finally {
                 this.loading = false;

@@ -363,6 +363,7 @@ export default {
             products: [],
             editProduct: [],
             selectedProduct: '',
+            product_alone: '',
             loadingProducts: false,
             productEditDialog: false,
             confirmUpdatingProductDialog: false,
@@ -621,6 +622,20 @@ export default {
                 this.showError("Error fetching products!");
             } finally {
                 this.loadingProducts = false;
+            }
+        },
+
+        async fetchProductAlone(productId) {
+            try {
+                await this.productsStore.fetchProductAloneStore(productId);
+                if (this.productsStore.productAlone.length === 0) {
+                    this.product_alone = '';
+                } else {
+                    this.product_alone = this.productsStore.productAlone.map(product => this.formatProduct(product));
+                }
+            } catch (error) {
+                console.error('Error fetching product_alone:', error);
+                this.showError("Error fetching product_alone!");
             }
         },
 
@@ -899,27 +914,13 @@ export default {
                     branch_id: this.currentProduct.branch_id,
                 };
                 await this.productsStore.updateProductStore(productData);
-                const index = this.products.findIndex(p => p.product_id === productData.product_id);
+                const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
+                const index = this.products.findIndex(
+                    p => p.product_id === this.currentProduct.product_id
+                );
                 if (index !== -1) {
-                    const existingProduct = this.products[index];
-                    this.products[index] = {
-                        ...existingProduct,
-                        product_name: productData.product_name,
-                        product_price: productData.product_price,
-                        product_size_id: productData.product_size_id,
-                        product_temp_id: productData.product_temp_id,
-                        product_category_id: productData.product_category_id,
-                        availability_id: productData.availability_id,
-                        shop_id: productData.shop_id,
-                        branch_id: productData.branch_id,
-                        temp_label: productData.temp_label,
-                        size_label: productData.size_label,
-                        category_label: productData.category_label,
-                        display_product_price: `₱${productData.product_price}`,
-                        updated_at: this.formatDateTime(new Date()),
-                    };
+                    this.products.splice(index, 1, updatedProduct); // Vue reactivity-friendly
                 }
-
                 this.productEditDialog = false;
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
