@@ -497,14 +497,15 @@ export default {
                 this.loadingStore.hide();
             } else if (newTab === 'reports') {
                 this.loadingStore.show("Preparing...");
-                this.activeReportsTab = 'sales';
                 this.fetchSalesReport();
                 this.loadingStore.hide();
             }
         },
         activeReportsTab(newReportsTab) {
             if (newReportsTab === 'sales') {
-                console.log("Active reports tab: Sales");
+                // this.loadingStore.show("Preparing...");
+                // this.fetchSalesReport();
+                // this.loadingStore.hide();
             } else if (newReportsTab === 'orders') {
                 this.loadingStore.show("Preparing...");
                 this.fetchOrdersReport();
@@ -556,13 +557,13 @@ export default {
         switchToSalesTab() {
             this.activeTab = 'reports';
             this.activeReportsTab = 'sales';   
-            this.fetchSalesReport();
+            // this.fetchSalesReport();
         },
 
         switchToOrdersTab() {
             this.activeTab = 'reports';
             this.activeReportsTab = 'orders';
-            this.fetchOrdersReport();
+            // this.fetchOrdersReport();
         },
 
         switchToProductsTab() {
