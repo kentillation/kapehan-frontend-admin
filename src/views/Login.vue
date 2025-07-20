@@ -81,7 +81,7 @@ export default {
 
             this.loading = true;
             try {
-                this.loadingStore.show('Logging in...');
+                this.loadingStore.show('');
                 const authStore = useAuthStore();
                 await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
                 window.location.href = '/home';

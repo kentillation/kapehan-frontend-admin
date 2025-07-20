@@ -58,7 +58,7 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.availability_id === 1 ? 'green' : 'red'" size="small" variant="flat">
+            <v-chip :style="item.availability_id === 2 ? 'background: white; color: red' : 'background: white; color: green'" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
         </template>
