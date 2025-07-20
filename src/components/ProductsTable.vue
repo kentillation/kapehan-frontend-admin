@@ -36,21 +36,21 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_product_name="{ item }">
-            <span :class="{ 'text-red': item.availability_id === 2 }">
+            <span :style="item.availability_id === 2 ? 'color: red' : ''">
                 {{ item.display_product_name }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_product_price="{ item }">
-            <span :class="{ 'text-red': item.availability_id === 2 }">
+            <span :style="item.availability_id === 2 ? 'color: red' : ''">
                 {{ item.display_product_price }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.category_label="{ item }">
-            <span :class="{ 'text-red': item.availability_id === 2 }">
+            <span :style="item.availability_id === 2 ? 'color: red' : ''">
                 {{ item.category_label }}
             </span>
         </template>
@@ -58,14 +58,14 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :style="item.availability_id === 2 ? 'background: white; color: red' : 'background: white; color: green'" size="small" variant="flat">
+            <v-chip :style="item.availability_id === 2 ? 'color: red' : 'color: white'" style="background: gray;" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.updated_at="{ item }">
-            <span :class="{ 'text-red': item.availability_id === 2 }">
+            <span :style="item.availability_id === 2 ? 'color: red' : ''">
                 {{ item.updated_at }}
             </span>
         </template>
