@@ -14,7 +14,6 @@
         :loading="loading" 
         :items-per-page="10"
         :sort-by="[{ key: 'display_product_name', order: 'asc' }]" 
-        :item-props="getRowProps"
         class="elevation-1 hover-table"
         density="comfortable">
         <template v-slot:top>
@@ -144,11 +143,6 @@ export default {
                 product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
             );
         },
-        getRowProps(item) {
-            return {
-                class: item.availability_id === 2 ? 'unavailable-row' : '',
-            };
-        },
         // hasCheck() {
         //     return !this.products.some(item => item.selected);
         // }
@@ -189,14 +183,6 @@ export default {
 <style scoped>
 .hover-table:deep(.v-data-table__tr:hover) {
     background-color: rgba(0, 0, 0, 0.04);
-}
-
-.hover-table:deep(.v-data-table__tr.unavailable-row) {
-    background-color: rgba(255, 0, 0, 0.1) !important;
-}
-
-.hover-table:deep(.v-data-table__tr.unavailable-row:hover) {
-    background-color: rgba(255, 0, 0, 0.15) !important;
 }
 
 .to-hide {
