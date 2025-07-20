@@ -260,13 +260,13 @@ export default {
             branch => `${branch.name} branch (${branch.count} item${branch.count !== 1 ? 's' : ''})`
           );
           const message = `Low stock alert: ${branchDetails.join(', ')}`;
-          this.showError(message);
+          this.showStockAlert(message);
         }
       } catch (error) {
         console.error('Error fetching stocks:', error);
       }
     },
-    showError(message) {
+    showStockAlert(message) {
       this.$refs.snackbarRef.showSnackbarAlert(message, "error");
     },
   }

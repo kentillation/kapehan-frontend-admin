@@ -287,17 +287,20 @@
             </v-card>
         </template>
         <Snackbar ref="snackbarRef" />
+        <Alert ref="lowStockAlertRef" />
     </v-container>
 </template>
 
 <script>
 import apiClient from '../axios';
 import { ref } from 'vue';
+import { mapState } from 'pinia';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useProductsStore } from '@/stores/productsStore';
 import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
+import Alert from '@/components/Alert.vue';
 import ProductsTable from '@/components/ProductsTable.vue';
 import ProductsTableSkeleton from '@/components/ProductsTableSkeleton.vue';
 import ProductEditDialog from '@/components/ProductEditDialog.vue';
@@ -322,6 +325,7 @@ export default {
     name: 'BranchView',
     components: {
         Snackbar,
+        Alert,
         ProductsTable,
         ProductsTableSkeleton,
         ProductEditDialog,
@@ -436,6 +440,7 @@ export default {
         return { loadingStore, stocksStore, productsStore, transactStore, activeTab, activeReportsTab };
     },
     computed: {
+        ...mapState(useStocksStore, ['stockNotificationQty']),
         branchDetailItems() {
             return [
                 { label: 'Store name', value: this.branchDetails.shop_name },
@@ -521,6 +526,26 @@ export default {
         }
     },
     methods: {
+        async fetchLowStocks() {
+            try {
+                const response = await this.stocksStore.fetchLowStocksStore();
+                const formattedBranches = {};
+                Object.entries(response.data.branches).forEach(([id, branch]) => {
+                formattedBranches[id.toString()] = branch;
+                });
+                this.lowStockBranches = formattedBranches;
+                this.totalLowStock = response.data.total_count;
+                if (this.totalLowStock > 0) {
+                const branchDetails = Object.values(this.lowStockBranches).map(
+                    branch => `${branch.name} branch (${branch.count} item${branch.count !== 1 ? 's' : ''})`
+                );
+                const message = `Low stock alert: ${branchDetails.join(', ')}`;
+                this.showStockAlert(message);
+                }
+            } catch (error) {
+                console.error('Error fetching stocks:', error);
+            }
+        },
         async onDashboard () {
             await this.fetchBranchDetails();
             this.activeTab = "dashboard";
@@ -923,10 +948,11 @@ export default {
                 // }
                 this.productEditDialog = false;
                 this.fetchProducts();
+                this.fetchLowStocks();
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
                 console.error("Failed to update product:", error);
-                this.showError("Failed to update product. Please try again!");
+                this.showError(error);
             } finally {
                 this.isSaving = false;
             }
@@ -1098,6 +1124,10 @@ export default {
 
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
+        },
+
+        showStockAlert(message) {
+            this.$refs.lowStockAlertRef.showSnackbarAlert(message, "error");
         },
 
         showSuccess(message) {
