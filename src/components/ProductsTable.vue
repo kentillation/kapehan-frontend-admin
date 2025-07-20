@@ -8,8 +8,15 @@
                 label="Search product"></v-text-field>
         </v-col>
     </v-row>
-    <v-data-table :headers="productHeaders" :items="filteredProducts" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
+    <v-data-table 
+        :headers="productHeaders" 
+        :items="filteredProducts" 
+        :loading="loading" 
+        :items-per-page="10"
+        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" 
+        :item-props="getRowProps"
+        class="elevation-1 hover-table"
+        density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
                 <h2 class="ms-3 to-hide">List of all Products</h2>
@@ -35,39 +42,10 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
-        <template v-slot:item.display_product_name="{ item }">
-            <span :style="item.availability_id === 1 ? '' : 'color: #ff1b1b'">
-                {{ item.display_product_name }}
-            </span>
-        </template>
-
-        <!--eslint-disable-next-line -->
-        <template v-slot:item.display_product_price="{ item }">
-            <span :style="item.availability_id === 1 ? '' : 'color: #ff1b1b'">
-                {{ item.display_product_price }}
-            </span>
-        </template>
-
-        <!--eslint-disable-next-line -->
-        <template v-slot:item.category_label="{ item }">
-            <span :style="item.availability_id === 1 ? '' : 'color: #ff1b1b'">
-                {{ item.category_label }}
-            </span>
-        </template>
-        
-
-        <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.availability_id === 1 ? 'red' : 'green'" style="background: gray;" size="small" variant="flat">
+            <v-chip :color="item.availability_id === 2 ? 'red' : 'green'" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
-        </template>
-
-        <!--eslint-disable-next-line -->
-        <template v-slot:item.updated_at="{ item }">
-            <span :style="item.availability_id === 1 ? '' : 'color: #ff1b1b'">
-                {{ item.updated_at }}
-            </span>
         </template>
 
         <!--eslint-disable-next-line -->
@@ -166,6 +144,11 @@ export default {
                 product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
             );
         },
+        getRowProps(item) {
+            return {
+                class: item.availability_id === 2 ? 'unavailable-row' : '',
+            };
+        },
         // hasCheck() {
         //     return !this.products.some(item => item.selected);
         // }
@@ -206,6 +189,14 @@ export default {
 <style scoped>
 .hover-table:deep(.v-data-table__tr:hover) {
     background-color: rgba(0, 0, 0, 0.04);
+}
+
+.hover-table:deep(.v-data-table__tr.unavailable-row) {
+    background-color: rgba(255, 0, 0, 0.1) !important;
+}
+
+.hover-table:deep(.v-data-table__tr.unavailable-row:hover) {
+    background-color: rgba(255, 0, 0, 0.15) !important;
 }
 
 .to-hide {
