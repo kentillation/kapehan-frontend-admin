@@ -61,11 +61,11 @@
         </template> -->
         
         <!--eslint-disable-next-line -->
-        <template v-slot:item.display_stock_in="{ item }">
+        <!-- <template v-slot:item.display_stock_in="{ item }">
             <span :class="item.stock_alert_qty > item.stock_in ? 'text-red' : 'text-green'">
                 {{ item.display_stock_in }}
             </span>
-        </template>
+        </template> -->
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
