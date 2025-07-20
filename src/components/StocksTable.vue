@@ -47,13 +47,6 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
-        <!-- <template v-slot:item.display_stock_in="{ item }">
-            <span :class="item.stock_in >= item.stock_alert_qty ? 'text-red' : ''">
-                {{ item.display_stock_in }}
-            </span>
-        </template> -->
-
-        <!--eslint-disable-next-line -->
         <!-- <template v-slot:item.display_unit_cost="{ item }">
             <span :class="item.stock_in >= item.stock_alert_qty ? 'text-red' : ''">
                 {{ item.display_unit_cost }}
@@ -67,10 +60,16 @@
             </span>
         </template> -->
         
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.display_stock_in="{ item }">
+            <span :class="item.stock_alert_qty >= item.stock_in ? 'text-red' : ''">
+                {{ item.display_stock_in }}
+            </span>
+        </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'green' : 'red'" size="small" variant="flat">
+            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'red' : 'green'" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
         </template>
