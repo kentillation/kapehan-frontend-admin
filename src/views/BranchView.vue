@@ -914,14 +914,15 @@ export default {
                     branch_id: this.currentProduct.branch_id,
                 };
                 await this.productsStore.updateProductStore(productData);
-                const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
-                const index = this.products.findIndex(
-                    p => p.product_id === this.currentProduct.product_id
-                );
-                if (index !== -1) {
-                    this.products.splice(index, 1, updatedProduct); // Vue reactivity-friendly
-                }
+                // const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
+                // const index = this.products.findIndex(
+                //     p => p.product_id === this.currentProduct.product_id
+                // );
+                // if (index !== -1) {
+                //     this.products.splice(index, 1, updatedProduct);
+                // }
                 this.productEditDialog = false;
+                this.fetchProducts();
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
                 console.error("Failed to update product:", error);
