@@ -69,7 +69,7 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'red' : 'green'" size="small" variant="flat">
+            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'green' : ''" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
         </template>
