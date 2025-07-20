@@ -13,20 +13,20 @@
                         label="Product Price (₱)" :rules="[v => !isNaN(parseFloat(v)) || 'Must be a valid number']"
                         type="text" outlined dense />
 
-                    <v-select :model-value="product.product_temp_id"
+                    <v-autocomplete :model-value="product.product_temp_id"
                         @update:modelValue="handleInputUpdate('product_temp_id', $event)" label="Product Temparature"
                         :items="productTemperatureOption" item-title="temp_label" item-value="temp_id" outlined dense />
 
-                    <v-select :model-value="product.product_size_id"
+                    <v-autocomplete :model-value="product.product_size_id"
                         @update:modelValue="handleInputUpdate('product_size_id', $event)" label="Product Size"
                         :items="productSizeOption" item-title="size_label" item-value="size_id" outlined dense />
 
-                    <v-select :model-value="product.product_category_id"
+                    <v-autocomplete :model-value="product.product_category_id"
                         @update:modelValue="handleInputUpdate('product_category_id', $event)" label="Product Category"
                         :items="productCategoryOption" item-title="category_label" item-value="category_id" outlined
                         dense />
 
-                    <v-select :model-value="product.availability_id"
+                    <v-autocomplete :model-value="product.availability_id"
                         @update:modelValue="handleInputUpdate('availability_id', $event)" label="Availability"
                         :items="productAvailabilityOption" item-title="availability_label" item-value="availability_id"
                         outlined dense />
