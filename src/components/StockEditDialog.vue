@@ -12,7 +12,7 @@
                         @update:modelValue="handleInputUpdate('stock_in', $event)" label="Stock In"
                         :rules="[v => !!v || 'Required']" outlined dense />
 
-                    <v-select :model-value="stock.stock_unit"
+                    <v-autocomplete :model-value="stock.stock_unit"
                         @update:modelValue="handleInputUpdate('stock_unit', $event)" label="Unit"
                         :items="stockUnitOption" item-title="unit_avb" item-value="unit_id" outlined dense />
 
@@ -20,7 +20,7 @@
                         label="Cost Per Unit (₱)" :rules="[v => !isNaN(parseFloat(v)) || 'Must be a valid number']"
                         type="text" outlined dense />
 
-                    <v-select :model-value="stock.availability_id"
+                    <v-autocomplete :model-value="stock.availability_id"
                         @update:modelValue="handleInputUpdate('availability_id', $event)" label="Availability"
                         :items="stockAvailabilityOption" item-title="availability_label" item-value="availability_id"
                         outlined dense />
