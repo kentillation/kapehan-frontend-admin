@@ -62,14 +62,14 @@
         
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_stock_in="{ item }">
-            <span :class="item.stock_alert_qty > item.stock_in ? 'text-red' : ''">
+            <span :class="item.stock_alert_qty > item.stock_in ? 'text-red' : 'text-green'">
                 {{ item.display_stock_in }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'green' : ''" size="small" variant="flat">
+            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'green' : 'red'" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
         </template>
