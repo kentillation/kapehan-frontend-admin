@@ -34,35 +34,35 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.stock_ingredient="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : 'text-dark'">
+            <span :class="item.stock_in < item.stock_alert_qty ? 'text-red' : 'text-dark'">
                 {{ item.stock_ingredient }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.unit_label="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : 'text-dark'">
+            <span :class="item.stock_in < item.stock_alert_qty ? 'text-red' : 'text-dark'">
                 {{ item.unit_label }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_stock_in="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : 'text-dark'">
+            <span :class="item.stock_in < item.stock_alert_qty ? 'text-red' : 'text-dark'">
                 {{ item.display_stock_in }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_unit_cost="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : 'text-dark'">
+            <span :class="item.stock_in < item.stock_alert_qty ? 'text-red' : 'text-dark'">
                 {{ item.display_unit_cost }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.updated_at="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : 'text-dark'">
+            <span :class="item.stock_in < item.stock_alert_qty ? 'text-red' : 'text-dark'">
                 {{ item.updated_at }}
             </span>
         </template>
@@ -70,7 +70,7 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.stock_in <= item.stock_alert_qty ? 'red' : 'green'" size="small" variant="flat">
+            <v-chip :color="item.stock_in < item.stock_alert_qty ? 'red' : 'green'" size="small" variant="flat">
                 <!-- {{ item.availability_label }} -->
                 {{ item.availability_label }}
             </v-chip>
