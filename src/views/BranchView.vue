@@ -82,7 +82,7 @@
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
-                                                            <h2>₱ {{ totalProducts }}</h2> &nbsp;
+                                                            <h2>{{ totalProducts }}</h2> &nbsp;
                                                             <span style="font-size: 18px;">{{ totalProducts > 1
                                                             ? 'items' : 'item' }}</span>
                                                         </template>
@@ -109,7 +109,7 @@
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
-                                                            <h2>₱ {{ totalStocks }}</h2> &nbsp;
+                                                            <h2>{{ totalStocks }}</h2> &nbsp;
                                                             <span style="font-size: 18px;">{{ totalStocks > 1
                                                             ? 'items' : 'item' }}</span>
                                                         </template>
@@ -910,6 +910,7 @@ export default {
                 await this.stocksStore.updateStockStore(stockData);
                 this.stockEditDialog = false;
                 this.fetchStocks();
+                this.fetchLowStocks();
                 this.showSuccess("Stock updated successfully!");
             } catch (error) {
                 console.error('Failed to update stock:', error);
