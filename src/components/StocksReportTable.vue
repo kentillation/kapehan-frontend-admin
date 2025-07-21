@@ -130,7 +130,7 @@ export default {
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
-                `Branch Name: ${this.branchName}`,
+                `Branch Name: ${this.branchName} Branch`,
                 `Branch Loc: ${this.branchLocation}`,
                 `Contact: ${this.contact}`,
                 `Date: ${this.formatCurrentDate}`,

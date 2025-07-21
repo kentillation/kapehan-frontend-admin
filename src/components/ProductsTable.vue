@@ -13,7 +13,7 @@
         :items="filteredProducts" 
         :loading="loading" 
         :items-per-page="10"
-        :sort-by="[{ key: 'display_product_name', order: 'asc' }]" 
+        :sort-by="[{ key: 'updated_at', order: 'desc' }]" 
         class="elevation-1 hover-table"
         density="comfortable">
         <template v-slot:top>

@@ -9,7 +9,7 @@
         </v-col>
     </v-row>
     <v-data-table :headers="stockHeaders" :items="filteredStocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'stock_in', order: 'asc' }]" class="elevation-1 hover-table" density="comfortable">
+        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="elevation-1 hover-table" density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
                 <h2 class="ms-3 to-hide">List of all Stocks</h2>
