@@ -69,6 +69,7 @@
 
 <script>
 import { useBranchStore } from '../stores/branchStore';
+import { useLoadingStore } from '@/stores/loading';
 import Snackbar from '@/components/Snackbar.vue';
 import { ref } from 'vue';
 
@@ -79,12 +80,14 @@ export default {
     },
     setup() {
         const branchStore = useBranchStore();
+        const loadingStore = useLoadingStore();
         const newBranchForm = ref(null);
         const snackbarRef = ref(null);
         const tabCreate = ref('option-1')
 
         return {
             branchStore,
+            loadingStore,
             newBranchForm,
             snackbarRef,
             tabCreate,
@@ -128,7 +131,7 @@ export default {
         async submitNewBranch() {
             try {
                 if (!(await this.newBranchForm.validate())) return;
-
+                this.loadingStore.show("Creating new branch...")
                 const payload = {
                     branch_name: this.branch_name,
                     branch_location: this.branch_location,
@@ -136,10 +139,10 @@ export default {
                     m_email: this.m_email,
                     contact: this.contact,
                 };
-
                 const response = await this.branchStore.createBranch(payload);
                 if (response && response.message) {
                     this.confirmDialog = false;
+                    this.loadingStore.hide();
                     this.snackbarRef.showSnackbar(response.message, 'success');
                     this.resetForm();
                 } else {

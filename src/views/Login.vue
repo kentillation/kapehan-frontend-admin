@@ -84,7 +84,8 @@ export default {
                 this.loadingStore.show('');
                 const authStore = useAuthStore();
                 await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
-                window.location.href = '/home';
+                // window.location.href = '/home';
+                window.location.href = '/about';
             } catch (error) {
                 this.loadingStore.hide();
                 console.error('Error fetching ingredients:', error);

@@ -31,14 +31,16 @@
         <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
           <v-list density="compact" nav>
             <v-list-subheader size="30">Menu</v-list-subheader>
-            <v-list-item prepend-icon="mdi-home-outline" @click="toHome"
-              class="bg-brown-darken-3 ps-3">Home</v-list-item>
+            <!-- <v-list-item prepend-icon="mdi-home-outline" @click="toHome"
+              class="bg-brown-darken-3 ps-3">Home</v-list-item> -->
+            <v-list-item prepend-icon="mdi-help-circle-outline" @click="toAbout"
+              class="bg-brown-darken-3 ps-3">About</v-list-item>
             <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-3">Create
               Branch</v-list-item>
             <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings"
               class="bg-brown-darken-3 ps-3">Settings</v-list-item>
-            <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp"
-              class="bg-brown-darken-3 ps-3">Help</v-list-item>
+            <!-- <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp"
+              class="bg-brown-darken-3 ps-3">Help</v-list-item> -->
 
             <v-divider class="mt-4"></v-divider>
 
