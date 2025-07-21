@@ -2,10 +2,6 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-h1 {
-    /* Change the size if every screen */
-}
-
 .v-messages {
     min-height: 16px !important;
     font-size: 10px !important;
