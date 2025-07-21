@@ -20,7 +20,7 @@ h1 {
 }
 
 .v-icon--size-default {
-    font-size: calc(var(--v-icon-size-multiplier) * 1.5em) !important;
+    font-size: calc(var(--v-icon-size-multiplier) * 1.3em) !important;
 }
 
 .v-tab.v-tab.v-btn {
