@@ -245,7 +245,7 @@
                                                 v-if="loadingTransactionsReports && activeReportsTab === 'orders'" />
                                             <OrdersReportTable v-else-if="activeReportsTab === 'orders'"
                                                 :transactions="transactStore.transactions"
-                                                :loading="loadingTransactionsReports" @refresh="fetchOrdersReport"
+                                                :loading="loadingTransactionsReports" @refresh="fetchAllOrdersReport"
                                                 :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
@@ -512,7 +512,7 @@ export default {
                 console.log("Current Reports Tab: ", newReportsTab);
             } else if (newReportsTab === 'orders') {
                 this.loadingStore.show("Preparing...");
-                this.fetchOrdersReport();
+                this.fetchAllOrdersReport();
                 this.loadingStore.hide();
             } else if (newReportsTab === 'products') {
                 this.loadingStore.show("Preparing...");
@@ -739,7 +739,7 @@ export default {
             }
         },
 
-        async fetchOrdersReport() {
+        async fetchAllOrdersReport() {
             this.loadingTransactionsReports = true;
             try {
                 this.isSaving = false;
@@ -748,7 +748,7 @@ export default {
                     this.transactionReports = [];
                     return;
                 }
-                await this.transactStore.fetchAllTransactionsStore(this.branchDetails.branch_id);
+                await this.transactStore.fetchAllOrdersStore(this.branchDetails.branch_id);
                 if (this.transactStore.transactions.length === 0) {
                     this.transactionReports = [];
                 } else {

@@ -78,7 +78,7 @@ export default {
             immediate: true
         },
         dateFilter(newVal) {
-            this.fetchTransactionsReport(newVal);
+            this.fetchAllOrdersReport(newVal);
         },
     },
     computed: {
@@ -161,9 +161,9 @@ export default {
         };
     },
     methods: {
-        async fetchTransactionsReport(dateFilterId = null) {
+        async fetchAllOrdersReport(dateFilterId = null) {
             try {
-                await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
+                await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
                 this.mappedTransactions = this.transactStore.transactions.map(order => this.formatOrder(order));
             } catch (error) {
                 this.showError("Error fetching transactions!");
@@ -171,7 +171,7 @@ export default {
         },
 
         async downloadTransactions(dateFilterId = null) {
-            await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
+            await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
                 this.showError("No orders available to download.");
                 return;
@@ -212,7 +212,7 @@ export default {
         },
 
         async printTransactions(dateFilterId = null) {
-            await this.transactStore.fetchAllTransactionsStore(this.branchId, dateFilterId);
+            await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
                 this.showError("No orders available to print.");
                 return;

@@ -2,23 +2,23 @@ import apiClient from '../axios';
 
 export const TRANSACT_API = {
     ENDPOINTS: {
-        FETCH: '/admin/transactions',
+        FETCH_ALL_ORDERS: '/admin/all-orders',
         FETCH_GROSS_SALES_BY_DATE: '/admin/gross-sales-by-date',
         FETCH_GROSS_SALES: '/admin/gross-sales-only',
-        FETCH_ORDERS: '/admin/orders-only',
+        FETCH_ORDERS_COUNT: '/admin/orders-only',
         FETCH_PRODUCTS: '/admin/products-only',
         FETCH_STOCKS: '/admin/stocks-only',
         FETCH_SALES_BY_MONTH: '/admin/sales-by-month',
 
     },
 
-    async fetchAllTransactionsApi(branchId, dateFilterId = null) {
+    async fetchAllOrdersApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
-            let endpoint = `${this.ENDPOINTS.FETCH}/${branchId}`;
+            let endpoint = `${this.ENDPOINTS.FETCH_ALL_ORDERS}/${branchId}`;
             if (dateFilterId) {
                 endpoint += `?date_filter=${dateFilterId}`;
             }
@@ -33,7 +33,7 @@ export const TRANSACT_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[fetchAllTransactionsApi] Error fetching transactions:', error);
+            console.error('[fetchAllOrdersApi] Error fetching transactions:', error);
             throw error;
         }
     },
@@ -94,7 +94,7 @@ export const TRANSACT_API = {
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
-            let endpoint = `${this.ENDPOINTS.FETCH_ORDERS}/${branchId}`;
+            let endpoint = `${this.ENDPOINTS.FETCH_ORDERS_COUNT}/${branchId}`;
             if (dateFilterId) {
                 endpoint += `?date_filter=${dateFilterId}`;
             }
