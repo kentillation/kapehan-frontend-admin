@@ -79,7 +79,7 @@
                                                     <h3 class="text-brown-lighten-2 ms-2">Products</h3>
                                                     <div class="d-flex  align-center justify-center">
                                                         <template v-if="textSkeleton">
-                                                            <v-skeleton-loader type="button" width="100" />
+                                                            <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <h2>₱ {{ totalProducts }}</h2> &nbsp;
@@ -106,7 +106,7 @@
                                                     <h3 class="text-brown-lighten-2 ms-2">Stocks</h3>
                                                     <div class="d-flex align-center justify-center">
                                                         <template v-if="textSkeleton">
-                                                            <v-skeleton-loader type="button" width="100" />
+                                                            <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <h2>₱ {{ totalStocks }}</h2> &nbsp;

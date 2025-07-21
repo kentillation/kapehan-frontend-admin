@@ -14,7 +14,7 @@
                     </div>
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
-                    <div class="d-flex ">
+                    <div class="d-flex">
                         <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
                             item-value="filter_date_id" label="Date Filter" class="ms-3 me-2" clearable></v-autocomplete>
                         <!-- <v-text-field style="font-size: 12px;" readonly>Sales: ₱{{ Number(totalSales).toLocaleString('en-PH') }}</v-text-field> -->
@@ -53,7 +53,7 @@ export default {
         return {
             totalSales: null,
             mappedSales: [],
-            dateFilter: null,
+            dateFilter: 1,
             shopLogoLink: '-',
             salesReportHeaders: [
                 { title: 'Product', value: 'display_product_name', sortable: 'true', width: '25%' },
@@ -74,6 +74,9 @@ export default {
             ],
             snackbarRef: null,
         }
+    },
+    mounted() {
+        this.fetchSalesReport(this.dateFilter);
     },
     watch: {
         salesByDate: {
