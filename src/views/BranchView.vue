@@ -1028,15 +1028,6 @@ export default {
             this.stockHistoryDialog = true;
         },
 
-        // formatProduct(product) {
-        //     return {
-        //         ...product,
-        //         display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
-        //         display_product_price: `₱${product.product_price}`,
-        //         updated_at: this.formatDateTime(product.updated_at),
-        //     };
-        // },
-
         formatProduct(product) {
             // const temp = this.tempOptions.find(t => t.temp_id === product.product_temp_id);
             // const size = this.sizeOptions.find(s => s.size_id === product.product_size_id);
@@ -1048,6 +1039,9 @@ export default {
                 // size_label: size?.size_label || '',
                 // category_label: category?.category_label || '',
                 // availability_label: availability?.availability_label || '',
+                product_temp_id: Number(product.product_temp_id),
+                product_size_id: Number(product.product_size_id),
+                product_category_id: Number(product.product_category_id),
                 availability_id: Number(product.availability_id),
                 display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
                 display_product_price: `₱${product.product_price}`,

@@ -41,6 +41,34 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
+        <template v-slot:item.display_product_name="{ item }">
+            <span :class="item.availability_id === 2 ? 'text-red' : ''">
+                {{ item.display_product_name }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.display_product_price="{ item }">
+            <span :class="item.availability_id === 2 ? 'text-red' : ''">
+                {{ item.display_product_price }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.category_label="{ item }">
+            <span :class="item.availability_id === 2 ? 'text-red' : ''">
+                {{ item.category_label }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.updated_at="{ item }">
+            <span :class="item.availability_id === 2 ? 'text-red' : ''">
+                {{ item.updated_at }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
             <v-chip :color="item.availability_id === 2 ? 'red' : 'green'" size="small" variant="flat">
                 {{ item.availability_label }}
