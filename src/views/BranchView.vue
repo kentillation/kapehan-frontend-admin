@@ -428,12 +428,12 @@ export default {
             isSaving: false,
         };
     },
-    mounted() {
-        this.getProductTemperatureOption();
-        this.getProductSizeOption();
-        this.getProductCategoryOption();
-        this.getProductAvailabilityOption();
-    },
+    // mounted() {
+    //     this.getProductTemperatureOption();
+    //     this.getProductSizeOption();
+    //     this.getProductCategoryOption();
+    //     this.getProductAvailabilityOption();
+    // },
     props: {
         branchName: {
             type: String,
@@ -1041,31 +1041,31 @@ export default {
             this.stockHistoryDialog = true;
         },
 
-        async getOptions(endpoint, targetArray, errorMessage) {
-            try {
-                const response = await apiClient.get(endpoint, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-                    },
-                });
-                this[targetArray] = response.data;
-            } catch (error) {
-                this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
-            }
-        },
+        // async getOptions(endpoint, targetArray, errorMessage) {
+        //     try {
+        //         const response = await apiClient.get(endpoint, {
+        //             headers: {
+        //                 Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+        //             },
+        //         });
+        //         this[targetArray] = response.data;
+        //     } catch (error) {
+        //         this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
+        //     }
+        // },
 
-        getProductTemperatureOption() {
-            this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
-        },
-        getProductSizeOption() {
-            this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product temperatures');
-        },
-        getProductCategoryOption() {
-            this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product temperatures');
-        },
-        getProductAvailabilityOption() {
-            this.getOptions('/admin/product-availability-option', 'productAvailabilityOption', 'Failed to fetch product temperatures');
-        },
+        // getProductTemperatureOption() {
+        //     this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
+        // },
+        // getProductSizeOption() {
+        //     this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product temperatures');
+        // },
+        // getProductCategoryOption() {
+        //     this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product temperatures');
+        // },
+        // getProductAvailabilityOption() {
+        //     this.getOptions('/admin/product-availability-option', 'productAvailabilityOption', 'Failed to fetch product temperatures');
+        // },
 
         formatProduct(product) {
             const temp = this.productTemperatureOption.find(t => t.temp_id === product.product_temp_id);
