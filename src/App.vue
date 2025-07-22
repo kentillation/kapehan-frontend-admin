@@ -33,7 +33,7 @@
             <v-list-subheader size="30">Menu</v-list-subheader>
             <!-- <v-list-item prepend-icon="mdi-home-outline" @click="toHome"
               class="bg-brown-darken-3 ps-3">Home</v-list-item> -->
-            <v-list-item prepend-icon="mdi-help-circle-outline" @click="toAbout"
+            <v-list-item prepend-icon="mdi-information-outline" @click="toAbout"
               class="bg-brown-darken-3 ps-3">About</v-list-item>
             <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-3">Create
               Branch</v-list-item>

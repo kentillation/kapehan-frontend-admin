@@ -1048,6 +1048,7 @@ export default {
                 // size_label: size?.size_label || '',
                 // category_label: category?.category_label || '',
                 // availability_label: availability?.availability_label || '',
+                availability_id: Number(product.availability_id),
                 display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
                 display_product_price: `₱${product.product_price}`,
                 updated_at: this.formatDateTime(product.updated_at),
