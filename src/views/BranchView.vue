@@ -958,12 +958,23 @@ export default {
                     availability_id: Number(this.currentProduct.availability_id),
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
+                };
+                const productDataWithUpdatedAt = {
+                    product_id: this.currentProduct.product_id,
+                    product_name: this.currentProduct.product_name?.trim(),
+                    product_price: parseFloat(this.currentProduct.product_price),
+                    product_size_id: Number(this.currentProduct.product_size_id),
+                    product_temp_id: Number(this.currentProduct.product_temp_id),
+                    product_category_id: Number(this.currentProduct.product_category_id),
+                    availability_id: Number(this.currentProduct.availability_id),
+                    shop_id: this.currentProduct.shop_id,
+                    branch_id: this.currentProduct.branch_id,
                     updated_at: formattedDate,
                 };
                 await this.productsStore.updateProductStore(productData);
-                await this.productOptionsStore.fetchAllOptions(); // added
+                await this.productOptionsStore.fetchAllOptions(); // added: Refreshing productOptionsStore
                 // Insert condition
-                const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
+                const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productDataWithUpdatedAt });
                 const index = this.products.findIndex(
                     p => p.product_id === this.currentProduct.product_id
                 );
