@@ -84,6 +84,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
+import { useProductOptionsStore } from '@/stores/productOptionsStore'; // added
 import { useRoute } from 'vue-router';
 import GlobalLoader from '@/components/GlobalLoader.vue';
 import Alert from '@/components/Alert.vue';
@@ -109,11 +110,10 @@ export default {
     const loadingStore = useLoadingStore();
     const branchStore = useBranchStore();
     const stocksStore = useStocksStore();
-
+    const productOptionsStore = useProductOptionsStore(); // added
     const connectionStatus = ref('online');
     const route = useRoute();
     const isNotFoundPage = computed(() => route.name === 'NotFound');
-
     const updateStatus = () => {
       if (!navigator.onLine) {
         connectionStatus.value = 'offline';
@@ -130,7 +130,8 @@ export default {
       }, 3000);
     };
 
-    onMounted(() => {
+    onMounted(async () => {
+      await productOptionsStore.fetchAllOptions(); // added
       window.addEventListener('online', updateStatus);
       window.addEventListener('offline', updateStatus);
 

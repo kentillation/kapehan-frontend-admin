@@ -74,6 +74,8 @@
 
 <script>
 // import apiClient from '../axios'
+import { computed } from 'vue'; // added
+import { useProductOptionsStore } from '@/stores/productOptionsStore';
 import LoaderUI from '@/components/LoaderUI.vue';
 
 export default {
@@ -83,18 +85,18 @@ export default {
     },
     data() {
         return {
-            productTemperatureOption: [],
-            productSizeOption: [],
-            productCategoryOption: [],
-            productAvailabilityOption: [],
         }
     },
-    // mounted() {
-    //     this.getProductTemperatureOption();
-    //     this.getProductSizeOption();
-    //     this.getProductCategoryOption();
-    //     this.getProductAvailabilityOption();
-    // },
+     // added
+    setup() {
+        const productOptionsStore = useProductOptionsStore();
+        return {
+        productTemperatureOption: computed(() => productOptionsStore.temperatureOptions),
+        productSizeOption: computed(() => productOptionsStore.sizeOptions),
+        productCategoryOption: computed(() => productOptionsStore.categoryOptions),
+        productAvailabilityOption: computed(() => productOptionsStore.availabilityOptions),
+        };
+    },
     props: {
         modelValue: {
             type: Boolean,
@@ -149,30 +151,6 @@ export default {
                 [field]: updatedValue
             });
         },
-        // async getOptions(endpoint, targetArray, errorMessage) {
-        //     try {
-        //         const response = await apiClient.get(endpoint, {
-        //             headers: {
-        //                 Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-        //             },
-        //         });
-        //         this[targetArray] = response.data;
-        //     } catch (error) {
-        //         this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
-        //     }
-        // },
-        // getProductTemperatureOption() {
-        //     this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
-        // },
-        // getProductSizeOption() {
-        //     this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product temperatures');
-        // },
-        // getProductCategoryOption() {
-        //     this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product temperatures');
-        // },
-        // getProductAvailabilityOption() {
-        //     this.getOptions('/admin/product-availability-option', 'productAvailabilityOption', 'Failed to fetch product temperatures');
-        // }
     }
 }
 </script>

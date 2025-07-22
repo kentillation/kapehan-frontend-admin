@@ -293,11 +293,12 @@
 
 <script>
 import apiClient from '../axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue'; // added: computed
 import { mapState } from 'pinia';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useProductsStore } from '@/stores/productsStore';
+import { useProductOptionsStore } from '@/stores/productOptionsStore'; // added
 import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 import Alert from '@/components/Alert.vue';
@@ -374,10 +375,6 @@ export default {
             productsHistoryDialog: false,
             productsLoaded: false,
             currentProduct: null,
-            productTemperatureOption: [],
-            productSizeOption: [],
-            productCategoryOption: [],
-            productAvailabilityOption: [],
 
             // Product Ingredients
             ingredients: [],
@@ -428,12 +425,6 @@ export default {
             isSaving: false,
         };
     },
-    // mounted() {
-    //     this.getProductTemperatureOption();
-    //     this.getProductSizeOption();
-    //     this.getProductCategoryOption();
-    //     this.getProductAvailabilityOption();
-    // },
     props: {
         branchName: {
             type: String,
@@ -444,10 +435,25 @@ export default {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
         const productsStore = useProductsStore();
+        const productOptionsStore = useProductOptionsStore(); // added
+        const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions); // added
+        const productSizeOption = computed(() => productOptionsStore.sizeOptions); // added
+        const productCategoryOption = computed(() => productOptionsStore.categoryOptions); // added
+        const productAvailabilityOption = computed(() => productOptionsStore.availabilityOptions); // added
         const transactStore = useTransactStore();
         const activeTab = ref('dashboard');
         const activeReportsTab = ref('sales');
-        return { loadingStore, stocksStore, productsStore, transactStore, activeTab, activeReportsTab };
+        return { loadingStore, 
+            stocksStore, 
+            productsStore,
+            productOptionsStore, // added
+            productTemperatureOption, // added
+            productSizeOption, // added
+            productCategoryOption, // added
+            productAvailabilityOption, // added 
+            transactStore, 
+            activeTab, 
+            activeReportsTab };
     },
     computed: {
         ...mapState(useStocksStore, ['stockNotificationQty']),
@@ -650,6 +656,7 @@ export default {
                 if (this.productsStore.products.length === 0) {
                     this.products = [];
                 } else {
+
                     this.products = this.productsStore.products.map(product => this.formatProduct(product));
                 }
                 this.productsLoaded = true;
@@ -952,6 +959,7 @@ export default {
                     updated_at: new Date(),
                 };
                 await this.productsStore.updateProductStore(productData);
+                await this.productOptionsStore.fetchAllOptions(); // added
                 // Insert condition
                 const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
                 const index = this.products.findIndex(
@@ -961,7 +969,6 @@ export default {
                     this.products.splice(index, 1, updatedProduct);
                 }
                 this.productEditDialog = false;
-                // this.fetchProducts();
                 this.fetchLowStocks();
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
@@ -1041,37 +1048,11 @@ export default {
             this.stockHistoryDialog = true;
         },
 
-        // async getOptions(endpoint, targetArray, errorMessage) {
-        //     try {
-        //         const response = await apiClient.get(endpoint, {
-        //             headers: {
-        //                 Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-        //             },
-        //         });
-        //         this[targetArray] = response.data;
-        //     } catch (error) {
-        //         this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
-        //     }
-        // },
-
-        // getProductTemperatureOption() {
-        //     this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
-        // },
-        // getProductSizeOption() {
-        //     this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product temperatures');
-        // },
-        // getProductCategoryOption() {
-        //     this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product temperatures');
-        // },
-        // getProductAvailabilityOption() {
-        //     this.getOptions('/admin/product-availability-option', 'productAvailabilityOption', 'Failed to fetch product temperatures');
-        // },
-
         formatProduct(product) {
-            const temp = this.productTemperatureOption.find(t => t.temp_id === product.product_temp_id);
-            const size = this.productSizeOption.find(s => s.size_id === product.product_size_id);
-            const category = this.productCategoryOption.find(c => c.category_id === product.product_category_id);
-            const availability = this.productAvailabilityOption.find(a => a.availability_id === product.availability_id);
+            const temp = this.productTemperatureOption.find(t => t.temp_id === product.product_temp_id); // added
+            const size = this.productSizeOption.find(s => s.size_id === product.product_size_id); // added
+            const category = this.productCategoryOption.find(c => c.category_id === product.product_category_id); // added
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === product.availability_id); // added
             return {
                 ...product,
                 temp_label: temp?.temp_label,
@@ -1082,7 +1063,6 @@ export default {
                 product_size_id: Number(product.product_size_id),
                 product_category_id: Number(product.product_category_id),
                 availability_id: Number(product.availability_id),
-                // display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
                 product_name: this.capitalizeFirstLetter(product.product_name),
                 display_product_price: `₱${product.product_price}`,
                 updated_at: this.formatDateTime(product.updated_at),
