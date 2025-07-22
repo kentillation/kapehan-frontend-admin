@@ -1049,10 +1049,10 @@ export default {
         },
 
         formatProduct(product) {
-            const temp = this.productTemperatureOption.find(t => t.temp_id === product.product_temp_id); // added
-            const size = this.productSizeOption.find(s => s.size_id === product.product_size_id); // added
-            const category = this.productCategoryOption.find(c => c.category_id === product.product_category_id); // added
-            const availability = this.productAvailabilityOption.find(a => a.availability_id === product.availability_id); // added
+            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id)); // added
+            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id)); // added
+            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id)); // added
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id)); // added
             return {
                 ...product,
                 temp_label: temp?.temp_label,
