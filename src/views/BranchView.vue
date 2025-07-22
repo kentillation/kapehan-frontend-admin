@@ -946,6 +946,8 @@ export default {
             this.isSaving = true;
             this.confirmUpdatingProductDialog = false;
             try {
+                const now = new Date();
+                const formattedDate = now.toISOString();
                 const productData = {
                     product_id: this.currentProduct.product_id,
                     product_name: this.currentProduct.product_name?.trim(),
@@ -956,7 +958,7 @@ export default {
                     availability_id: Number(this.currentProduct.availability_id),
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
-                    // updated_at: new Date(),
+                    updated_at: formattedDate,
                 };
                 await this.productsStore.updateProductStore(productData);
                 await this.productOptionsStore.fetchAllOptions(); // added
@@ -1128,6 +1130,7 @@ export default {
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
+                hour12: true,
                 timeZone: 'Asia/Manila'
             });
         },
