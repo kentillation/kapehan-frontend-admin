@@ -374,6 +374,10 @@ export default {
             productsHistoryDialog: false,
             productsLoaded: false,
             currentProduct: null,
+            productTemperatureOption: [],
+            productSizeOption: [],
+            productCategoryOption: [],
+            productAvailabilityOption: [],
 
             // Product Ingredients
             ingredients: [],
@@ -423,6 +427,12 @@ export default {
             formValid: true,
             isSaving: false,
         };
+    },
+    mounted() {
+        this.getProductTemperatureOption();
+        this.getProductSizeOption();
+        this.getProductCategoryOption();
+        this.getProductAvailabilityOption();
     },
     props: {
         branchName: {
@@ -939,17 +949,19 @@ export default {
                     availability_id: Number(this.currentProduct.availability_id),
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
+                    updated_at: new Date(),
                 };
                 await this.productsStore.updateProductStore(productData);
-                // const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
-                // const index = this.products.findIndex(
-                //     p => p.product_id === this.currentProduct.product_id
-                // );
-                // if (index !== -1) {
-                //     this.products.splice(index, 1, updatedProduct);
-                // }
+                // Insert condition
+                const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productData });
+                const index = this.products.findIndex(
+                    p => p.product_id === this.currentProduct.product_id
+                );
+                if (index !== -1) {
+                    this.products.splice(index, 1, updatedProduct);
+                }
                 this.productEditDialog = false;
-                this.fetchProducts();
+                // this.fetchProducts();
                 this.fetchLowStocks();
                 this.showSuccess("Product updated successfully!");
             } catch (error) {
@@ -1029,22 +1041,49 @@ export default {
             this.stockHistoryDialog = true;
         },
 
+        async getOptions(endpoint, targetArray, errorMessage) {
+            try {
+                const response = await apiClient.get(endpoint, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+                    },
+                });
+                this[targetArray] = response.data;
+            } catch (error) {
+                this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
+            }
+        },
+
+        getProductTemperatureOption() {
+            this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
+        },
+        getProductSizeOption() {
+            this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product temperatures');
+        },
+        getProductCategoryOption() {
+            this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product temperatures');
+        },
+        getProductAvailabilityOption() {
+            this.getOptions('/admin/product-availability-option', 'productAvailabilityOption', 'Failed to fetch product temperatures');
+        },
+
         formatProduct(product) {
-            // const temp = this.tempOptions.find(t => t.temp_id === product.product_temp_id);
-            // const size = this.sizeOptions.find(s => s.size_id === product.product_size_id);
-            // const category = this.categoryOptions.find(c => c.category_id === product.product_category_id);
-            // const availability = this.availabilityOptions.find(a => a.availability_id === product.availability_id);
+            const temp = this.productTemperatureOption.find(t => t.temp_id === product.product_temp_id);
+            const size = this.productSizeOption.find(s => s.size_id === product.product_size_id);
+            const category = this.productCategoryOption.find(c => c.category_id === product.product_category_id);
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === product.availability_id);
             return {
                 ...product,
-                // temp_label: temp?.temp_label || '',
-                // size_label: size?.size_label || '',
-                // category_label: category?.category_label || '',
-                // availability_label: availability?.availability_label || '',
+                temp_label: temp?.temp_label,
+                size_label: size?.size_label,
+                category_label: category?.category_label,
+                availability_label: availability?.availability_label,
                 product_temp_id: Number(product.product_temp_id),
                 product_size_id: Number(product.product_size_id),
                 product_category_id: Number(product.product_category_id),
                 availability_id: Number(product.availability_id),
-                display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
+                // display_product_name: `${this.capitalizeFirstLetter(product.product_name)}${product.temp_label}${product.size_label}`,
+                product_name: this.capitalizeFirstLetter(product.product_name),
                 display_product_price: `₱${product.product_price}`,
                 updated_at: this.formatDateTime(product.updated_at),
             };

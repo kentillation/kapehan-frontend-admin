@@ -40,9 +40,23 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
-        <template v-slot:item.display_product_name="{ item }">
+        <template v-slot:item.product_name="{ item }">
             <span :class="item.availability_id === 2 ? 'text-red' : ''">
-                {{ item.display_product_name }}
+                {{ item.product_name }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.temp_label="{ item }">
+            <span :class="item.availability_id === 2 ? 'text-red' : ''">
+                {{ item.temp_label }}
+            </span>
+        </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.size_label="{ item }">
+            <span :class="item.availability_id === 2 ? 'text-red' : ''">
+                {{ item.size_label }}
             </span>
         </template>
 
@@ -117,9 +131,11 @@ export default {
             addProductDialog: false,
             productHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Product name', value: 'display_product_name', sortable: true, width: '20%' },
+                { title: 'Product', value: 'product_name', sortable: true, width: '20%' },
+                { title: 'Temp', value: 'temp_label', sortable: true, width: '10%' },
+                { title: 'Size', value: 'size_label', sortable: true, width: '10%' },
                 { title: 'Price', value: 'display_product_price', sortable: true, width: '10%' },
-                { title: 'Category', value: 'category_label', sortable: true, width: '15%' },
+                { title: 'Category', value: 'category_label', sortable: true, width: '10%' },
                 { title: 'Availability', value: 'availability_label', sortable: true, width: '15%' },
                 { title: 'Last update', value: 'updated_at', sortable: true, width: '20%' },
                 { title: '', value: 'actions', sortable: false, width: '15%' }

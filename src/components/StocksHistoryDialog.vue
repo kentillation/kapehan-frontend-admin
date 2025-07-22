@@ -10,7 +10,7 @@
                             <h2 class="ms-3 to-show">History</h2>
                             <v-spacer></v-spacer>
                             <v-btn color="primary" variant="tonal" @click="fetchStocksHistory" :loading="loading"
-                                prepend-icon="mdi-refresh" class="ps-6 me-4" size="small">
+                                prepend-icon="mdi-refresh" class="ps-6 me-4">
                                 <span class="to-hide">Refresh</span>
                             </v-btn>
                         </v-toolbar>
