@@ -956,7 +956,7 @@ export default {
                     availability_id: Number(this.currentProduct.availability_id),
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
-                    updated_at: new Date(),
+                    // updated_at: new Date(),
                 };
                 await this.productsStore.updateProductStore(productData);
                 await this.productOptionsStore.fetchAllOptions(); // added
