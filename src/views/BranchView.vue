@@ -546,6 +546,7 @@ export default {
                 console.error('Error fetching stocks:', error);
             }
         },
+
         async onDashboard () {
             await this.fetchBranchDetails();
             this.activeTab = "dashboard";
@@ -1049,7 +1050,6 @@ export default {
             };
         },
 
-
         formatIngredient(ingredient) {
             return {
                 ...ingredient,
@@ -1064,6 +1064,10 @@ export default {
             return {
                 ...stock,
                 stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
+                stock_unit: Number(stock.stock_unit),
+                stock_in: Number(stock.stock_in),
+                stock_alert_qty: Number(stock.stock_alert_qty),
+                availability_id: Number(stock.availability_id),
                 display_stock_in: `${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}`,
                 display_unit_cost: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),

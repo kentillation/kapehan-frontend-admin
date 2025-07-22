@@ -8,8 +8,13 @@
                 label="Search stock"></v-text-field>
         </v-col>
     </v-row>
-    <v-data-table :headers="stockHeaders" :items="filteredStocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="elevation-1 hover-table" density="comfortable">
+    <v-data-table 
+        :headers="stockHeaders" 
+        :items="filteredStocks" 
+        :loading="loading" 
+        :items-per-page="10"
+        class="elevation-1 hover-table" 
+        density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
                 <h2 class="ms-3 to-hide">List of all Stocks</h2>
@@ -33,43 +38,43 @@
         </template> -->
 
         <!--eslint-disable-next-line -->
-        <!-- <template v-slot:item.stock_ingredient="{ item }">
-            <span :class="item.stock_in >= item.stock_alert_qty ? 'text-red' : ''">
+        <template v-slot:item.stock_ingredient="{ item }">
+            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
                 {{ item.stock_ingredient }}
             </span>
-        </template> -->
+        </template>
 
         <!--eslint-disable-next-line -->
-        <!-- <template v-slot:item.unit_label="{ item }">
-            <span :class="item.stock_in >= item.stock_alert_qty ? 'text-red' : ''">
+        <template v-slot:item.unit_label="{ item }">
+            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
                 {{ item.unit_label }}
             </span>
-        </template> -->
+        </template>
 
         <!--eslint-disable-next-line -->
-        <!-- <template v-slot:item.display_unit_cost="{ item }">
-            <span :class="item.stock_in >= item.stock_alert_qty ? 'text-red' : ''">
+        <template v-slot:item.display_unit_cost="{ item }">
+            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
                 {{ item.display_unit_cost }}
             </span>
-        </template> -->
+        </template>
 
         <!--eslint-disable-next-line -->
-        <!-- <template v-slot:item.updated_at="{ item }">
-            <span :class="item.stock_in >= item.stock_alert_qty ? 'text-red' : ''">
+        <template v-slot:item.updated_at="{ item }">
+            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
                 {{ item.updated_at }}
             </span>
-        </template> -->
+        </template>
         
         <!--eslint-disable-next-line -->
-        <!-- <template v-slot:item.display_stock_in="{ item }">
-            <span :class="item.stock_alert_qty > item.stock_in ? 'text-red' : 'text-green'">
+        <template v-slot:item.display_stock_in="{ item }">
+            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
                 {{ item.display_stock_in }}
             </span>
-        </template> -->
+        </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.stock_alert_qty >= item.stock_in ? 'green' : 'red'" size="small" variant="flat">
+            <v-chip :color="item.stock_in <= item.stock_alert_qty ? 'red' : 'green'" size="small" variant="flat">
                 {{ item.availability_label }}
             </v-chip>
         </template>
