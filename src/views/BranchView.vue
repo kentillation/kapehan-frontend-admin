@@ -972,6 +972,8 @@ export default {
                     updated_at: formattedDate,
                 };
                 await this.productsStore.updateProductStore(productData);
+                console.log("Updated product:", productData);
+
                 await this.productOptionsStore.fetchAllOptions(); // added: Refreshing productOptionsStore
                 // Insert condition
                 const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productDataWithUpdatedAt });
