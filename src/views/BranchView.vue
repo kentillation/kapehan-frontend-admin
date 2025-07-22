@@ -951,7 +951,7 @@ export default {
                 const productData = {
                     product_id: this.currentProduct.product_id,
                     product_name: this.currentProduct.product_name?.trim(),
-                    product_price: parseFloat(this.currentProduct.product_price),
+                    product_price: Number(this.currentProduct.product_price),
                     product_size_id: Number(this.currentProduct.product_size_id),
                     product_temp_id: Number(this.currentProduct.product_temp_id),
                     product_category_id: Number(this.currentProduct.product_category_id),
