@@ -6,10 +6,8 @@
         <v-form ref="productForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productRows" :key="index"
                 class="d-flex align-center border rounded my-3 pt-3 mx-auto">
-                <v-col cols="12" lg="1" md="6" sm="6">
-                    <v-btn color="red" variant="tonal" class="pe-1 mb-4" prepend-icon="mdi-trash-can-outline"
-                        @click="removeRow(index)"></v-btn>
-                </v-col>
+                <v-btn color="red" variant="tonal" class="pe-1" prepend-icon="mdi-trash-can-outline"
+                    @click="removeRow(index)"></v-btn>
                 <v-col cols="12" lg="2" md="6" sm="6">
                     <v-text-field v-model="row.productName" label="Product name" :rules="[v => !!v || 'Required']"
                         variant="outlined" />
@@ -33,6 +31,11 @@
                     <v-autocomplete v-model="row.productCategory" @click="getProductCategoryOption"
                         label="Category" :items="productCategoryOption" :rules="[v => !!v || 'Required']"
                         item-title="category_label" item-value="category_id" variant="outlined" />
+                </v-col>
+                <v-col cols="12" lg="2" md="6" sm="6">
+                    <v-autocomplete v-model="row.productStation" @click="getProductStationOption"
+                        label="Station" :items="productStationOption" :rules="[v => !!v || 'Required']"
+                        item-title="station_name" item-value="station_id" variant="outlined" />
                 </v-col>
             </v-row>
             <v-row>
@@ -102,11 +105,13 @@ export default {
                     productTemp: null,
                     productSize: null,
                     productCategory: null,
+                    productStation: null,
                 },
             ],
             productTemperatureOption: [],
             productSizeOption: [],
             productCategoryOption: [],
+            productStationOption: [],
         };
     },
     setup() {
@@ -126,7 +131,8 @@ export default {
                     !isNaN(parseFloat(row.productPrice)) &&
                     row.productTemp &&
                     row.productSize &&
-                    row.productCategory
+                    row.productCategory &&
+                    row.productStation
                 );
             });
         },
@@ -153,6 +159,7 @@ export default {
                 productTemp: null,
                 productSize: null,
                 productCategory: null,
+                productStation: null,
             });
         },
         async submitForm() {
@@ -166,6 +173,7 @@ export default {
                     product_temp_id: row.productTemp,
                     product_size_id: row.productSize,
                     product_category_id: row.productCategory,
+                    station_id: row.productStation,
                     branch_id: this.branchID
                 }));
                 await this.productsStore.saveProductsStore(payload);
@@ -198,6 +206,9 @@ export default {
         },
         getProductCategoryOption() {
             this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product category');
+        },
+        getProductStationOption() {
+            this.getOptions('/admin/product-station-option', 'productStationOption', 'Failed to fetch product station');
         },
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
