@@ -1,13 +1,26 @@
 <template>
-    <v-data-table :headers="stocksHeaders" :items="stocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
+    <v-data-table :headers="stocksHeaders" :items="mappedStocks" :loading="loading" :items-per-page="10"
+        :sort-by="[{ key: 'created_at_formatted', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
-            <v-toolbar flat color="transparent" class="mt-2">
-                <v-btn @click="downloadStocks" prepend-icon="mdi-download" color="primary" variant="tonal">XLS</v-btn>&nbsp;
-                <v-btn @click="printStocks" prepend-icon="mdi-printer" color="primary" variant="tonal">PRINT</v-btn>&nbsp;
-                <v-btn prepend-icon="mdi-refresh" color="primary" variant="tonal" class="ps-7 me-3"
-                    @click="$emit('refresh')" :loading="loading"></v-btn>
-            </v-toolbar>
+            <v-row class="mt-5">
+                <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
+                    <div class="d-flex ms-3 mb-5">
+                        <v-btn @click="downloadStocks(dateFilter)" prepend-icon="mdi-download" color="primary"
+                            variant="tonal">XLS</v-btn>&nbsp;
+                        <v-btn @click="printStocks(dateFilter)" prepend-icon="mdi-printer" color="primary"
+                            variant="tonal">PRINT</v-btn>&nbsp;
+                        <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
+                            @click="$emit('refresh')" :loading="loading"></v-btn>
+                    </div>
+                </v-col>
+                <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
+                    <div class="d-flex">
+                        <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
+                            item-value="filter_date_id" label="Date Filter" class="ms-3 me-2" clearable></v-autocomplete>
+                        <!-- <span class="w-25">Net sales: <br /><h3>₱{{ Number(totalSales).toLocaleString('en-PH') }}</h3></span> -->
+                    </div>
+                </v-col>
+            </v-row>
         </template>
 
         <template v-slot:no-data>
@@ -29,20 +42,56 @@ export default {
     data() {
         return {
             shopLogoLink: '-',
+            mappedStocks: [],
+            dateFilter: 1,
+            dateFilterItems: [
+                { filter_date_id: 1, filter_date_label: 'Today' },
+                { filter_date_id: 2, filter_date_label: 'Yesterday' },
+                { filter_date_id: 3, filter_date_label: 'Last 7 days' },
+                { filter_date_id: 4, filter_date_label: 'This Week' },
+                { filter_date_id: 5, filter_date_label: 'Last 30 days' },
+                { filter_date_id: 6, filter_date_label: 'This Month' },
+                { filter_date_id: 7, filter_date_label: 'Last Month' },
+            ],
             stocksHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '15%' },
                 { title: 'Unit', value: 'unit_label', sortable: 'true', width: '15%' },
-                { title: 'Stock quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
+                { title: 'Stock in', value: 'display_stock_in', sortable: 'true', width: '15%' },
+                { title: 'Stock out', value: 'display_stock_out', sortable: 'true', width: '15%' },
                 { title: 'Unit cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
-                { title: 'Last update', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: 'Last update', value: 'created_at_formatted', sortable: 'true', width: '25%' },
             ],
         }
     },
     components: {
         Snackbar,
     },
+    mounted() {
+        this.fetchStocksReport(this.dateFilter);
+    },
+    watch: {
+        stocksByDate: {
+            handler(newVal) {
+                this.mappedStocks = newVal.map(sale => this.formatStock(sale));
+            },
+            immediate: true
+        },
+        dateFilter(newVal) {
+            this.fetchStocksReport(newVal);
+        },
+    },
+    computed: {
+        selectedFilterLabel() {
+            const found = this.dateFilterItems.find(item => item.filter_date_id === this.dateFilter);
+            return found ? found.filter_date_label : '';
+        }
+    },
     props: {
+        stocksByDate: {
+            type: Array,
+            default: () => []
+        },
         stocks: {
             type: Array,
             required: true
@@ -113,8 +162,20 @@ export default {
         };
     },
     methods: {
-        async downloadStocks() {
-            await this.stocksStore.fetchAllStocksStore(this.branchId);
+        async fetchStocksReport(dateFilterId = null) {
+            try {
+                await this.stocksStore.fetchStocksReportStore(this.branchId, dateFilterId);
+                this.mappedStocks = this.stocksStore.stocksByDate.map(stock => this.formatStock(stock));
+            } catch (error) {
+                console.error('Error fetching stocks report:', error);
+                this.showError("Error fetching stocks report!");
+            } finally {
+                this.loadingStockReports = false;
+            }
+        },
+
+        async downloadStocks(dateFilterId = null) {
+            await this.stocksStore.fetchAllStocksStore(this.branchId, dateFilterId);
             if (this.stocksStore.stocks.length === 0) {
                 this.showError("No stocks available to download.");
                 return;
@@ -126,7 +187,7 @@ export default {
                 'Unit': stock.unit_label,
                 'Stock_quantity': stock.stock_in,
                 'Unit_cost': stock.stock_cost_per_unit,
-                'Last Update': this.formatDateTime(stock.updated_at),
+                'Last Update': this.formatDateTime(stock.created_at_formatted),
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
@@ -153,8 +214,8 @@ export default {
             // this.$emit('refresh');
         },
 
-        async printStocks() {
-            await this.stocksStore.fetchAllStocksStore(this.branchId);
+        async printStocks(dateFilterId = null) {
+            await this.stocksStore.fetchAllStocksStore(this.branchId, dateFilterId);
             if (this.stocksStore.stocks.length === 0) {
                 this.showError("No stocks available to print.");
                 return;
@@ -205,7 +266,7 @@ export default {
                                     <td>${stock.unit_label}</td>
                                     <td>${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}</td>
                                     <td>₱${stock.stock_cost_per_unit}</td>
-                                    <td>${this.formatDateTime(stock.updated_at)}</td>
+                                    <td>${this.formatDateTime(stock.created_at_formatted)}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -217,6 +278,31 @@ export default {
                 </html>`);
             printWindow.document.close();
             printWindow.print();
+        },
+
+        formatStock(stock) {
+            const stockInvalue = Number(stock.stock_in);
+            const displayStockIn = (Math.round(stockInvalue * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) || '';
+
+            const stockOutvalue = Number(stock.stock_out);
+            const displayStockOut = (Math.round(stockOutvalue * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) || '';
+
+            return {
+                ...stock,
+                stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
+                stock_unit: Number(stock.stock_unit),
+                stock_in: Number(stock.stock_in),
+                stock_alert_qty: Number(stock.stock_alert_qty),
+                availability_id: Number(stock.availability_id),
+                display_stock_in: displayStockIn,
+                display_stock_out: displayStockOut,
+                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
+                created_at_formatted: this.formatDateTime(stock.created_at_formatted),
+            };
+        },
+
+        capitalizeFirstLetter(text) {
+            return text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : '';
         },
 
         formatDateTime(dateString) {

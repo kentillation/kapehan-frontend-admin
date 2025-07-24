@@ -741,7 +741,7 @@ export default {
                     this.stockReports = [];
                     return;
                 }
-                await this.stocksStore.fetchAllStocksStore(this.branchDetails.branch_id);
+                await this.stocksStore.fetchStocksReportStore(this.branchDetails.branch_id);
                 if (this.stocksStore.stocks.length === 0) {
                     this.stockReports = [];
                 } else {

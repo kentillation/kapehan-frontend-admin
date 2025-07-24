@@ -3,6 +3,7 @@ import apiClient from '../axios';
 export const STOCK_API = {
     ENDPOINTS: {
         FETCH: '/admin/stocks',
+        FETCH_STOCKS_BY_DATE: '/admin/stocks-report',
         SAVE: '/admin/save-stock',
         UPDATE: '/admin/update-stock',
         FETCH_LOW_STOCKS: '/admin/low-stocks',
@@ -41,6 +42,32 @@ export const STOCK_API = {
 
             const enhancedError = new Error('Failed to fetch stocks');
             throw enhancedError;
+        }
+    },
+
+    async fetchStocksReportByDateApi(branchId, dateFilterId = null) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            let endpoint = `${this.ENDPOINTS.FETCH_STOCKS_BY_DATE}/${branchId}`;
+            if (dateFilterId) {
+                endpoint += `?date_filter=${dateFilterId}`;
+            }
+            const response = await apiClient.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[fetchStocksReportByDateApi] Error fetching sales:', error);
+            throw error;
         }
     },
 

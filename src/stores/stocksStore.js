@@ -4,6 +4,7 @@ import { STOCK_API } from '@/api/stocksApi';
 export const useStocksStore = defineStore('stocks', {
     state: () => ({
         stocks: [],
+        stocksByDate: [],
         lowStockBranches: [],
         totalLowStock: null,
         loading: false,
@@ -27,6 +28,25 @@ export const useStocksStore = defineStore('stocks', {
             } catch (error) {
                 console.error('Error in fetchAllStocksApi:', error);
                 this.error = 'Failed to fetch stocks';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchStocksReportStore(branchId, dateFilterId = null) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await STOCK_API.fetchStocksReportByDateApi(branchId, dateFilterId);
+                if (response && response.status === true) {
+                    this.stocksByDate = response.data;
+                } else {
+                    throw new Error(response?.message || 'Failed to fetch sales');
+                }
+            } catch (error) {
+                console.error('Error in fetchStocksReportByDateApi:', error);
+                this.error = error.message || 'Failed to fetch sales';
                 throw error;
             } finally {
                 this.loading = false;
