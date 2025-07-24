@@ -40,7 +40,7 @@ export default {
             shopLogoLink: '-',
             productsHeaders: [
                 { title: '', value: 'select', width: '5%' },
-                { title: 'Product name', value: 'display_product_name', sortable: true, width: '20%' },
+                { title: 'Product name', value: 'product_name', sortable: true, width: '20%' },
                 { title: 'Price', value: 'display_product_price', sortable: true, width: '20%' },
                 { title: 'Category', value: 'category_label', sortable: true, width: '20%' },
                 { title: 'Last update', value: 'updated_at', sortable: true, width: '25%' },

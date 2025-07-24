@@ -1,6 +1,6 @@
 <template>
     <v-data-table :headers="stocksHeaders" :items="mappedStocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'created_at_formatted', order: 'desc' }]" class="hover-table" density="comfortable">
+        :sort-by="[{ key: 'created_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-row class="mt-5">
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
@@ -25,7 +25,11 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No stocks found for this branch.</span>
+                <span>&nbsp; No stocks report found
+                    <template v-if="selectedFilterLabel">
+                        for <strong>{{ selectedFilterLabel }}</strong>
+                    </template>
+                </span>
             </v-alert>
         </template>
     </v-data-table>
@@ -57,10 +61,10 @@ export default {
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '15%' },
                 { title: 'Unit', value: 'unit_label', sortable: 'true', width: '15%' },
-                { title: 'Stock in', value: 'display_stock_in', sortable: 'true', width: '15%' },
-                { title: 'Stock out', value: 'display_stock_out', sortable: 'true', width: '15%' },
-                { title: 'Unit cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
-                { title: 'Last update', value: 'created_at_formatted', sortable: 'true', width: '25%' },
+                { title: 'Remaining_stock', value: 'display_stock_in', sortable: 'true', width: '15%' },
+                { title: 'Stock_out', value: 'display_stock_out', sortable: 'true', width: '15%' },
+                { title: 'Unit_cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
+                { title: 'Date', value: 'created_at', sortable: 'true', width: '25%' },
             ],
         }
     },
@@ -175,19 +179,20 @@ export default {
         },
 
         async downloadStocks(dateFilterId = null) {
-            await this.stocksStore.fetchAllStocksStore(this.branchId, dateFilterId);
-            if (this.stocksStore.stocks.length === 0) {
+            await this.stocksStore.fetchStocksReportStore(this.branchId, dateFilterId);
+            if (this.stocksStore.stocksByDate.length === 0) {
                 this.showError("No stocks available to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading stocks...');
             }
-            const stocks = this.stocksStore.stocks.map(stock => ({
+            const stocksByDate = this.stocksStore.stocksByDate.map(stock => ({
                 'Ingredients': stock.stock_ingredient,
                 'Unit': stock.unit_label,
-                'Stock_quantity': stock.stock_in,
-                'Unit_cost': stock.stock_cost_per_unit,
-                'Last Update': this.formatDateTime(stock.created_at_formatted),
+                'Remaining stock': stock.stock_in,
+                'Stock out': stock.stock_out,
+                'Unit cost': stock.stock_cost_per_unit,
+                'Date': this.formatDateTime(stock.created_at),
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
@@ -200,8 +205,8 @@ export default {
             ].join('\n');
             const csvContent = "data:text/csv;charset=utf-8,"
                 + headings + "\n"
-                + Object.keys(stocks[0]).join(",") + "\n"
-                + stocks.map(e => Object.values(e).join(",")).join("\n");
+                + Object.keys(stocksByDate[0]).join(",") + "\n"
+                + stocksByDate.map(e => Object.values(e).join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -215,8 +220,8 @@ export default {
         },
 
         async printStocks(dateFilterId = null) {
-            await this.stocksStore.fetchAllStocksStore(this.branchId, dateFilterId);
-            if (this.stocksStore.stocks.length === 0) {
+            await this.stocksStore.fetchStocksReportStore(this.branchId, dateFilterId);
+            if (this.stocksStore.stocksByDate.length === 0) {
                 this.showError("No stocks available to print.");
                 return;
             }
@@ -225,6 +230,7 @@ export default {
                 alert('Please allow popups for this website to print the report.');
                 return;
             }
+            
             printWindow.document.write(`
                 <html>
                     <head>
@@ -256,17 +262,19 @@ export default {
                             <tr>
                                 <th>Ingredients</th>
                                 <th>Unit</th>
-                                <th>Stock_quantity</th>
+                                <th>Remaining_stock</th>
+                                <th>Stock_out</th>
                                 <th>Unit_cost</th>
-                                <th>Last Update</th>
+                                <th>Date</th>
                             </tr>
-                            ${this.stocksStore.stocks.map(stock => `
+                            ${this.stocksStore.stocksByDate.map(stock => `
                                 <tr>
                                     <td>${stock.stock_ingredient}</td>
                                     <td>${stock.unit_label}</td>
-                                    <td>${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}</td>
+                                    <td>${stock.stock_in}</td>
+                                    <td>${stock.stock_out}</td>
                                     <td>₱${stock.stock_cost_per_unit}</td>
-                                    <td>${this.formatDateTime(stock.created_at_formatted)}</td>
+                                    <td>${this.formatDateTime(stock.created_at)}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -297,7 +305,7 @@ export default {
                 display_stock_in: displayStockIn,
                 display_stock_out: displayStockOut,
                 display_unit_cost: `₱${stock.stock_cost_per_unit}`,
-                created_at_formatted: this.formatDateTime(stock.created_at_formatted),
+                created_at: this.formatDateTime(stock.created_at),
             };
         },
 

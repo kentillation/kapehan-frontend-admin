@@ -31,7 +31,7 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No sales found for this branch
+                <span>&nbsp; No sales report found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>

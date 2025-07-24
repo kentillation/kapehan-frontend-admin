@@ -27,7 +27,7 @@
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No orders found for this branch
+                <span>&nbsp; No orders report found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>
@@ -48,7 +48,7 @@ export default {
     data() {
         return {
             mappedTransactions: [],
-            dateFilter: null,
+            dateFilter: 1,
             shopLogoLink: '-',
             transactionsHeaders: [
                 { title: 'Reference', value: 'reference_number', sortable: 'true', width: '25%' },
@@ -69,6 +69,9 @@ export default {
             ],
             snackbarRef: null,
         }
+    },
+    mounted() {
+        this.fetchAllOrdersReport(this.dateFilter);
     },
     watch: {
         transactions: {
