@@ -60,10 +60,11 @@ export default {
             stocksHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '15%' },
-                { title: 'Unit', value: 'unit_label', sortable: 'true', width: '15%' },
-                { title: 'Remaining_stock', value: 'display_stock_in', sortable: 'true', width: '15%' },
-                { title: 'Stock_out', value: 'display_stock_out', sortable: 'true', width: '15%' },
-                { title: 'Unit_cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
+                { title: 'Remaining stock', value: 'display_stock_in', sortable: 'true', width: '10%' },
+                { title: 'Stock out', value: 'display_stock_out', sortable: 'true', width: '10%' },
+                { title: 'Stock capital', value: 'ingredient_capital', sortable: 'true', width: '10%' },
+                { title: 'Quantity sold', value: 'total_quantity', sortable: 'true', width: '10%' },
+                { title: 'Total amount', value: 'total_amount', sortable: 'true', width: '10%' },
                 { title: 'Date', value: 'created_at', sortable: 'true', width: '25%' },
             ],
         }
@@ -188,10 +189,11 @@ export default {
             }
             const stocksByDate = this.stocksStore.stocksByDate.map(stock => ({
                 'Ingredients': stock.stock_ingredient,
-                'Unit': stock.unit_label,
                 'Remaining stock': stock.stock_in,
                 'Stock out': stock.stock_out,
-                'Unit cost': stock.stock_cost_per_unit,
+                'Stock capital': stock.ingredient_capital,
+                'Quantity sold': stock.total_quantity,
+                'Total amount': stock.total_amount,
                 'Date': this.formatDateTime(stock.created_at),
             }));
             const headings = [
@@ -261,19 +263,21 @@ export default {
                         <table>
                             <tr>
                                 <th>Ingredients</th>
-                                <th>Unit</th>
-                                <th>Remaining_stock</th>
-                                <th>Stock_out</th>
-                                <th>Unit_cost</th>
+                                <th>Remaining stock</th>
+                                <th>Stock out</th>
+                                <th>Stock capital</th>
+                                <th>Quantity sold</th>
+                                <th>Total amount</th>
                                 <th>Date</th>
                             </tr>
                             ${this.stocksStore.stocksByDate.map(stock => `
                                 <tr>
                                     <td>${stock.stock_ingredient}</td>
-                                    <td>${stock.unit_label}</td>
                                     <td>${stock.stock_in}</td>
                                     <td>${stock.stock_out}</td>
-                                    <td>₱${stock.stock_cost_per_unit}</td>
+                                    <td>₱${stock.ingredient_capital}</td>
+                                    <td>${stock.total_quantity}</td>
+                                    <td>₱${stock.total_amount}</td>
                                     <td>${this.formatDateTime(stock.created_at)}</td>
                                 </tr>`).join('')}
                         </table>
@@ -298,13 +302,14 @@ export default {
             return {
                 ...stock,
                 stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
-                stock_unit: Number(stock.stock_unit),
                 stock_in: Number(stock.stock_in),
                 stock_alert_qty: Number(stock.stock_alert_qty),
                 availability_id: Number(stock.availability_id),
                 display_stock_in: displayStockIn,
                 display_stock_out: displayStockOut,
-                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
+                ingredient_capital: `₱${stock.ingredient_capital}`,
+                total_quantity: `x${Number(stock.total_quantity)}`,
+                total_amount: `₱${Number(stock.total_amount)}`,
                 created_at: this.formatDateTime(stock.created_at),
             };
         },
