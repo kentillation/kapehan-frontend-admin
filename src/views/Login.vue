@@ -97,11 +97,6 @@ export default {
                 this.loadingStore.hide();
             }
         },
-        // showSnackbar(message, color) {
-        //     this.snackbar.message = message;
-        //     this.snackbar.color = color;
-        //     this.snackbar.visible = true;
-        // },
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
         },
