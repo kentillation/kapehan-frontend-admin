@@ -81,9 +81,7 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
-            <v-btn @click="$emit('edit-stock', item)" color="green" variant="tonal" size="small">
-                <v-icon>mdi-pencil</v-icon>&nbsp;Edit
-            </v-btn>
+            <v-btn @click="$emit('edit-stock', item)" color="green" variant="tonal" size="small" icon="mdi-pencil"></v-btn>
         </template>
 
         <template v-slot:no-data>
@@ -107,12 +105,12 @@ export default {
             stockHeaders: [
                 { title: '', value: 'select', width: '5%' },
                 { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '20%' },
-                { title: 'Unit', value: 'unit_label', sortable: 'true', width: '15%' },
+                { title: 'Unit', value: 'unit_label', sortable: 'true', width: '10%' },
                 { title: 'Stock quantity', value: 'display_stock_in', sortable: 'true', width: '15%' },
-                { title: 'Unit cost', value: 'display_unit_cost', sortable: 'true', width: '15%' },
-                { title: 'Availability', value: 'availability_label', sortable: 'true', width: '10%' },
-                { title: 'Last update', value: 'updated_at', sortable: 'true', width: '20%' },
-                { title: '', value: 'actions', width: '15%' },
+                { title: 'Unit cost', value: 'display_unit_cost', sortable: 'true', width: '10%' },
+                { title: 'Availability', value: 'availability_label', sortable: 'true', width: '15%' },
+                { title: 'Last update', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: '', value: 'actions', width: '10%' },
             ],
         }
     },

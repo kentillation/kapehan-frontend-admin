@@ -185,7 +185,7 @@ export default {
                 await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
                 if (this.transactStore.grossSalesByDate.length === 0) {
                     this.loadingStore.hide();
-                    this.showError("No sales available to download.");
+                    this.showError("No available sales report to download.");
                     return;
                 } else {
                     this.loadingStore.show('Downloading sales...');
@@ -228,7 +228,7 @@ export default {
         async printSales(dateFilterId = null) {
             await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
             if (this.transactStore.grossSalesByDate.length === 0) {
-                this.showError("No sales available to print.");
+                this.showError("No available sales report to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');

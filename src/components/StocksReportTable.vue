@@ -182,7 +182,7 @@ export default {
         async downloadStocks(dateFilterId = null) {
             await this.stocksStore.fetchStocksReportStore(this.branchId, dateFilterId);
             if (this.stocksStore.stocksByDate.length === 0) {
-                this.showError("No stocks available to download.");
+                this.showError("No available stocks report to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading stocks...');
@@ -224,7 +224,7 @@ export default {
         async printStocks(dateFilterId = null) {
             await this.stocksStore.fetchStocksReportStore(this.branchId, dateFilterId);
             if (this.stocksStore.stocksByDate.length === 0) {
-                this.showError("No stocks available to print.");
+                this.showError("No available stocks report to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');

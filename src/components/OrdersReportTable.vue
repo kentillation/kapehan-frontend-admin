@@ -176,7 +176,7 @@ export default {
         async downloadTransactions(dateFilterId = null) {
             await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
-                this.showError("No orders available to download.");
+                this.showError("No available orders report to download.");
                 return;
             } else {
                 this.loadingStore.show('Downloading transactions...');
@@ -217,7 +217,7 @@ export default {
         async printTransactions(dateFilterId = null) {
             await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
             if (this.transactStore.transactions.length === 0) {
-                this.showError("No orders available to print.");
+                this.showError("No available orders report to print.");
                 return;
             }
             const printWindow = window.open('', '_blank');

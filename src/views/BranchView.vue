@@ -21,23 +21,24 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2 ms-2">Net sales</h3>
+                                                    <h3 class="text-brown-lighten-2">Net Sales</h3>
                                                     <div class="d-flex justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
-                                                            <h2>₱ {{ totalSales }}</h2>
+                                                            <h2 class="my-2">₱ {{ totalSales }}</h2>
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
                                                         <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
                                                             style="cursor: pointer;" @click="switchToSalesTab()">
-                                                            View</h4>
+                                                            <v-icon>mdi-eye-outline</v-icon>&nbsp; View
+                                                        </h4>
                                                     </div>
                                                 </v-card-text>
                                                 <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 70px; left: -10px;" 
+                                                    style="top: 85px; left: -10px;" 
                                                     size="80">mdi-account-cash</v-icon>
                                             </v-card>
                                         </v-col>
@@ -46,14 +47,14 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2 ms-2">Orders</h3>
+                                                    <h3 class="text-brown-lighten-2">Total Orders</h3>
                                                     <div class="d-flex justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <div class="d-flex align-center">
-                                                                <h2>{{ totalOrders }}</h2> &nbsp;
+                                                                <h2 class="my-2">{{ totalOrders }}</h2> &nbsp;
                                                                 <span style="font-size: 18px;">{{
                                                                     totalOrders > 1 ? 'items' : 'item'
                                                                 }}</span>
@@ -63,11 +64,12 @@
                                                     <div class="d-flex justify-end mt-3">
                                                         <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
                                                             style="cursor: pointer;" @click="switchToOrdersTab()">
-                                                            View</h4>
+                                                            <v-icon>mdi-eye-outline</v-icon>&nbsp; View
+                                                        </h4>
                                                     </div>
                                                 </v-card-text>
                                                 <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 70px; left: -10px;" 
+                                                    style="top: 80px; left: -10px;" 
                                                     size="80">mdi-invoice-text-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -76,13 +78,13 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2 ms-2">Products</h3>
+                                                    <h3 class="text-brown-lighten-2">Total Products</h3>
                                                     <div class="d-flex  align-center justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
-                                                            <h2>{{ totalProducts }}</h2> &nbsp;
+                                                            <h2 class="my-2">{{ totalProducts }}</h2> &nbsp;
                                                             <span style="font-size: 18px;">{{ totalProducts > 1
                                                             ? 'items' : 'item' }}</span>
                                                         </template>
@@ -90,11 +92,12 @@
                                                     <div class="d-flex justify-end mt-3">
                                                         <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
                                                             style="cursor: pointer;" @click="switchToProductsTab()">
-                                                            View</h4>
+                                                            <v-icon>mdi-eye-outline</v-icon>&nbsp; View
+                                                        </h4>
                                                     </div>
                                                 </v-card-text>
                                                 <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 70px; left: -10px;" 
+                                                    style="top: 75px; left: -10px;" 
                                                     size="80">mdi-food-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -103,13 +106,13 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2 ms-2">Stocks</h3>
+                                                    <h3 class="text-brown-lighten-2">Total Stocks</h3>
                                                     <div class="d-flex align-center justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
-                                                            <h2>{{ totalStocks }}</h2> &nbsp;
+                                                            <h2 class="my-2">{{ totalStocks }}</h2> &nbsp;
                                                             <span style="font-size: 18px;">{{ totalStocks > 1
                                                             ? 'items' : 'item' }}</span>
                                                         </template>
@@ -117,11 +120,12 @@
                                                     <div class="d-flex justify-end mt-3">
                                                         <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
                                                             style="cursor: pointer;" @click="switchToStocksTab()">
-                                                            View</h4>
+                                                            <v-icon>mdi-eye-outline</v-icon>&nbsp; View
+                                                        </h4>
                                                     </div>
                                                 </v-card-text>
                                                 <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 70px; left: -10px;" 
+                                                    style="top: 80px; left: -10px;" 
                                                     size="80">mdi-archive-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -219,8 +223,8 @@
                             <!-- Reports -->
                             <v-tabs-window-item value="reports">
                                 <v-container>
-                                    <v-tabs v-model="activeReportsTab" class="bg-brown-lighten-2 d-flex px-4 rounded"
-                                        align-tabs="left" color="white" stacked>
+                                    <v-tabs v-model="activeReportsTab" class="bg-brown-lighten-2 d-flex px-3 rounded"
+                                        align-tabs="left" color="white" stacked show-arrows>
                                         <v-tab v-for="tab in reportsTabs" :key="tab.value" class="rounded mt-4 mx-2"
                                             :value="tab.value" :class="{ 'active-tab': activeReportsTab === tab.value }"
                                             @click="tab.clickHandler ? tab.clickHandler() : null">
@@ -253,23 +257,23 @@
                                                 :contact="branchDetails.contact"
                                                 :admin-name="branchDetails.admin_name" />
 
-                                            <ProductsReportsTableSkeleton
-                                                v-if="loadingProductReports && activeReportsTab === 'products'" />
-                                            <ProductsReportTable v-else-if="activeReportsTab === 'products'"
-                                                :products="productReports" :loading="loadingProductReports"
-                                                @refresh="fetchProductsReport" :shop-id="branchDetails.shop_id"
+                                            <StocksReportsTableSkeleton
+                                                v-if="loadingStockReports && activeReportsTab === 'stocks'" />
+                                            <StocksReportTable v-else-if="activeReportsTab === 'stocks'"
+                                                :stocks="stockReports" :loading="loadingStockReports"
+                                                @refresh="fetchStocksReport" :shop-id="branchDetails.shop_id"
                                                 :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
                                                 :admin-name="branchDetails.admin_name" />
-
-                                            <StocksReportsTableSkeleton
-                                                v-if="loadingStockReports && activeReportsTab === 'stocks'" />
-                                            <StocksReportTable v-else-if="activeReportsTab === 'stocks'"
-                                                :stocks="stockReports" :loading="loadingStockReports"
-                                                @refresh="fetchStocksReport" :shop-id="branchDetails.shop_id"
+                                            
+                                            <ProductsReportsTableSkeleton
+                                                v-if="loadingProductReports && activeReportsTab === 'products'" />
+                                            <ProductsReportTable v-else-if="activeReportsTab === 'products'"
+                                                :products="productReports" :loading="loadingProductReports"
+                                                @refresh="fetchProductsReport" :shop-id="branchDetails.shop_id"
                                                 :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
@@ -480,8 +484,8 @@ export default {
             return [
                 { label: 'Sales', value: 'sales', },
                 { label: 'Orders', value: 'orders', },
-                { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
+                { label: 'Products', value: 'products', },
             ];
         },
         stockCost: {
@@ -607,13 +611,13 @@ export default {
         },
 
         switchToProductsTab() {
-            this.activeTab = 'reports';
-            this.activeReportsTab = 'products';
+            this.activeTab = 'products';
+            // this.activeReportsTab = 'products';
         },
 
         switchToStocksTab() {
-            this.activeTab = 'reports';
-            this.activeReportsTab = 'stocks';
+            this.activeTab = 'stocks';
+            // this.activeReportsTab = 'stocks';
         },
 
         switchToBranchInfoTab() {
@@ -1168,13 +1172,6 @@ export default {
         showSuccess(message) {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
-
-        // onRefreshTransactionsoOrdersReport() {
-        //     this.loadingTransactionOrdersReports = true;
-        //     setTimeout(() => {
-        //         this.fetchSalesReport();
-        //     }, 1000);
-        // },
 
     }
 };
