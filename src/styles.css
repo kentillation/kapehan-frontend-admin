@@ -13,6 +13,16 @@ h2, h3, h4, h5, p, .v-list-item {
 .v-list-item:hover {
     background-color: #0090b6;
     color: #e8faff;
+    transition: all 0.3s ease-in-out;
+}
+
+.v-list-item .v-icon:hover {
+    color: #f4fafc;
+}
+
+.v-list-item-title {
+    font-size: 16px !important;
+    font-weight: normal !important;
 }
 
 .v-messages {

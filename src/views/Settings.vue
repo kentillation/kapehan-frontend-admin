@@ -11,7 +11,7 @@
                 <v-col cols="12" lg="6" md="6" sm="12">
                     <v-container class="d-flex align-center justify-end">
                         <span class="descriptionColor"></span>
-                        <v-btn class="ms-5" icon @click="openAccountDialog">
+                        <v-btn class="ms-5" size="small" icon @click="openAccountDialog">
                             <v-icon class="descriptionColor">mdi-chevron-right</v-icon>
                         </v-btn>
                     </v-container>
@@ -26,7 +26,7 @@
                 <v-col cols="12" lg="6" md="6" sm="12">
                     <v-container class="d-flex align-center justify-end">
                         <span class="descriptionColor">{{ currentThemeName }}</span>
-                        <v-btn class="ms-5" icon @click="themeDialog = true">
+                        <v-btn class="ms-5" size="small" icon @click="themeDialog = true">
                             <v-icon class="descriptionColor">mdi-chevron-right</v-icon>
                         </v-btn>
                     </v-container>

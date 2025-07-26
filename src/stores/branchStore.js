@@ -82,7 +82,7 @@ export const useBranchStore = defineStore('branches', {
         getBranchNames: (state) => {
             return state.branches.map(branch => [
                 typeof branch === 'object' ? branch.branch_name : branch,
-                'mdi-store-outline'
+                'mdi-chevron-right'
             ]);
         },
 

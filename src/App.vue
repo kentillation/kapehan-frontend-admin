@@ -12,7 +12,7 @@
       <template v-if="!isNotFoundPage">
         <v-app-bar v-if="showSidebar" prominent>
           <v-app-bar-nav-icon v-if="showMenu" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-          <h3>{{ authStore.shopName }}</h3>
+          <span><strong>{{ authStore.shopName }}</strong></span>
           <v-spacer></v-spacer>
           <!-- added -->
           <v-btn icon>
@@ -51,7 +51,7 @@
 
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
-                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="ps-3">
+                :append-icon="branch[1]" @click="navigateToBranch(branch[0])" class="px-4">
                 <!-- <v-badge :content="totalLowStock" class="position-absolute"
                   style="top: 12px; right: 12px;" color="error"></v-badge> -->
               </v-list-item>
@@ -59,7 +59,7 @@
 
             <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
               <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;">
-                <em>No branch available</em></span>
+                <em>Branch unavailable. Reload!</em></span>
             </template>
 
             <v-divider class="mt-4"></v-divider>

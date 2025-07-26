@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
                 localStorage.setItem('auth_token', token.value);
                 localStorage.setItem('shop_id', shopId.value);
                 localStorage.setItem('shop_name', shopName.value);
-                router.push('/home');
+                router.push('/about');
             }
         } catch (err) {
             error.value = err.response?.data?.message ||
