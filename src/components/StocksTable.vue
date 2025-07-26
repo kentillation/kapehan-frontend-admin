@@ -17,16 +17,16 @@
         density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
-                <h2 class="ms-3 to-hide">List of all Stocks</h2>
-                <h2 class="ms-3 to-show">List</h2>
+                <h2 class="ms-4 to-hide">List of all Stocks</h2>
+                <h2 class="ms-4 to-show">List</h2>
                 <v-spacer></v-spacer>
                 <AddStockDialog v-model="addStockDialog" />
-                <v-btn @click="openAddStockDialog" :disabled="loading" prepend-icon="mdi-plus" color="primary"
-                    class="me-2" variant="tonal">
+                <v-btn @click="openAddStockDialog" :disabled="loading" prepend-icon="mdi-plus" color="#0090b6"
+                    class="me-2" variant="flat">
                     <span class="to-hide">Add stocks</span>
                     <span class="to-show">Stocks</span>
                 </v-btn>
-                <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="primary" variant="tonal"
+                <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
                     size="small" class="me-3"></v-btn>
             </v-toolbar>
         </template>

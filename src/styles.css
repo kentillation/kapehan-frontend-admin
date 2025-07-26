@@ -2,13 +2,22 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-.v-messages {
-    min-height: 16px !important;
-    font-size: 10px !important;
+h2, h3, h4, h5, p, .v-list-item {
+    color: #0090b6;
 }
 
 .v-list-item {
     border-radius: 30px;
+}
+
+.v-list-item:hover {
+    background-color: #0090b6;
+    color: #e8faff;
+}
+
+.v-messages {
+    min-height: 16px !important;
+    font-size: 10px !important;
 }
 
 .v-btn--size-default, .v-icon {
@@ -25,9 +34,9 @@ body {
 
 .active-tab {
     background: linear-gradient(90deg,
-            rgba(128, 41, 0, 0.1) 0%,
-            rgb(110, 71, 62) 50%,
-            rgba(128, 0, 0, 0.1) 100%);
+            #008fb63d 0%,
+            #0090b6 50%,
+            #008fb657 100%);
     background-size: 200% auto;
     animation: gradientMove 3s linear infinite;
     border-radius: 8px;

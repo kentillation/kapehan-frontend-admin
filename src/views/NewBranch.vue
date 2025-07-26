@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h2 class="text-brown-lighten-1">Create New Branch</h2>
+        <h2>Create New Branch</h2>
         <v-row>
             <v-col cols="12" lg="6" md="6" sm="12">
                 <v-card class="pa-5 mt-3">
@@ -30,7 +30,7 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" lg="6" md="6">
-                                    <v-btn prepend-icon="mdi-check" color="green" variant="tonal"
+                                    <v-btn prepend-icon="mdi-check" color="#0090b6" variant="flat"
                                         :disabled="!isFormValid || validatingBranch" @click="showConfirmDialog">
                                         Confirm
                                     </v-btn>

@@ -9,7 +9,7 @@
                             <h2 class="ms-3 to-hide">Stocks Management History</h2>
                             <h2 class="ms-3 to-show">History</h2>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" variant="tonal" @click="fetchStocksHistory" :loading="loading"
+                            <v-btn color="#0090b6" variant="flat" @click="fetchStocksHistory" :loading="loading"
                                 prepend-icon="mdi-refresh" class="ps-6 me-4">
                                 <span class="to-hide">Refresh</span>
                             </v-btn>

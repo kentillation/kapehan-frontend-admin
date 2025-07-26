@@ -32,15 +32,15 @@
           <v-list density="compact" nav>
             <v-list-subheader size="30">Menu</v-list-subheader>
             <!-- <v-list-item prepend-icon="mdi-home-outline" @click="toHome"
-              class="bg-brown-darken-3 ps-3">Home</v-list-item> -->
-            <v-list-item prepend-icon="mdi-information-outline" @click="toAbout"
-              class="bg-brown-darken-3 ps-3">About</v-list-item>
-            <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="bg-brown-darken-3 ps-3">Create
+              class="ps-3">Home</v-list-item> -->
+            <v-list-item prepend-icon="mdi-plus" @click="toNewBranch" class="ps-3">Create
               Branch</v-list-item>
             <v-list-item prepend-icon="mdi-account-cog-outline" @click="toSettings"
-              class="bg-brown-darken-3 ps-3">Settings</v-list-item>
+              class="ps-3">Settings</v-list-item>
+            <v-list-item prepend-icon="mdi-information-outline" @click="toAbout"
+              class="ps-3">About</v-list-item>
             <!-- <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp"
-              class="bg-brown-darken-3 ps-3">Help</v-list-item> -->
+              class="ps-3">Help</v-list-item> -->
 
             <v-divider class="mt-4"></v-divider>
 
@@ -51,7 +51,7 @@
 
             <template v-else>
               <v-list-item v-for="(branch, i) in branchStore.getBranchNames" :key="i" :title="`${branch[0]} Branch`"
-                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="bg-brown-darken-3 ps-3">
+                :prepend-icon="branch[1]" @click="navigateToBranch(branch[0])" class="ps-3">
                 <!-- <v-badge :content="totalLowStock" class="position-absolute"
                   style="top: 12px; right: 12px;" color="error"></v-badge> -->
               </v-list-item>
@@ -64,7 +64,7 @@
 
             <v-divider class="mt-4"></v-divider>
             <v-list-item prepend-icon="mdi-power" v-if="showLogout" @click="authStore.logout"
-              class="bg-brown-darken-3 ps-3 mt-2">Signout</v-list-item>
+              class="ps-3 mt-2">Signout</v-list-item>
           </v-list>
         </v-navigation-drawer>
       </template>
@@ -227,21 +227,27 @@ export default {
         console.error('Error fetching branches:', error);
       }
     },
+
     toHome() {
       this.$router.push('/home');
     },
+
     toNewBranch() {
       this.$router.push('/new-branch');
     },
+
     toSettings() {
       this.$router.push('/settings');
     },
+
     toHelp() {
       this.$router.push('/help');
     },
+
     toAbout() {
       this.$router.push('/about');
     },
+
     navigateToBranch(branchName) {
       const encodedName = encodeURIComponent(branchName);
       this.$router.push({
@@ -249,6 +255,7 @@ export default {
         query: { activeTab: 'home' }
       });
     },
+
     async fetchLowStocks() {
       try {
         const response = await this.stocksStore.fetchLowStocksStore();
@@ -269,6 +276,7 @@ export default {
         console.error('Error fetching stocks:', error);
       }
     },
+
     showStockAlert(message) {
       this.$refs.snackbarRef.showSnackbarAlert(message, "error");
     },

@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h2 class="text-brown-lighten-2">{{ branchDetails.branch_name || branchName }} Branch</h2>
+        <h2>{{ branchDetails.branch_name || branchName }} Branch</h2>
         <template v-if="branchDetails.branch_name">
             <v-card class="pa-4 mt-3">
                 <v-tabs v-model="activeTab" class="mt-5" align-tabs="center" color="white" show-arrows>
@@ -21,7 +21,7 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2">Net Sales</h3>
+                                                    <p class="text-grey">Net Sales</p>
                                                     <div class="d-flex justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
@@ -31,14 +31,16 @@
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
-                                                            style="cursor: pointer;" @click="switchToSalesTab()">
+                                                        <v-btn color="#0090b6" 
+                                                            class="pa-2 w-50 d-flex justify-center rounded"
+                                                            size="small"
+                                                            @click="switchToSalesTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
-                                                        </h4>
+                                                        </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 85px; left: -10px;" 
+                                                <v-icon color="purple" class="position-absolute" 
+                                                    style="top: 75px; left: -10px;" 
                                                     size="80">mdi-account-cash</v-icon>
                                             </v-card>
                                         </v-col>
@@ -47,7 +49,7 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2">Total Orders</h3>
+                                                    <p class="text-grey">Total Orders</p>
                                                     <div class="d-flex justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
@@ -55,21 +57,23 @@
                                                         <template v-else>
                                                             <div class="d-flex align-center">
                                                                 <h2 class="my-2">{{ totalOrders }}</h2> &nbsp;
-                                                                <span style="font-size: 18px;">{{
-                                                                    totalOrders > 1 ? 'items' : 'item'
-                                                                }}</span>
+                                                                <span style="font-size: 18px;">
+                                                                    <p>{{ totalOrders > 1 ? 'items' : 'item' }}</p>
+                                                                </span>
                                                             </div>
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
-                                                            style="cursor: pointer;" @click="switchToOrdersTab()">
+                                                        <v-btn color="#0090b6" 
+                                                            class="pa-2 w-50 d-flex justify-center rounded"
+                                                            size="small"
+                                                            @click="switchToOrdersTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
-                                                        </h4>
+                                                        </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 80px; left: -10px;" 
+                                                <v-icon color="green" class="position-absolute" 
+                                                    style="top: 70px; left: -10px;" 
                                                     size="80">mdi-invoice-text-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -78,25 +82,28 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2">Total Products</h3>
+                                                    <p class="text-grey">Total Products</p>
                                                     <div class="d-flex  align-center justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <h2 class="my-2">{{ totalProducts }}</h2> &nbsp;
-                                                            <span style="font-size: 18px;">{{ totalProducts > 1
-                                                            ? 'items' : 'item' }}</span>
+                                                            <span style="font-size: 18px;">
+                                                                <p>{{ totalProducts > 1 ? 'items' : 'item' }}</p>
+                                                            </span>
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
-                                                            style="cursor: pointer;" @click="switchToProductsTab()">
+                                                        <v-btn color="#0090b6" 
+                                                            class="pa-2 w-50 d-flex justify-center rounded"
+                                                            size="small"
+                                                            @click="switchToProductsTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
-                                                        </h4>
+                                                        </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon class="text-grey-lighten-1 position-absolute" 
+                                                <v-icon color="orange" class="position-absolute" 
                                                     style="top: 75px; left: -10px;" 
                                                     size="80">mdi-food-outline</v-icon>
                                             </v-card>
@@ -106,26 +113,29 @@
                                         <v-col cols="12" lg="3" md="6" sm="6">
                                             <v-card elevation="5">
                                                 <v-card-text>
-                                                    <h3 class="text-brown-lighten-2">Total Stocks</h3>
+                                                    <p class="text-grey">Total Stocks</p>
                                                     <div class="d-flex align-center justify-center">
                                                         <template v-if="textSkeleton">
                                                             <v-skeleton-loader type="text" width="100" />
                                                         </template>
                                                         <template v-else>
                                                             <h2 class="my-2">{{ totalStocks }}</h2> &nbsp;
-                                                            <span style="font-size: 18px;">{{ totalStocks > 1
-                                                            ? 'items' : 'item' }}</span>
+                                                            <span style="font-size: 18px;">
+                                                                <p>{{ totalStocks > 1 ? 'items' : 'item' }}</p>
+                                                            </span>
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <h4 class="bg-brown-darken-1 pa-2 w-50 d-flex justify-center rounded"
-                                                            style="cursor: pointer;" @click="switchToStocksTab()">
+                                                        <v-btn color="#0090b6" 
+                                                            class="pa-2 w-50 d-flex justify-center rounded"
+                                                            size="small"
+                                                            @click="switchToStocksTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
-                                                        </h4>
+                                                        </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon class="text-grey-lighten-1 position-absolute" 
-                                                    style="top: 80px; left: -10px;" 
+                                                <v-icon color="brown" class="position-absolute" 
+                                                    style="top: 70px; left: -10px;" 
                                                     size="80">mdi-archive-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -133,8 +143,8 @@
                                 </v-container>
 
                                 <!-- Sales Visualization -->
-                                <v-container class="mt-5">
-                                    <h3>Sales Trends</h3>
+                                <v-container>
+                                    <h3 class="my-3">Sales Trends</h3>
                                     <v-card>
                                         <v-card-text>
                                             <SalesChart :sales-by-month="salesByMonthReports" :sales-only="totalSales"
@@ -175,8 +185,8 @@
                                         :loading="isSaving" :confirm="confirmUpdatingIngredientDialog" />
                                     <ProductsHistoryDialog v-model="productsHistoryDialog"
                                         :branch-id="branchDetails.branch_id" />
-                                    <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="gray"
-                                        class="mt-3" variant="tonal">
+                                    <v-btn @click="openProductHistory" prepend-icon="mdi-history" color="#0090b6"
+                                        class="mt-3" variant="flat">
                                         <span class="to-hide">Products History</span>
                                         <span class="to-show">History</span>
                                     </v-btn>
@@ -201,8 +211,8 @@
 
                                     <StocksHistoryDialog v-model="stockHistoryDialog"
                                         :branch-id="branchDetails.branch_id" />
-                                    <v-btn @click="openStockHistory" prepend-icon="mdi-history" color="gray"
-                                        class="mt-3" variant="tonal">
+                                    <v-btn @click="openStockHistory" prepend-icon="mdi-history" color="#0090b6"
+                                        class="mt-3" variant="flat">
                                         <span class="to-hide">Stocks History</span>
                                         <span class="to-show">History</span>
                                     </v-btn>
@@ -212,20 +222,56 @@
                             <!-- Branch Info -->
                             <v-tabs-window-item value="branch_info">
                                 <v-container>
-                                    <div class="d-flex flex-column" v-for="(detail, i) in branchDetailItems" :key="i"
-                                        cols="12" lg="3" md="4" sm="6" xs="12">
-                                        <p class="text-grey-darken-1">{{ detail.label }}</p>
-                                        <h4 class="mb-5">{{ detail.value }}</h4>
-                                    </div>
+                                    <v-tabs v-model="activeBranchInfoTab" style="background: #01546b;" class="d-flex px-3 rounded"
+                                        align-tabs="left" color="white" stacked show-arrows>
+                                        <v-tab v-for="tab in branchInfoTabs" :key="tab.value" class="rounded text-white mt-4 mx-2"
+                                            :value="tab.value" :class="{ 'active-tab': activeBranchInfoTab === tab.value }"
+                                            @click="tab.clickHandler ? tab.clickHandler() : null">
+                                            {{ tab.label }}
+                                        </v-tab>
+                                    </v-tabs>
+                                    <transition name="slide-x-transition" mode="out-in">
+                                        <div :key="activeBranchInfoTab">
+                                            <!-- <v-container v-if="loadingBranchDetails && activeBranchInfoTab === 'details'" /> -->
+                                            <v-container v-if="activeBranchInfoTab === 'details'" class="mt-5">
+                                                <v-row>
+                                                    <v-col v-for="(detail, i) in branchDetailItems" :key="i" cols="12" lg="6" md="6" sm="6">
+                                                        <p class="text-grey-darken-1">{{ detail.label }}</p>
+                                                        <h4 class="mb-5">{{ detail.value }}</h4>
+                                                    </v-col>
+                                                </v-row>
+                                                <div class="d-flex justify-end">
+                                                    <v-btn prepend-icon="mdi-pencil" color="#0090b6" variant="flat"
+                                                        @click="activeBranchInfoTab = 'details'">&nbsp; Edit</v-btn>
+                                                </div>
+                                            </v-container>
+
+                                            <!-- <v-container v-if="loadingCashierPersonnel && activeBranchInfoTab === 'cashier'" /> -->
+                                            <v-container v-if="activeBranchInfoTab === 'cashier'">
+                                                <h3>Cashier Personnel</h3>
+                                            </v-container>
+
+                                            <!-- <v-container v-if="loadingKitchenPersonnel && activeBranchInfoTab === 'kitchen'" /> -->
+                                            <v-container v-if="activeBranchInfoTab === 'kitchen'">
+                                                <h3>Kitchen Personnel</h3>
+                                            </v-container>
+                                            
+                                            <!-- <v-container v-if="loadingBaristaPersonnel && activeBranchInfoTab === 'barista'" /> -->
+                                            <v-container v-if="activeBranchInfoTab === 'barista'">
+                                                <h3>Barista Personnel</h3>
+                                            </v-container>
+
+                                        </div>
+                                    </transition>
                                 </v-container>
                             </v-tabs-window-item>
 
                             <!-- Reports -->
                             <v-tabs-window-item value="reports">
                                 <v-container>
-                                    <v-tabs v-model="activeReportsTab" class="bg-brown-lighten-2 d-flex px-3 rounded"
+                                    <v-tabs v-model="activeReportsTab" style="background: #01546b;" class="d-flex px-3 rounded"
                                         align-tabs="left" color="white" stacked show-arrows>
-                                        <v-tab v-for="tab in reportsTabs" :key="tab.value" class="rounded mt-4 mx-2"
+                                        <v-tab v-for="tab in reportsTabs" :key="tab.value" class="text-white rounded mt-4 mx-2"
                                             :value="tab.value" :class="{ 'active-tab': activeReportsTab === tab.value }"
                                             @click="tab.clickHandler ? tab.clickHandler() : null">
                                             {{ tab.label }}
@@ -447,6 +493,7 @@ export default {
         const transactStore = useTransactStore();
         const activeTab = ref('dashboard');
         const activeReportsTab = ref('sales');
+        const activeBranchInfoTab = ref('details');
         return { loadingStore, 
             stocksStore, 
             productsStore,
@@ -457,13 +504,14 @@ export default {
             productAvailabilityOption, // added 
             transactStore, 
             activeTab, 
-            activeReportsTab };
+            activeReportsTab,
+            activeBranchInfoTab };
     },
     computed: {
         ...mapState(useStocksStore, ['stockNotificationQty']),
         branchDetailItems() {
             return [
-                { label: 'Store name', value: this.branchDetails.shop_name },
+                // { label: 'Store name', value: this.branchDetails.shop_name },
                 { label: 'Branch name', value: this.branchDetails.branch_name },
                 { label: 'Branch manager', value: this.branchDetails.m_name },
                 { label: 'Contact', value: this.branchDetails.contact },
@@ -486,6 +534,14 @@ export default {
                 { label: 'Orders', value: 'orders', },
                 { label: 'Stocks', value: 'stocks', },
                 { label: 'Products', value: 'products', },
+            ];
+        },
+        branchInfoTabs() {
+            return [
+                { label: 'Details', value: 'details', },
+                { label: 'Cashier', value: 'cashier', },
+                { label: 'Kitchen', value: 'kitchen', },
+                { label: 'Barista', value: 'barista', },
             ];
         },
         stockCost: {
@@ -541,6 +597,25 @@ export default {
             } else if (newReportsTab === 'stocks') {
                 this.loadingStore.show("Preparing...");
                 this.fetchStocksReport();
+                this.loadingStore.hide();
+            }
+        },
+        activeBranchInfoTab (newBranchInfoTab) {
+            if (newBranchInfoTab === 'details') {
+                this.loadingStore.show("Preparing...");
+                this.fetchBranchDetails();
+                this.loadingStore.hide();
+            } else if (newBranchInfoTab === 'cashier') {
+                this.loadingStore.show("Preparing...");
+                // this.fetchCashierPersonnel();
+                this.loadingStore.hide();
+            } else if (newBranchInfoTab === 'kitchen') {
+                this.loadingStore.show("Preparing...");
+                // this.fetchKitchenPersonnel();
+                this.loadingStore.hide();
+            } else if (newBranchInfoTab === 'barista') {
+                this.loadingStore.show("Preparing...");
+                // this.fetchCashierPersonnel();
                 this.loadingStore.hide();
             }
         }
@@ -622,6 +697,7 @@ export default {
 
         switchToBranchInfoTab() {
             this.activeTab = 'branch_info';
+            this.activeBranchInfoTab = 'details';
         },
 
         async ingredientsDialog(item) {
