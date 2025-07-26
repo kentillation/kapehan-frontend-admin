@@ -1,7 +1,7 @@
 <template>
     <div class="login-bg">
         <v-container class="fill-height d-flex align-center justify-center">
-            <v-sheet class="py-8 px-6 mx-auto ma-4" max-width="500" rounded="lg" width="100%">
+            <v-sheet class="pa-6 mx-auto ma-4" max-width="500" rounded="lg" width="100%">
                 <div class="d-flex justify-center mb-4">
                     <img :src="logo" alt="Poofsa Logo" />
                 </div>
