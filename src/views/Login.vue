@@ -26,7 +26,7 @@
                     :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'"
                     @click:append-inner="showPassword = !showPassword" />
 
-                <v-btn :disabled="!isFormValid || loading" type="submit" color="brown-darken-3" size="large" class="mt-5" height="45" block rounded>
+                <v-btn :disabled="!isFormValid || loading" type="submit" color="#0090b6" size="large" class="mt-5" height="45" block rounded>
                     Proceed
                 </v-btn>
             </v-form>
@@ -54,7 +54,7 @@ export default {
     },
     data() {
         return {
-            logo: require('@/assets/logo.svg'),
+            logo: require('@/assets/Poofsa-logo.png'),
             admin_email: '',
             admin_password: '',
             showPassword: false,
@@ -116,6 +116,6 @@ export default {
 }
 
 .v-sheet {
-    border: 1.5px solid rgb(33, 150, 243);
+    border: 1.5px solid #0090b6;
 }
 </style>
