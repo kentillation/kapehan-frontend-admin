@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from '../views/Login.vue';
+import LoginPage from '@/views/Login.vue';
 import NotFound from '@/views/NotFound.vue';
-import Register from '../views/Register.vue';
-import Home from '../views/Home.vue';
-import NewBranch from '../views/NewBranch.vue';
-import AddStock from '../views/AddStock.vue';
-import AddProduct from '../views/AddProduct.vue';
-import AddProductIngredients from '../views/AddProductIngredients.vue';
-import EditProducts from '../views/EditProducts.vue';
-import Help from '../views/Help.vue';
-import About from '../views/About.vue';
-import Settings from '../views/Settings.vue';
-import LoaderUI from '../components/LoaderUI.vue';
+import Register from '@/views/Register.vue';
+import Home from '@/views/Home.vue';
+import NewBranch from '@/views/NewBranch.vue';
+import AddStock from '@/views/AddStock.vue';
+import AddProduct from '@/views/AddProduct.vue';
+import AddProductIngredients from '@/views/AddProductIngredients.vue';
+import EditProducts from '@/views/EditProducts.vue';
+import Help from '@/views/Help.vue';
+import About from '@/views/About.vue';
+import Settings from '@/views/Settings.vue';
+import LoaderUI from '@/components/LoaderUI.vue';
 import { useAuthStore } from '@/stores/auth';
 
 const routes = [

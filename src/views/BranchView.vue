@@ -219,6 +219,17 @@
                                 </v-container>
                             </v-tabs-window-item>
 
+                            <v-tabs-window-item value="void-blotter">
+                                <v-container>
+                                    <VoidBlotterTableSkeleton v-if="loadingVoidBlotter" />
+                                    <VoidBlotterTable v-else 
+                                        :transactions="transactStore.transactions"
+                                        :loading="loadingVoidBlotter" 
+                                        @refresh="fetchVoidBlotters"
+                                        :branch-id="branchDetails.branch_id" />
+                                </v-container>
+                            </v-tabs-window-item>
+
                             <!-- Branch Info -->
                             <v-tabs-window-item value="branch_info">
                                 <v-container>
@@ -370,6 +381,8 @@ import OrdersReportTable from '@/components/OrdersReportTable.vue';
 import OrdersReportsTableSkeleton from '@/components/OrdersReportsTableSkeleton.vue';
 import SalesReportTable from '@/components/SalesReportTable.vue';
 import SalesReportsTableSkeleton from '@/components/SalesReportsTableSkeleton.vue';
+import VoidBlotterTable from '@/components/VoidBlotterTable.vue';
+import VoidBlotterTableSkeleton from '@/components/VoidBlotterTableSkeleton.vue';
 import SalesChart from '@/components/SalesChart.vue';
 
 export default {
@@ -395,6 +408,8 @@ export default {
         OrdersReportsTableSkeleton,
         SalesReportTable,
         SalesReportsTableSkeleton,
+        VoidBlotterTable,
+        VoidBlotterTableSkeleton,
         SalesChart,
     },
     data() {
@@ -449,6 +464,9 @@ export default {
             stockHistoryDialog: false,
             stocksLoaded: false,
             currentStock: null,
+
+            // Void Blotter
+            loadingVoidBlotter: false,
 
             // Reports
             // activeReportsTab: 'sales',
@@ -524,7 +542,8 @@ export default {
                 { label: 'Dashboard', value: 'dashboard' },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
-                { label: 'Branch Info', value: 'branch_info', clickHandler: () => this.switchToBranchInfoTab() },
+                { label: 'Void Blotter', value: 'void-blotter', },
+                { label: 'Branch Info', value: 'branch_info', },
                 { label: 'Reports', value: 'reports', },
             ];
         },
@@ -784,6 +803,31 @@ export default {
                 this.showError("Error fetching stocks!");
             } finally {
                 this.loadingStocks = false;
+            }
+        },
+
+        async fetchVoidBlotters() {
+            this.loadingVoidBlotter = true;
+            try {
+                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.transactionReports = [];
+                    return;
+                }
+                await this.transactStore.fetchAllOrdersStore(this.branchDetails.branch_id);
+                if (this.transactStore.transactions.length === 0) {
+                    this.transactionReports = [];
+                } else {
+                    this.transactionReports = this.transactStore.transactions.map(transact => this.formatTransactions(transact));
+                }
+                this.transactionReportsLoaded = true;
+                this.loadingVoidBlotter = false;
+            } catch (error) {
+                console.error('Error fetching orders report:', error);
+                this.showError("Error fetching orders report!");
+            } finally {
+                this.loadingVoidBlotter = false;
             }
         },
 

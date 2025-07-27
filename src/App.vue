@@ -56,7 +56,7 @@
 
             <template v-if="branchStore.getBranchNames && branchStore.getBranchNames.length === 0">
               <span class="text-grey bg-grey-darken-3 ps-3 pe-3 pa-1 ms-7 rounded" style="font-size: 14px;">
-                <em>Branch unavailable. Reload!</em></span>
+                <em>Branch unavailable!</em></span>
             </template>
 
             <v-divider class="mt-4"></v-divider>
