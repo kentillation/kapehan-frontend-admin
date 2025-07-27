@@ -4,35 +4,25 @@
         <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
         <h3>Add Stock in <span class="text-warning">{{ branchName }}</span> Branch</h3>
         <v-form ref="stockForm" @submit.prevent="showConfirmDialog">
-            <v-row v-for="(row, index) in stockRows" :key="index"
-                class="d-flex align-center border rounded my-3 pt-3 mx-auto">
-                <v-col cols="12" lg="1" md="6" sm="6">
-                    <v-btn color="red" class="pe-1 mb-4" variant="tonal" prepend-icon="mdi-trash-can-outline"
-                        @click="removeRow(index)"></v-btn>
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.stockIngredient" label="Stock name" :rules="[v => !!v || 'Required']"
-                        variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.stockIn" label="Stock In (qty)" :rules="[v => !!v || 'Required']"
-                        type="number" variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.stockAlertQty" label="Stock alert (qty)" :rules="[v => !!v || 'Required']"
-                        type="number" variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-autocomplete v-model="row.stockUnit" label="Unit" :items="unitOptions" @click="getProductTemperatureOption"
-                        :rules="[v => !!v || 'Required']" item-title="unit_avb" item-value="unit_id"
-                        variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.costPerUnit" label="Cost Per Unit (₱)" type="text"
-                        :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
-                        @input="e => row.costPerUnit = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
-                </v-col>
-            </v-row>
+            <v-container v-for="(row, index) in stockRows" :key="index" class="parent border rounded my-3 pb-1 mx-auto">
+                <v-btn color="red" class="d-flex align-center me-1 mb-5 pt-7 pb-7 ps-7" variant="tonal" prepend-icon="mdi-trash-can-outline"
+                    @click="removeRow(index)">
+                    <span class="to-hide">Remove</span>
+                    <span class="to-show mt-5"></span>
+                </v-btn>
+                <v-text-field class="child" v-model="row.stockIngredient" label="Stock name" :rules="[v => !!v || 'Required']"
+                    variant="outlined" />
+                <v-text-field class="child" v-model="row.stockIn" label="Stock In (qty)" :rules="[v => !!v || 'Required']"
+                    type="number" variant="outlined" />
+                <v-text-field class="child" v-model="row.stockAlertQty" label="Stock alert (qty)" :rules="[v => !!v || 'Required']"
+                    type="number" variant="outlined" />
+                <v-autocomplete class="child" v-model="row.stockUnit" label="Unit" :items="unitOptions"
+                    @click="getProductTemperatureOption" :rules="[v => !!v || 'Required']" item-title="unit_avb"
+                    item-value="unit_id" variant="outlined" />
+                <v-text-field class="child" v-model="row.costPerUnit" label="Cost Per Unit (₱)" type="text"
+                    :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
+                    @input="e => row.costPerUnit = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
+            </v-container>
             <v-row>
                 <v-col cols="12">
                     <v-btn color="primary" class="mb-3" variant="tonal" prepend-icon="mdi-plus"
@@ -128,7 +118,7 @@ export default {
         },
     },
     methods: {
-        back () {
+        back() {
             this.$router.go(-1);
         },
         removeRow(index) {
@@ -199,3 +189,20 @@ export default {
 
 };
 </script>
+
+<style scoped>
+.parent {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.child {
+    min-width: 300px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.child:nth-last-child(1) {
+    max-width: 500px;
+}
+</style>

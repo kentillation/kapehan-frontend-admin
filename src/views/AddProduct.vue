@@ -4,40 +4,30 @@
         <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
         <h3>Add Product in <span class="text-warning">{{ branchName }}</span> Branch</h3>
         <v-form ref="productForm" @submit.prevent="showConfirmDialog">
-            <v-row v-for="(row, index) in productRows" :key="index"
-                class="d-flex align-center border rounded my-3 pt-3 mx-auto">
-                <v-btn color="red" variant="tonal" class="pe-1" prepend-icon="mdi-trash-can-outline"
-                    @click="removeRow(index)"></v-btn>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.productName" label="Product name" :rules="[v => !!v || 'Required']"
-                        variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-text-field v-model="row.productPrice" label="Price (₱)" type="text"
-                        :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
-                        @input="e => row.productPrice = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-autocomplete v-model="row.productTemp" @click="getProductTemperatureOption"
-                        label="Temparature" :items="productTemperatureOption" :rules="[v => !!v || 'Required']"
-                        item-title="temp_label" item-value="temp_id" variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-autocomplete v-model="row.productSize" @click="getProductSizeOption" label="Size"
-                        :items="productSizeOption" :rules="[v => !!v || 'Required']" item-title="size_label"
-                        item-value="size_id" variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-autocomplete v-model="row.productCategory" @click="getProductCategoryOption"
-                        label="Category" :items="productCategoryOption" :rules="[v => !!v || 'Required']"
-                        item-title="category_label" item-value="category_id" variant="outlined" />
-                </v-col>
-                <v-col cols="12" lg="2" md="6" sm="6">
-                    <v-autocomplete v-model="row.productStation" @click="getProductStationOption"
-                        label="Station" :items="productStationOption" :rules="[v => !!v || 'Required']"
-                        item-title="station_name" item-value="station_id" variant="outlined" />
-                </v-col>
-            </v-row>
+            <v-container v-for="(row, index) in productRows" :key="index" class="parent border rounded my-3 pb-1 mx-auto">
+                <v-btn color="red" variant="tonal" class="d-flex align-center me-1 mb-5 pt-7 pb-7 ps-7" prepend-icon="mdi-trash-can-outline"
+                    @click="removeRow(index)">
+                    <span class="to-hide">Remove</span>
+                    <span class="to-show mt-5"></span>
+                </v-btn>
+                <v-text-field class="child" v-model="row.productName" label="Product name"
+                    :rules="[v => !!v || 'Required']" variant="outlined" />
+                <v-text-field class="child" v-model="row.productPrice" label="Price (₱)" type="text"
+                    :rules="[v => !isNaN(parseFloat(v)) || 'Required' || 'Must be a valid number']"
+                    @input="e => row.productPrice = e.target.value.replace(/[^0-9.]/g, '')" variant="outlined" />
+                <v-autocomplete class="child" v-model="row.productTemp" @click="getProductTemperatureOption"
+                    label="Temparature" :items="productTemperatureOption" :rules="[v => !!v || 'Required']"
+                    item-title="temp_label" item-value="temp_id" variant="outlined" />
+                <v-autocomplete class="child" v-model="row.productSize" @click="getProductSizeOption" label="Size"
+                    :items="productSizeOption" :rules="[v => !!v || 'Required']" item-title="size_label"
+                    item-value="size_id" variant="outlined" />
+                <v-autocomplete class="child" v-model="row.productCategory" @click="getProductCategoryOption"
+                    label="Category" :items="productCategoryOption" :rules="[v => !!v || 'Required']"
+                    item-title="category_label" item-value="category_id" variant="outlined" />
+                <v-autocomplete class="child" v-model="row.productStation" @click="getProductStationOption"
+                    label="Station" :items="productStationOption" :rules="[v => !!v || 'Required']"
+                    item-title="station_name" item-value="station_id" variant="outlined" />
+            </v-container>
             <v-row>
                 <v-col cols="12">
                     <v-btn color="primary" variant="tonal" class="mb-3" prepend-icon="mdi-plus"
@@ -57,7 +47,7 @@
                     <span class="headline">Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    <p class="text-center">Do you want to save new products for {{ branchName }} Branch?</p>
+                    <p class="text-center">Do you want to save new products in {{ branchName }} Branch?</p>
                 </v-card-text>
                 <v-card-actions class="mx-4 my-4">
                     <v-spacer></v-spacer>
@@ -138,7 +128,7 @@ export default {
         },
     },
     methods: {
-        back () {
+        back() {
             this.$router.go(-1);
         },
         removeRow(index) {
@@ -220,3 +210,21 @@ export default {
 
 };
 </script>
+
+<style scoped>
+.parent {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.child {
+    min-width: 250px;
+    max-width: 400px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+/* .child:nth-last-child(1) {
+    max-width: 500px;
+} */
+</style>
