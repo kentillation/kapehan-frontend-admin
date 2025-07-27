@@ -10,11 +10,10 @@
     </div>
     <v-main>
       <template v-if="!isNotFoundPage">
-        <v-app-bar v-if="showSidebar" prominent>
-          <v-app-bar-nav-icon v-if="showMenu" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar v-if="showMenu" prominent>
+          <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <span><strong>{{ authStore.shopName }}</strong></span>
           <v-spacer></v-spacer>
-          <!-- added -->
           <v-btn icon>
             <v-badge v-if="stockNotificationQty >= 1" 
               :content="stockNotificationQty" 
@@ -41,9 +40,7 @@
               class="ps-3">About</v-list-item>
             <!-- <v-list-item prepend-icon="mdi-help-circle-outline" @click="toHelp"
               class="ps-3">Help</v-list-item> -->
-
             <v-divider class="mt-4"></v-divider>
-
             <v-list-subheader size="30">Branch</v-list-subheader>
             <template v-if="branchStore.getBranchNames === null || branchStore.getBranchNames === undefined">
               <v-progress-circular indeterminate color="brown" class="ma-4"></v-progress-circular>

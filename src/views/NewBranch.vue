@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h2>Create New Branch</h2>
+        <h3>Create New Branch</h3>
         <v-row>
             <v-col cols="12" lg="6" md="6" sm="12">
                 <v-card class="pa-5 mt-3">

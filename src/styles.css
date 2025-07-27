@@ -63,7 +63,7 @@ h2, h3, h4, h5, p, .v-list-item {
 .v-data-table {
     max-width: 100%;
 }
-.v-date-picker {
+/* .v-date-picker {
     width: 100%;
 }
 .v-date-picker__title {
@@ -93,7 +93,7 @@ h2, h3, h4, h5, p, .v-list-item {
     padding-bottom: 0 !important;
     padding-inline-start: 0 !important;
     padding-inline-end: 0 !important;
-}
+} */
 thead .v-data-table__th .v-data-table-header__content {
     color: #a2a0a0;
 }

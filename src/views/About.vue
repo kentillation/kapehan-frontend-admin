@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h2>About</h2>
+        <h3>About</h3>
         <v-card class="pa-2 mt-3">
             <v-card-text>
                 <v-container class="text-center">

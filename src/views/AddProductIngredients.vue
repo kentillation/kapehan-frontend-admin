@@ -2,8 +2,9 @@
 <template>
     <v-container>
         <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
-        <h2 class="text-brown-lighten-1">Add Product Ingredients in <span class="text-warning">{{ branchName }}</span> Branch</h2>
-        <h3 class="mt-5">Add ingredients for {{ productName }}{{ productTemp }}{{ productSize }}</h3>
+        <h3>Add Product Ingredients</h3>
+        <h4 class="text-grey mt-3">Branch name: {{ branchName }} Branch</h4>
+        <h4 class="text-grey">Product name: {{ productName }}{{ productTemp }}{{ productSize }}</h4>
         <v-form ref="productIngredientsForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productIngredientsRows" :key="index"
                 class="d-flex align-center border rounded my-3 pt-3 mx-auto">

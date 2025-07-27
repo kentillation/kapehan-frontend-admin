@@ -1,10 +1,15 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h2 class="text-brown-lighten-1">Help</h2>
-        <v-card class="mt-3">
+        <h3>Help</h3>
+        <v-card class="pa-2 mt-3">
             <v-card-text>
-                
+                <v-container class="text-center">
+                    <h2 class="mb-2">POOFSA PH</h2>
+                    <p>
+                        Poofsa will provide you with a list of all the available commands and their usage.
+                    </p>
+                </v-container>
             </v-card-text>
         </v-card>
     </v-container>

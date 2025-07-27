@@ -2,7 +2,7 @@
 <template>
     <v-container>
         <v-icon @click="back" class="mb-4">mdi-arrow-left</v-icon>
-        <h2 class="text-brown-lighten-1">Add Product in <span class="text-warning">{{ branchName }}</span> Branch</h2>
+        <h3>Add Product in <span class="text-warning">{{ branchName }}</span> Branch</h3>
         <v-form ref="productForm" @submit.prevent="showConfirmDialog">
             <v-row v-for="(row, index) in productRows" :key="index"
                 class="d-flex align-center border rounded my-3 pt-3 mx-auto">
