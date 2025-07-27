@@ -197,7 +197,8 @@ export default {
 }
 
 .child {
-    min-width: 300px;
+    min-width: 250px;
+    max-width: 400px;
     margin-left: 4px;
     margin-right: 4px;
 }
