@@ -5,7 +5,11 @@
                 <div class="d-flex justify-center mb-4">
                     <img :src="logo" alt="Poofsa Logo" />
                 </div>
-                <h1 class="text-center">Poofsa <span class="text-info">.vent</span></h1>
+                <h1 class="text-center">
+                    Poofsa 
+                    <span class="text-info">.vent</span>
+                    <v-chip color="#0090b6" size="x-small" class="position-absolute">BETA</v-chip>
+                </h1>
                 <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                     <div class="text-subtitle-1 text-medium-emphasis">Email</div>
                     <v-text-field v-model="admin_email" 
@@ -31,7 +35,9 @@
                         Proceed
                     </v-btn>
                 </v-form>
-                <h6 class="text-center text-grey mt-5">Poofsa .vent UAT Version v1.0.0</h6>
+                <div class="text-center mb-5">
+                    <p color="#0090b6" style="cursor: pointer;" @click="$router.push('/forgot-password')">Forgot password?</p>
+                </div>
             </v-sheet>
             <Snackbar ref="snackbarRef" />
         </v-container>
