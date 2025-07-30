@@ -224,7 +224,7 @@
                                 <v-container>
                                     <VoidReversalTableSkeleton v-if="loadingVoidReversal" />
                                     <VoidReversalTable v-else 
-                                        :reversal-orders-by-date="transactStore.reversalOrders"
+                                        :reversal-by-date="transactStore.reversalOrdersByDate"
                                         @refresh="fetchReversalOrders"
                                         :loading="loadingVoidReversal" 
                                         :branch-id="branchDetails.branch_id" />
@@ -468,7 +468,7 @@ export default {
 
             // Void Blotter
             loadingVoidReversal: false,
-            reversalOrdersByDate: [],
+            reversalByDate: [],
 
             // Reports
             // activeReportsTab: 'sales',
@@ -816,19 +816,19 @@ export default {
             }
         },
 
-        async fetchReversalOrders(dateFilter = null) {
+        async fetchReversalOrders() {
             this.loadingVoidReversal = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.reversalOrdersByDate = [];
+                    this.reversalByDate = [];
                     return;
                 }
-                await this.transactStore.fetchReversalByDateStore(this.branchDetails.branchId, dateFilter);
+                await this.transactStore.fetchReversalByDateStore(this.branchDetails.branch_id);
                 if (this.transactStore.reversalOrdersByDate.length === 0) {
-                    this.reversalOrdersByDate = [];
+                    this.reversalByDate = [];
                 } else {
-                    this.reversalOrdersByDate = this.transactStore.reversalOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
+                    this.reversalByDate = this.transactStore.reversalOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
                 }
                 this.loadingVoidReversal = false;
             } catch (error) {

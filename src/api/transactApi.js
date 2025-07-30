@@ -188,9 +188,7 @@ export const TRANSACT_API = {
     async fetchReversalByDateApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
-            if (!authToken) {
-                throw new Error('No authentication token found');
-            }
+            if (!authToken) throw new Error('No authentication token found');
             let endpoint = `${this.ENDPOINTS.FETCH_REVERSAL}/${branchId}`;
             if (dateFilterId) {
                 endpoint += `?date_filter=${dateFilterId}`;

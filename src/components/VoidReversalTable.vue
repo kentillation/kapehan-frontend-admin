@@ -15,7 +15,7 @@
                 <div class="w-75 w-sm-50 d-flex align-center justify-space-between">
                     <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
                             item-value="filter_date_id" label="Date Filter" class="mt-5 me-3"></v-autocomplete>
-                    <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
+                    <v-btn @click="$emit('refresh', this.dateFilterId )" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
                         size="small" class="me-3"></v-btn>
                 </div>
             </v-toolbar>
@@ -26,9 +26,28 @@
             {{ item.to_quantity }} {{ item.to_quantity > 1 ? 'items' : 'item' }}
         </template>
 
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.reversal_status="{ item }">
+            <v-chip :color="item.reversal_status_id === 1 ? 'red' : 'green'" size="small" variant="flat">
+                {{ item.reversal_status }}
+            </v-chip>
+        </template>
+
+        <!--eslint-disable-next-line -->
+        <template v-slot:item.actions="{ item }">
+            <div class="d-flex" style="gap: 8px;">
+                <v-tooltip text="Edit Product" location="top">
+                    <template v-slot:activator="{ props }">
+                        <v-btn v-bind="props" @click="editReversal(item)" color="green" variant="tonal"
+                            size="small" icon="mdi-pencil"></v-btn>
+                    </template>
+                </v-tooltip>
+            </div>
+        </template>
+
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No void reversal found
+                <span>&nbsp; No reversal order found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>
@@ -60,17 +79,18 @@ export default {
                 { title: 'Product', value: 'display_product_name', width: '20%' },
                 { title: 'Quantity', value: 'to_quantity', width: '10%' },
                 { title: 'Status', value: 'reversal_status', width: '10%' },
-                { title: 'Date created', value: 'updated_at', width: '30%' },
+                { title: 'Date created', value: 'updated_at', width: '20%' },
+                { title: '', value: 'actions', sortable: false, width: '10%' }
             ],
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
                 { filter_date_id: 2, filter_date_label: 'Yesterday' },
                 { filter_date_id: 3, filter_date_label: 'Last 2 days' },
-                { filter_date_id: 4, filter_date_label: 'Last 3 days' },
-                { filter_date_id: 5, filter_date_label: 'Last 4 days' },
-                { filter_date_id: 6, filter_date_label: 'Last 5 days' },
-                { filter_date_id: 7, filter_date_label: 'Last 6 days' },
-                { filter_date_id: 8, filter_date_label: 'Last 7 days' },
+                // { filter_date_id: 4, filter_date_label: 'Last 3 days' },
+                // { filter_date_id: 5, filter_date_label: 'Last 4 days' },
+                // { filter_date_id: 6, filter_date_label: 'Last 5 days' },
+                // { filter_date_id: 7, filter_date_label: 'Last 6 days' },
+                // { filter_date_id: 8, filter_date_label: 'Last 7 days' },
             ],
             snackbarRef: null,
         }
@@ -86,7 +106,7 @@ export default {
             immediate: true
         },
         dateFilter(newVal) {
-            this.formatReversalOrders(newVal);
+            this.fetchReversalOrders(newVal);
         },
     },
     computed: {
