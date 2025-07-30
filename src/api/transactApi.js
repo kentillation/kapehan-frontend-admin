@@ -9,6 +9,7 @@ export const TRANSACT_API = {
         FETCH_PRODUCTS: '/admin/products-only',
         FETCH_STOCKS: '/admin/stocks-only',
         FETCH_SALES_BY_MONTH: '/admin/sales-by-month',
+        FETCH_REVERSAL: '/admin/reversal-orders',
 
     },
 
@@ -182,5 +183,28 @@ export const TRANSACT_API = {
             console.error('[fetchSalesByMonthApi] Error fetching sales:', error);
             throw error;
         }
-    }
+    },
+
+    async fetchReversalApi(branchId) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            let endpoint = `${this.ENDPOINTS.FETCH_REVERSAL}/${branchId}`;
+            const response = await apiClient.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[fetchReversalApi] Error fetching sales:', error);
+            throw error;
+        }
+    },
 };

@@ -1,7 +1,7 @@
 <template>
     <v-data-table 
-        :headers="transactionsHeaders" 
-        :items="mappedTransactions" 
+        :headers="headersReversalOrders" 
+        :items="reversalOrdersByDate" 
         :loading="loading" 
         :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" 
@@ -9,7 +9,7 @@
         density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
-                <h2 class="ms-4 to-hide">List of Void Blotters</h2>
+                <h2 class="ms-4 to-hide">List of Reversal Orders</h2>
                 <h2 class="ms-4 to-show">List</h2>
                 <v-spacer></v-spacer>
                 <div class="w-75 w-sm-50 d-flex align-center justify-space-between">
@@ -22,13 +22,13 @@
         </template>
 
         <!--eslint-disable-next-line -->
-        <template v-slot:item.total_quantity="{ item }">
-            {{ item.total_quantity }} {{ item.total_quantity > 1 ? 'items' : 'item' }}
+        <template v-slot:item.to_quantity="{ item }">
+            {{ item.to_quantity }} {{ item.to_quantity > 1 ? 'items' : 'item' }}
         </template>
 
         <template v-slot:no-data>
             <v-alert type="warning" variant="tonal" class="ma-4">
-                <span>&nbsp; No void blotters found
+                <span>&nbsp; No void reversal found
                     <template v-if="selectedFilterLabel">
                         for <strong>{{ selectedFilterLabel }}</strong>
                     </template>
@@ -36,28 +36,31 @@
             </v-alert>
         </template>
     </v-data-table>
-    <Snackbar ref="snackbarRef" />
+    <Alert ref="alertRef" />
 </template>
 
 <script>
 import { useLoadingStore } from '@/stores/loading';
 import { useTransactStore } from '@/stores/transactStore';
-import Snackbar from '@/components/Snackbar.vue';
+import Alert from '@/components/Alert.vue';
 
 export default {
-    name: 'TransactionsReportsTable',
+    name: 'VoidReversalTable',
+    components: {
+        Alert,
+    },
     data() {
         return {
-            mappedTransactions: [],
+            reversalOrdersByDate: [],
             dateFilter: 1,
             searchStock: '',
-            transactionsHeaders: [
-                { title: 'Reference', value: 'reference_number', sortable: 'true', width: '25%' },
-                { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '15%' },
-                { title: 'Cash_render', value: 'display_customer_cash', sortable: 'true', width: '10%' },
-                { title: 'Charge', value: 'display_customer_charge', sortable: 'true', width: '10%' },
-                { title: 'Change', value: 'display_customer_change', sortable: 'true', width: '15%' },
-                { title: 'Transaction date', value: 'updated_at', sortable: 'true', width: '25%' },
+            headersReversalOrders: [
+                { title: 'Reference', value: 'reference_number', width: '10%' },
+                { title: 'Table#', value: 'table_number', width: '10%' },
+                { title: 'Product', value: 'display_product_name', width: '20%' },
+                { title: 'Quantity', value: 'to_quantity', width: '10%' },
+                { title: 'Status', value: 'reversal_status', width: '10%' },
+                { title: 'Date created', value: 'updated_at', width: '30%' },
             ],
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
@@ -72,33 +75,27 @@ export default {
         }
     },
     mounted() {
-        this.fetchAllOrdersReport(this.dateFilter);
+        // this.fetchAllOrdersReport(this.dateFilter);
+        this.fetchReversalOrders();
     },
-    watch: {
-        transactions: {
-            handler(newVal) {
-                this.mappedTransactions = newVal.map(order => this.formatOrder(order));
-            },
-            immediate: true
-        },
-        dateFilter(newVal) {
-            this.fetchAllOrdersReport(newVal);
-        },
-    },
-    computed: {
-        selectedFilterLabel() {
-            const found = this.dateFilterItems.find(item => item.filter_date_id === this.dateFilter);
-            return found ? found.filter_date_label : '';
-        },
-    },
-    components: {
-        Snackbar,
-    },
+    // watch: {
+    //     reversalOrdersByDate: {
+    //         handler(newVal) {
+    //             this.reversalOrdersByDate = newVal.map(order => this.formatReversalOrders(order));
+    //         },
+    //         immediate: true
+    //     },
+    //     dateFilter(newVal) {
+    //         this.fetchAllOrdersReport(newVal);
+    //     },
+    // },
+    // computed: {
+    //     selectedFilterLabel() {
+    //         const found = this.dateFilterItems.find(item => item.filter_date_id === this.dateFilter);
+    //         return found ? found.filter_date_label : '';
+    //     },
+    // },
     props: {
-        transactions: {
-            type: Array,
-            default: () => []
-        },
         loading: {
             type: Boolean,
             default: false
@@ -137,13 +134,34 @@ export default {
         };
     },
     methods: {
-        async fetchAllOrdersReport(dateFilterId = null) {
+        // async fetchAllOrdersReport(dateFilterId = null) {
+        //     try {
+        //         await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
+        //         this.reversalOrders = this.transactStore.reversalOrders.map(order => this.formatReversalOrders(order));
+        //     } catch (error) {
+        //         this.showAlert("Error fetching reversalOrders!");
+        //     }
+        // },
+
+        async fetchReversalOrders() {
             try {
-                await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-                this.mappedTransactions = this.transactStore.transactions.map(order => this.formatOrder(order));
+                await this.transactStore.fetchReversalStore(this.branchId);
+                if (this.transactStore.reversalOrders.length === 0) {
+                    this.reversalOrdersByDate = [];
+                } else {
+                    this.reversalOrdersByDate = this.transactStore.reversalOrders.map(order => this.formatReversalOrders(order));
+                }
             } catch (error) {
-                this.showError("Error fetching transactions!");
+                console.error('Error fetching reversal orders:', error);
             }
+        },
+
+        formatReversalOrders(order) {
+            return {
+                ...order,
+                display_product_name: `${ order.product_name }${ order.temp_label }${ order.size_label }` || '',
+                updated_at: order.updated_at ? this.formatDateTime(order.updated_at) : 'N/A',
+            };
         },
 
         formatDateTime(dateString) {
@@ -159,19 +177,19 @@ export default {
             });
         },
 
-        formatOrder(order) {
-            return {
-                ...order,
-                display_customer_cash: `₱${order.customer_cash}`,
-                display_customer_charge: `₱${Number(order.customer_charge).toLocaleString('en-PH')}`,
-                display_customer_change: `₱${order.customer_change}`,
-                display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
-                updated_at: this.formatDateTime(order.updated_at),
-            };
-        },
+        // formatOrder(order) {
+        //     return {
+        //         ...order,
+        //         display_customer_cash: `₱${order.customer_cash}`,
+        //         display_customer_charge: `₱${Number(order.customer_charge).toLocaleString('en-PH')}`,
+        //         display_customer_change: `₱${order.customer_change}`,
+        //         display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
+        //         updated_at: this.formatDateTime(order.updated_at),
+        //     };
+        // },
 
-        showError(message) {
-            this.$refs.snackbarRef.showSnackbar(message, "error");
+        showAlert(message) {
+            this.$refs.alertRef.showSnackbarAlert(message, "error");
         },
     }
 }

@@ -219,19 +219,19 @@
                                 </v-container>
                             </v-tabs-window-item>
 
-                            <v-tabs-window-item value="void-blotter">
+                            <!-- Void Reversal -->
+                            <v-tabs-window-item value="void-reversal">
                                 <v-container>
-                                    <VoidBlotterTableSkeleton v-if="loadingVoidBlotter" />
-                                    <VoidBlotterTable v-else 
-                                        :transactions="transactStore.transactions"
-                                        :loading="loadingVoidBlotter" 
-                                        @refresh="fetchVoidBlotters"
+                                    <VoidReversalTableSkeleton v-if="loadingVoidReversal" />
+                                    <VoidReversalTable v-else 
+                                        @refresh="fetchReversalOrders"
+                                        :loading="loadingVoidReversal" 
                                         :branch-id="branchDetails.branch_id" />
                                 </v-container>
                             </v-tabs-window-item>
 
                             <!-- Branch Info -->
-                            <v-tabs-window-item value="branch_info">
+                            <v-tabs-window-item value="branch-info">
                                 <v-container>
                                     <v-tabs v-model="activeBranchInfoTab" style="background: #01546b;" class="d-flex px-3 rounded"
                                         align-tabs="left" color="white" stacked show-arrows>
@@ -354,12 +354,12 @@
 
 <script>
 import apiClient from '../axios';
-import { ref, computed } from 'vue'; // added: computed
+import { ref, computed } from 'vue';
 import { mapState } from 'pinia';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useProductsStore } from '@/stores/productsStore';
-import { useProductOptionsStore } from '@/stores/productOptionsStore'; // added
+import { useProductOptionsStore } from '@/stores/productOptionsStore'; 
 import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 import Alert from '@/components/Alert.vue';
@@ -381,8 +381,8 @@ import OrdersReportTable from '@/components/OrdersReportTable.vue';
 import OrdersReportsTableSkeleton from '@/components/OrdersReportsTableSkeleton.vue';
 import SalesReportTable from '@/components/SalesReportTable.vue';
 import SalesReportsTableSkeleton from '@/components/SalesReportsTableSkeleton.vue';
-import VoidBlotterTable from '@/components/VoidBlotterTable.vue';
-import VoidBlotterTableSkeleton from '@/components/VoidBlotterTableSkeleton.vue';
+import VoidReversalTable from '@/components/VoidReversalTable.vue';
+import VoidReversalTableSkeleton from '@/components/VoidReversalTableSkeleton.vue';
 import SalesChart from '@/components/SalesChart.vue';
 
 export default {
@@ -408,8 +408,8 @@ export default {
         OrdersReportsTableSkeleton,
         SalesReportTable,
         SalesReportsTableSkeleton,
-        VoidBlotterTable,
-        VoidBlotterTableSkeleton,
+        VoidReversalTable,
+        VoidReversalTableSkeleton,
         SalesChart,
     },
     data() {
@@ -466,7 +466,8 @@ export default {
             currentStock: null,
 
             // Void Blotter
-            loadingVoidBlotter: false,
+            loadingVoidReversal: false,
+            reversalOrdersByDate: [],
 
             // Reports
             // activeReportsTab: 'sales',
@@ -503,11 +504,11 @@ export default {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
         const productsStore = useProductsStore();
-        const productOptionsStore = useProductOptionsStore(); // added
-        const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions); // added
-        const productSizeOption = computed(() => productOptionsStore.sizeOptions); // added
-        const productCategoryOption = computed(() => productOptionsStore.categoryOptions); // added
-        const productAvailabilityOption = computed(() => productOptionsStore.availabilityOptions); // added
+        const productOptionsStore = useProductOptionsStore(); 
+        const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions); 
+        const productSizeOption = computed(() => productOptionsStore.sizeOptions); 
+        const productCategoryOption = computed(() => productOptionsStore.categoryOptions); 
+        const productAvailabilityOption = computed(() => productOptionsStore.availabilityOptions); 
         const transactStore = useTransactStore();
         const activeTab = ref('dashboard');
         const activeReportsTab = ref('sales');
@@ -515,11 +516,11 @@ export default {
         return { loadingStore, 
             stocksStore, 
             productsStore,
-            productOptionsStore, // added
-            productTemperatureOption, // added
-            productSizeOption, // added
-            productCategoryOption, // added
-            productAvailabilityOption, // added 
+            productOptionsStore, 
+            productTemperatureOption, 
+            productSizeOption, 
+            productCategoryOption, 
+            productAvailabilityOption,  
             transactStore, 
             activeTab, 
             activeReportsTab,
@@ -542,8 +543,8 @@ export default {
                 { label: 'Dashboard', value: 'dashboard' },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
-                { label: 'Void Blotter', value: 'void-blotter', },
-                { label: 'Branch Info', value: 'branch_info', },
+                { label: 'Reversal Orders', value: 'void-reversal', },
+                { label: 'Branch Info', value: 'branch-info', },
                 { label: 'Reports', value: 'reports', },
             ];
         },
@@ -595,6 +596,14 @@ export default {
             } else if (newTab === 'stocks') {
                 this.loadingStore.show("Preparing...");
                 this.fetchStocks();
+                this.loadingStore.hide();
+            } else if (newTab === 'void-reversal') {
+                this.loadingStore.show("Preparing...");
+                this.fetchReversalOrders();
+                this.loadingStore.hide();
+            } else if (newTab === 'branch-info') {
+                this.loadingStore.show("Preparing...");
+                // this.fetchReversalOrders();
                 this.loadingStore.hide();
             } else if (newTab === 'reports') {
                 this.loadingStore.show("Preparing...");
@@ -715,7 +724,7 @@ export default {
         },
 
         switchToBranchInfoTab() {
-            this.activeTab = 'branch_info';
+            this.activeTab = 'branch-info';
             this.activeBranchInfoTab = 'details';
         },
 
@@ -806,31 +815,24 @@ export default {
             }
         },
 
-        async fetchVoidBlotters() {
-            this.loadingVoidBlotter = true;
+        async fetchReversalOrders() {
+            this.loadingVoidReversal = true;
             try {
-                this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.transactionReports = [];
+                    this.reversalOrdersByDate = [];
                     return;
                 }
-                await this.transactStore.fetchAllOrdersStore(this.branchDetails.branch_id);
-                if (this.transactStore.transactions.length === 0) {
-                    this.transactionReports = [];
-                } else {
-                    this.transactionReports = this.transactStore.transactions.map(transact => this.formatTransactions(transact));
-                }
-                this.transactionReportsLoaded = true;
-                this.loadingVoidBlotter = false;
+                await this.transactStore.fetchReversalStore(this.branchDetails.branchId);
+                this.loadingVoidReversal = false;
             } catch (error) {
-                console.error('Error fetching orders report:', error);
-                this.showError("Error fetching orders report!");
+                console.error('Error fetching reversal orders:', error);
+                this.showError("Error fetching reversal orders!");
             } finally {
-                this.loadingVoidBlotter = false;
+                this.loadingVoidReversal = false;
             }
         },
-
+        
         async fetchProductsReport() {
             this.loadingProductReports = true;
             try {
@@ -1098,7 +1100,7 @@ export default {
                 await this.productsStore.updateProductStore(productData);
                 console.log("Updated product:", productData);
 
-                await this.productOptionsStore.fetchAllOptions(); // added: Refreshing productOptionsStore
+                await this.productOptionsStore.fetchAllOptions(); 
                 // Insert condition
                 const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productDataWithUpdatedAt });
                 const index = this.products.findIndex(
@@ -1188,10 +1190,10 @@ export default {
         },
 
         formatProduct(product) {
-            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id)); // added
-            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id)); // added
-            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id)); // added
-            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id)); // added
+            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id)); 
+            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id)); 
+            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id)); 
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id)); 
             return {
                 ...product,
                 temp_label: temp?.temp_label,
