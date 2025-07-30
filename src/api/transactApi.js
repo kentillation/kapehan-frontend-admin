@@ -185,13 +185,16 @@ export const TRANSACT_API = {
         }
     },
 
-    async fetchReversalApi(branchId) {
+    async fetchReversalByDateApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) {
                 throw new Error('No authentication token found');
             }
             let endpoint = `${this.ENDPOINTS.FETCH_REVERSAL}/${branchId}`;
+            if (dateFilterId) {
+                endpoint += `?date_filter=${dateFilterId}`;
+            }
             const response = await apiClient.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${authToken}`,
@@ -203,7 +206,7 @@ export const TRANSACT_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[fetchReversalApi] Error fetching sales:', error);
+            console.error('[fetchReversalByDateApi] Error fetching sales:', error);
             throw error;
         }
     },

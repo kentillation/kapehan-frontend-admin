@@ -51,7 +51,6 @@ export default {
     },
     data() {
         return {
-            reversalOrdersByDate: [],
             mappedReversalOrdersByDate: [],
             dateFilter: 1,
             searchStock: '',
@@ -66,21 +65,21 @@ export default {
             dateFilterItems: [
                 { filter_date_id: 1, filter_date_label: 'Today' },
                 { filter_date_id: 2, filter_date_label: 'Yesterday' },
-                { filter_date_id: 3, filter_date_label: 'Last 7 days' },
-                { filter_date_id: 4, filter_date_label: 'This Week' },
-                { filter_date_id: 5, filter_date_label: 'Last 30 days' },
-                { filter_date_id: 6, filter_date_label: 'This Month' },
-                { filter_date_id: 7, filter_date_label: 'Last Month' },
+                { filter_date_id: 3, filter_date_label: 'Last 2 days' },
+                { filter_date_id: 4, filter_date_label: 'Last 3 days' },
+                { filter_date_id: 5, filter_date_label: 'Last 4 days' },
+                { filter_date_id: 6, filter_date_label: 'Last 5 days' },
+                { filter_date_id: 7, filter_date_label: 'Last 6 days' },
+                { filter_date_id: 8, filter_date_label: 'Last 7 days' },
             ],
             snackbarRef: null,
         }
     },
     mounted() {
-        // this.fetchAllOrdersReport(this.dateFilter);
-        this.fetchReversalOrders();
+        this.fetchReversalOrders(this.dateFilter);
     },
     watch: {
-        reversalOrdersByDate: {
+        reversalByDate: {
             handler(newVal) {
                 this.mappedReversalOrdersByDate = newVal.map(order => this.formatReversalOrders(order));
             },
@@ -97,6 +96,10 @@ export default {
         },
     },
     props: {
+        reversalByDate: {
+            type: Array,
+            default: () => []
+        },
         loading: {
             type: Boolean,
             default: false
@@ -135,23 +138,15 @@ export default {
         };
     },
     methods: {
-        // async fetchAllOrdersReport(dateFilterId = null) {
-        //     try {
-        //         await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-        //         this.reversalOrders = this.transactStore.reversalOrders.map(order => this.formatReversalOrders(order));
-        //     } catch (error) {
-        //         this.showAlert("Error fetching reversalOrders!");
-        //     }
-        // },
-
-        async fetchReversalOrders() {
+        async fetchReversalOrders(dateFilterId = null) {
             try {
-                await this.transactStore.fetchReversalStore(this.branchId);
-                if (this.transactStore.reversalOrders.length === 0) {
-                    this.mappedReversalOrdersByDate = [];
-                } else {
-                    this.mappedReversalOrdersByDate = this.transactStore.reversalOrders.map(order => this.formatReversalOrders(order));
-                }
+                await this.transactStore.fetchReversalByDateStore(this.branchId, dateFilterId);
+                this.mappedReversalOrdersByDate = this.transactStore.reversalOrdersByDate.map(order => this.formatReversalOrders(order));
+                // if (this.transactStore.reversalOrdersByDate.length === 0) {
+                //     this.mappedReversalOrdersByDate = [];
+                // } else {
+                //     this.mappedReversalOrdersByDate = this.transactStore.reversalOrdersByDate.map(order => this.formatReversalOrders(order));
+                // }
             } catch (error) {
                 console.error('Error fetching reversal orders:', error);
             }

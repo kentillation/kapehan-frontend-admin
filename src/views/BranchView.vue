@@ -224,6 +224,7 @@
                                 <v-container>
                                     <VoidReversalTableSkeleton v-if="loadingVoidReversal" />
                                     <VoidReversalTable v-else 
+                                        :reversal-orders-by-date="transactStore.reversalOrders"
                                         @refresh="fetchReversalOrders"
                                         :loading="loadingVoidReversal" 
                                         :branch-id="branchDetails.branch_id" />
@@ -815,7 +816,7 @@ export default {
             }
         },
 
-        async fetchReversalOrders() {
+        async fetchReversalOrders(dateFilter = null) {
             this.loadingVoidReversal = true;
             try {
                 if (!this.branchDetails.branch_id) {
@@ -823,7 +824,12 @@ export default {
                     this.reversalOrdersByDate = [];
                     return;
                 }
-                await this.transactStore.fetchReversalStore(this.branchDetails.branchId);
+                await this.transactStore.fetchReversalByDateStore(this.branchDetails.branchId, dateFilter);
+                if (this.transactStore.reversalOrdersByDate.length === 0) {
+                    this.reversalOrdersByDate = [];
+                } else {
+                    this.reversalOrdersByDate = this.transactStore.reversalOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
+                }
                 this.loadingVoidReversal = false;
             } catch (error) {
                 console.error('Error fetching reversal orders:', error);
@@ -1231,6 +1237,14 @@ export default {
                 display_stock_in: `${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}`,
                 display_unit_cost: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),
+            };
+        },
+
+        formatReversalOrders(rev_order) {
+            return {
+                ...rev_order,
+                display_product_name: `${ rev_order.product_name }${ rev_order.temp_label }${ rev_order.size_label }` || '',
+                updated_at: rev_order.updated_at ? this.formatDateTime(rev_order.updated_at) : 'N/A',
             };
         },
 
