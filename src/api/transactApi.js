@@ -9,7 +9,7 @@ export const TRANSACT_API = {
         FETCH_PRODUCTS: '/admin/products-only',
         FETCH_STOCKS: '/admin/stocks-only',
         FETCH_SALES_BY_MONTH: '/admin/sales-by-month',
-        FETCH_REVERSAL: '/admin/reversal-orders',
+        FETCH_REVERSAL: '/admin/void-orders',
 
     },
 
@@ -185,7 +185,7 @@ export const TRANSACT_API = {
         }
     },
 
-    async fetchReversalByDateApi(branchId, dateFilterId = null) {
+    async fetchVoidByDateApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
             if (!authToken) throw new Error('No authentication token found');
@@ -204,7 +204,7 @@ export const TRANSACT_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[fetchReversalByDateApi] Error fetching sales:', error);
+            console.error('[fetchVoidByDateApi] Error fetching sales:', error);
             throw error;
         }
     },

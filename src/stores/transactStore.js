@@ -6,7 +6,7 @@ export const useTransactStore = defineStore('transactions', {
         transactions: [],
         grossSalesByDate: [],
         salesByMonth: [],
-        reversalOrdersByDate: [],
+        voidOrdersByDate: [],
         grossSales: '',
         ordersOnly: '',
         productsOnly: '',
@@ -150,19 +150,19 @@ export const useTransactStore = defineStore('transactions', {
             }
         },
 
-        async fetchReversalByDateStore(branchId, dateFilterId = null) {
+        async fetchVoidByDateStore(branchId, dateFilterId = null) {
             this.loading = true;
             this.error = null;
             try {
-                const response = await TRANSACT_API.fetchReversalByDateApi(branchId, dateFilterId);
+                const response = await TRANSACT_API.fetchVoidByDateApi(branchId, dateFilterId);
                 if (response && response.status === true) {
-                    this.reversalOrdersByDate = response.data;
+                    this.voidOrdersByDate = response.data;
                 } else {
-                    throw new Error(response?.message || 'Failed to fetch reversal orders');
+                    throw new Error(response?.message || 'Failed to fetch void orders');
                 }
             } catch (error) {
                 console.error('Error in fetchSalesByMonthApi:', error);
-                this.error = error.message || 'Failed to fetch reversal orders';
+                this.error = error.message || 'Failed to fetch void orders';
                 throw error;
             } finally {
                 this.loading = false;

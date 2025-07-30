@@ -220,12 +220,12 @@
                             </v-tabs-window-item>
 
                             <!-- Void Reversal -->
-                            <v-tabs-window-item value="void-reversal">
+                            <v-tabs-window-item value="void-orders">
                                 <v-container>
                                     <VoidReversalTableSkeleton v-if="loadingVoidReversal" />
                                     <VoidReversalTable v-else 
-                                        :reversal-by-date="transactStore.reversalOrdersByDate"
-                                        @refresh="fetchReversalOrders"
+                                        :void-by-date="transactStore.voidOrdersByDate"
+                                        @refresh="fetchVoidOrders"
                                         :loading="loadingVoidReversal" 
                                         :branch-id="branchDetails.branch_id" />
                                 </v-container>
@@ -468,7 +468,7 @@ export default {
 
             // Void Blotter
             loadingVoidReversal: false,
-            reversalByDate: [],
+            voidByDate: [],
 
             // Reports
             // activeReportsTab: 'sales',
@@ -544,7 +544,7 @@ export default {
                 { label: 'Dashboard', value: 'dashboard' },
                 { label: 'Products', value: 'products', },
                 { label: 'Stocks', value: 'stocks', },
-                { label: 'Reversal Orders', value: 'void-reversal', },
+                { label: 'Void Orders', value: 'void-orders', },
                 { label: 'Branch Info', value: 'branch-info', },
                 { label: 'Reports', value: 'reports', },
             ];
@@ -598,13 +598,13 @@ export default {
                 this.loadingStore.show("Preparing...");
                 this.fetchStocks();
                 this.loadingStore.hide();
-            } else if (newTab === 'void-reversal') {
+            } else if (newTab === 'void-orders') {
                 this.loadingStore.show("Preparing...");
-                this.fetchReversalOrders();
+                this.fetchVoidOrders();
                 this.loadingStore.hide();
             } else if (newTab === 'branch-info') {
                 this.loadingStore.show("Preparing...");
-                // this.fetchReversalOrders();
+                // this.fetchVoidOrders();
                 this.loadingStore.hide();
             } else if (newTab === 'reports') {
                 this.loadingStore.show("Preparing...");
@@ -816,24 +816,24 @@ export default {
             }
         },
 
-        async fetchReversalOrders() {
+        async fetchVoidOrders() {
             this.loadingVoidReversal = true;
             try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
-                    this.reversalByDate = [];
+                    this.voidByDate = [];
                     return;
                 }
-                await this.transactStore.fetchReversalByDateStore(this.branchDetails.branch_id);
-                if (this.transactStore.reversalOrdersByDate.length === 0) {
-                    this.reversalByDate = [];
+                await this.transactStore.fetchVoidByDateStore(this.branchDetails.branch_id);
+                if (this.transactStore.voidOrdersByDate.length === 0) {
+                    this.voidByDate = [];
                 } else {
-                    this.reversalByDate = this.transactStore.reversalOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
+                    this.voidByDate = this.transactStore.voidOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
                 }
                 this.loadingVoidReversal = false;
             } catch (error) {
-                console.error('Error fetching reversal orders:', error);
-                this.showError("Error fetching reversal orders!");
+                console.error('Error fetching void orders:', error);
+                this.showError("Error fetching void orders!");
             } finally {
                 this.loadingVoidReversal = false;
             }
