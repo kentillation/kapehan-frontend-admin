@@ -1,7 +1,7 @@
 <template>
     <v-data-table 
         :headers="headersReversalOrders" 
-        :items="reversalOrdersByDate" 
+        :items="mappedReversalOrdersByDate" 
         :loading="loading" 
         :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" 
@@ -52,6 +52,7 @@ export default {
     data() {
         return {
             reversalOrdersByDate: [],
+            mappedReversalOrdersByDate: [],
             dateFilter: 1,
             searchStock: '',
             headersReversalOrders: [
@@ -78,23 +79,23 @@ export default {
         // this.fetchAllOrdersReport(this.dateFilter);
         this.fetchReversalOrders();
     },
-    // watch: {
-    //     reversalOrdersByDate: {
-    //         handler(newVal) {
-    //             this.reversalOrdersByDate = newVal.map(order => this.formatReversalOrders(order));
-    //         },
-    //         immediate: true
-    //     },
-    //     dateFilter(newVal) {
-    //         this.fetchAllOrdersReport(newVal);
-    //     },
-    // },
-    // computed: {
-    //     selectedFilterLabel() {
-    //         const found = this.dateFilterItems.find(item => item.filter_date_id === this.dateFilter);
-    //         return found ? found.filter_date_label : '';
-    //     },
-    // },
+    watch: {
+        reversalOrdersByDate: {
+            handler(newVal) {
+                this.mappedReversalOrdersByDate = newVal.map(order => this.formatReversalOrders(order));
+            },
+            immediate: true
+        },
+        dateFilter(newVal) {
+            this.formatReversalOrders(newVal);
+        },
+    },
+    computed: {
+        selectedFilterLabel() {
+            const found = this.dateFilterItems.find(item => item.filter_date_id === this.dateFilter);
+            return found ? found.filter_date_label : '';
+        },
+    },
     props: {
         loading: {
             type: Boolean,
@@ -147,9 +148,9 @@ export default {
             try {
                 await this.transactStore.fetchReversalStore(this.branchId);
                 if (this.transactStore.reversalOrders.length === 0) {
-                    this.reversalOrdersByDate = [];
+                    this.mappedReversalOrdersByDate = [];
                 } else {
-                    this.reversalOrdersByDate = this.transactStore.reversalOrders.map(order => this.formatReversalOrders(order));
+                    this.mappedReversalOrdersByDate = this.transactStore.reversalOrders.map(order => this.formatReversalOrders(order));
                 }
             } catch (error) {
                 console.error('Error fetching reversal orders:', error);
