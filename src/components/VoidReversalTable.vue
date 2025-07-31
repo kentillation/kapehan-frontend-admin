@@ -31,10 +31,11 @@
         <!--eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
             <div class="d-flex" style="gap: 8px;">
-                <v-tooltip text="Edit Product" location="top">
+                <v-tooltip text="Confirm" location="top">
                     <template v-slot:activator="{ props }">
-                        <v-btn :class="item.void_status_id === 1 ? 'd-flex' : 'd-none'" v-bind="props" @click="editReversal( {item} )" color="green" variant="tonal" size="small"
-                            icon="mdi-pencil"></v-btn>
+                        <v-btn :class="item.void_status_id === 1 ? 'd-flex' : 'd-none'" v-bind="props"
+                            @click="editReversal({ item })" color="green" variant="tonal" size="small"
+                            icon="mdi-swap-horizontal"></v-btn>
                     </template>
                 </v-tooltip>
             </div>
@@ -59,7 +60,7 @@
                 <span class="mb-3" style="font-size: 16px;">
                     <strong>{{ selectedProductText }} &nbsp; &nbsp; x{{ this.selectedProduct.to_quantity }}</strong>
                 </span>
-                <span class="text-center">Do you want to confirm this void?</span>
+                <span class="text-center">Want to confirm this void?</span>
             </v-card-text>
             <v-card-actions class="d-flex">
                 <v-btn color="red" variant="tonal" class="px-3 pt-1 pb-1" prepend-icon="mdi-close"
@@ -67,26 +68,27 @@
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="green" variant="tonal" class="px-3 pt-1 pb-1" prepend-icon="mdi-check"
-                    @click="confirmReversalDialog = false">Yes<span class="to-hide"> , I want!</span>
+                    @click="changeStatus(this.selectedProduct)">Yes<span class="to-hide"> , I want!</span>
                 </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <Alert ref="alertRef" />
+    <Snackbar ref="alertRef" />
 </template>
 
 <script>
 import { useLoadingStore } from '@/stores/loading';
 import { useTransactStore } from '@/stores/transactStore';
-import Alert from '@/components/Alert.vue';
+import Snackbar from '@/components/Snackbar.vue';
 
 export default {
     name: 'VoidReversalTable',
     components: {
-        Alert,
+        Snackbar,
     },
     data() {
         return {
+            void_statuses: [],
             mappedReversalOrdersByDate: [],
             dateFilter: 1,
             searchStock: '',
@@ -103,6 +105,11 @@ export default {
                 { filter_date_id: 1, filter_date_label: 'Today' },
                 { filter_date_id: 2, filter_date_label: 'Yesterday' },
                 { filter_date_id: 3, filter_date_label: 'Last 2 days' },
+                { filter_date_id: 4, filter_date_label: 'Last 3 days' },
+                { filter_date_id: 5, filter_date_label: 'Last 4 days' },
+                { filter_date_id: 6, filter_date_label: 'Last 5 days' },
+                { filter_date_id: 7, filter_date_label: 'Last 6 days' },
+                { filter_date_id: 8, filter_date_label: 'Last 7 days' },
             ],
             selectedProduct: null,
             confirmReversalDialog: false,
@@ -111,6 +118,7 @@ export default {
     },
     mounted() {
         this.fetchVoidOrders(this.dateFilter);
+        this.fetchVoidStatus();
     },
     watch: {
         voidByDate: {
@@ -187,9 +195,62 @@ export default {
             }
         },
 
+        async fetchVoidStatus() {
+            try {
+                await this.transactStore.fetchVoidStatusStore();
+                this.void_statuses = this.transactStore.voidStatuses;
+            } catch (error) {
+                console.error('Error fetching void status:', error);
+                this.showError("Error fetching void status!");
+            }
+        },
+
         editReversal({ item }) {
             this.selectedProduct = { ...item };
             this.confirmReversalDialog = true;
+        },
+
+        changeStatus(voidOrder) {
+            if (!voidOrder || !voidOrder.reference_number) {
+                this.showError("Invalid void data!");
+                return;
+            }
+            const currentStatusIndex = this.void_statuses.findIndex(
+                status => Number(status.void_status_id) === Number(voidOrder.void_status_id)
+            );
+
+            if (currentStatusIndex === -1) {
+                this.showError("Current void status not found!");
+                return;
+            }
+            const nextStatusIndex = (currentStatusIndex + 1) % this.void_statuses.length;
+            const newStatus = Number(this.void_statuses[nextStatusIndex].void_status_id);
+
+            if (isNaN(newStatus)) {
+                this.showError("Next void status is invalid!");
+                return;
+            }
+            this.loadingStore.show("Updating status...");
+            this.transactStore.updateVoidStatusStore(this.branchId, voidOrder.reference_number, newStatus)
+                .then(() => {
+                    const statusName = this.getStatusName(newStatus);
+                    this.showSuccess(`Void has been ${statusName} successfully!`);
+                    voidOrder.void_status_id = newStatus;
+                    this.fetchVoidOrders();
+                })
+                .catch(error => {
+                    console.error('Error updating void order:', error);
+                    this.showError("Failed to update void order. Please try again!");
+                })
+                .finally(() => {
+                    this.loadingStore.hide();
+                    this.confirmReversalDialog = false;
+                });
+        },
+
+        getStatusName(statusId) {
+            const status = this.void_statuses.find(s => Number(s.void_status_id) === Number(statusId));
+            return status ? status.void_status : 'Unknown';
         },
 
         formatReversalOrders(order) {
@@ -213,8 +274,12 @@ export default {
             });
         },
 
-        showAlert(message) {
-            this.$refs.alertRef.showSnackbarAlert(message, "error");
+        showSuccess(message) {
+            this.$refs.alertRef.showSnackbar(message, "success");
+        },
+
+        showError(message) {
+            this.$refs.alertRef.showSnackbar(message, "error");
         },
     }
 }

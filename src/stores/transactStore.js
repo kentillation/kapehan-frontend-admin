@@ -6,7 +6,9 @@ export const useTransactStore = defineStore('transactions', {
         transactions: [],
         grossSalesByDate: [],
         salesByMonth: [],
+        voidStatuses: [],
         voidOrdersByDate: [],
+        voidOrders: [],
         grossSales: '',
         ordersOnly: '',
         productsOnly: '',
@@ -150,6 +152,28 @@ export const useTransactStore = defineStore('transactions', {
             }
         },
 
+        async fetchVoidStatusStore() {
+            this.loading = true;
+            this.error = null;
+            try {
+                if (!TRANSACT_API || typeof TRANSACT_API.fetchVoidStatusApi !== 'function') {
+                    throw new Error('TRANSACT_API service is not properly initialized');
+                }
+                const response = await TRANSACT_API.fetchVoidStatusApi();
+                if (response && response.status === true) {
+                    this.voidStatuses = response.data;
+                } else {
+                    throw new Error('Failed to fetch voidStatuses');
+                }
+            } catch (error) {
+                console.error('Error in fetchVoidStatusApi:', error);
+                this.error = 'Failed to fetch order status';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async fetchVoidByDateStore(branchId, dateFilterId = null) {
             this.loading = true;
             this.error = null;
@@ -165,6 +189,32 @@ export const useTransactStore = defineStore('transactions', {
                 this.error = error.message || 'Failed to fetch void orders';
                 throw error;
             } finally {
+                this.loading = false;
+            }
+        },
+
+        async updateVoidStatusStore(branchId, referenceNumber, voidStatus) {
+            this.loading = true;
+            this.error = null;
+            try {
+                if (!referenceNumber || !voidStatus) {
+                    throw new Error('Invalid branch_id, reference_number, or void status');
+                }
+                const response = await TRANSACT_API.updateVoidStatusApi(branchId, referenceNumber, voidStatus);
+                if (response && response.status === true) {
+                    this.voidOrders = this.voidOrders.map(voidOrder =>
+                        voidOrder.id === referenceNumber ? { ...voidOrder, voidStatus } : voidOrder
+                    );
+                    return response;
+                } else {
+                    throw new Error(response?.message || 'Failed to update void order');
+                }
+            } catch (error) {
+                console.error('Error updating void order:', error);
+                this.error = error.message || 'Failed to update void order';
+                throw error;
+            }
+            finally {
                 this.loading = false;
             }
         },

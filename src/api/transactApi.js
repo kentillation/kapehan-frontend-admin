@@ -9,7 +9,9 @@ export const TRANSACT_API = {
         FETCH_PRODUCTS: '/admin/products-only',
         FETCH_STOCKS: '/admin/stocks-only',
         FETCH_SALES_BY_MONTH: '/admin/sales-by-month',
+        FETCH_VOID_STATUS: '/admin/void-status',
         FETCH_REVERSAL: '/admin/void-orders',
+        UPDATE_VOID: '/admin/update-void',
 
     },
 
@@ -185,6 +187,39 @@ export const TRANSACT_API = {
         }
     },
 
+    async fetchVoidStatusApi() {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+            };
+            const response = await apiClient.get(
+                `${this.ENDPOINTS.FETCH_VOID_STATUS}`,
+                config
+            );
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[TRANSACT_API] Error fetching void status:', error);
+            const enhancedError = new Error(
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to fetch void status'
+            );
+            enhancedError.response = error.response;
+            enhancedError.status = error.response?.status;
+            throw enhancedError;
+        }
+    },
+
     async fetchVoidByDateApi(branchId, dateFilterId = null) {
         try {
             const authToken = localStorage.getItem('auth_token');
@@ -206,6 +241,43 @@ export const TRANSACT_API = {
         } catch (error) {
             console.error('[fetchVoidByDateApi] Error fetching sales:', error);
             throw error;
+        }
+    },
+
+    async updateVoidStatusApi(branchId, referenceNumber, voidStatus) {
+        if (!referenceNumber || !voidStatus) {
+            throw new Error('Invalid reference_number, or void_status');
+        }
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            const response = await apiClient.put(
+                `${this.ENDPOINTS.UPDATE_VOID}/${branchId}`,
+                { referenceNumber, voidStatus },
+                config
+            );
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[TRANSACT_API] Error updating void order:', error);
+            const enhancedError = new Error(
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to update void order'
+            );
+            enhancedError.response = error.response;
+            enhancedError.status = error.response?.status;
+            throw enhancedError;
         }
     },
 };
