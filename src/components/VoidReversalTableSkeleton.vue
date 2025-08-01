@@ -5,7 +5,7 @@
         density="comfortable">
         <template v-slot:top>
             <v-toolbar flat>
-                <h2 class="ms-4 to-hide">List of Void Blotters</h2>
+                <h2 class="ms-4 to-hide">List of Reversal Orders</h2>
                 <h2 class="ms-4 to-show">List</h2>
                 <v-spacer></v-spacer>
                 <div class="w-75 w-sm-50 d-flex align-center justify-space-between">
