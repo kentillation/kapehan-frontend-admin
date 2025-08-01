@@ -23,7 +23,7 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.void_status="{ item }">
-            <v-chip :color="item.void_status_id === 1 ? 'red' : 'green'" size="small" variant="flat">
+            <v-chip :color="item.void_status_id === 1 ? 'red' : 'green'" size="small" variant="tonal">
                 {{ item.void_status }}
             </v-chip>
         </template>

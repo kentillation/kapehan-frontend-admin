@@ -2,40 +2,49 @@
     <v-container>
         <h3>Create New Branch</h3>
         <v-row>
-            <v-col cols="12" lg="6" md="6" sm="12">
+            <v-col cols="12" lg="6" md="6" sm="7">
                 <v-card class="pa-5 mt-3">
                     <v-card-text>
                         <v-form ref="newBranchForm" @submit.prevent="showConfirmDialog">
-                            <v-row>
-                                <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="branch_name" label="Branch name" placeholder="e.g. Manila"
-                                        :rules="[v => !!v || 'Required']" variant="outlined" />
-                                </v-col>
-                                <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="branch_location" label="Branch location" placeholder="e.g. Manila City, Philippines"
-                                        :rules="[v => !!v || 'Required']" variant="outlined" />
-                                </v-col>
-                                <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="m_name" label="Branch manager name" placeholder="e.g. Juan Dela Cruz"
-                                        :rules="[v => !!v || 'Required']" variant="outlined" />
-                                </v-col>
-                                <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="m_email" label="Branch manager email" placeholder="e.g. yourname@example.com"
-                                        :rules="[v => !!v || 'Required']" variant="outlined" />
-                                </v-col>
-                                <v-col cols="12" lg="6" md="6" sm="12">
-                                    <v-text-field v-model="contact" label="Branch manager contact" placeholder="e.g. 09123456789"
-                                        :rules="[v => !!v || 'Required']" variant="outlined" />
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12" lg="6" md="6">
-                                    <v-btn prepend-icon="mdi-check" color="#0090b6" variant="flat"
-                                        :disabled="!isFormValid || validatingBranch" @click="showConfirmDialog">
-                                        Confirm
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
+                            <div class="parent mb-2">
+                                <div class="child">
+                                    <label for="branch_name"><span class="text-red">*</span> Branch name</label>
+                                    <v-text-field v-model="branch_name" placeholder="e.g. Manila"
+                                        :rules="[requiredRule]" variant="outlined" />
+                                </div>
+                                <div class="child">
+                                    <label for="branch_location"><span class="text-red">*</span> Branch location</label>
+                                    <v-text-field v-model="branch_location" placeholder="e.g. Manila City, Philippines"
+                                        :rules="[requiredRule]" variant="outlined" />
+                                </div>
+                                <div class="child">
+                                    <label for="m_name"><span class="text-red">*</span> Name of Manager/Supervisor</label>
+                                    <v-text-field v-model="m_name" placeholder="e.g. Juan Dela Cruz"
+                                        :rules="[requiredRule]" variant="outlined" />
+                                </div>
+                                <div class="child">
+                                    <label for="contact"><span class="text-red">*</span> Contact # of Manager/Supervisor</label>
+                                    <v-text-field v-model="contact" placeholder="e.g. 09123456789"
+                                        :rules="[requiredRule]" variant="outlined" type="number"
+                                        @input="e => contact = e.target.value.replace(/[^0-9.]/g, '')"  />
+                                </div>
+                                <div class="child">
+                                    <label for="m_email"><span class="text-red">*</span> Email of Manager/Supervisor</label>
+                                    <v-text-field v-model="m_email" placeholder="e.g. name@example.com"
+                                        :rules="[requiredRule, emailFormatRule]" variant="outlined" type="email" />
+                                </div>
+                                <div class="child">
+                                    <label for="staff_name">Name of Staff/Crew</label>
+                                    <v-text-field v-model="staff_name" placeholder="e.g. Juan Dela Cruz" variant="outlined" />
+                                </div>
+                            </div>
+                            <span class="text-grey"><em>Note: Asterisk (<span class="text-red">*</span>) indicates a required field</em></span>
+                            <div class="mt-4 d-flex justify-end">
+                                <v-btn prepend-icon="mdi-check" color="#0090b6" variant="tonal"
+                                    :disabled="!isFormValid || validatingBranch" @click="showConfirmDialog">
+                                    Confirm
+                                </v-btn>
+                            </div>
                         </v-form>
                     </v-card-text>
                 </v-card>
@@ -100,22 +109,32 @@ export default {
             m_name: '',
             m_email: '',
             contact: '',
+            staff_name: '',
             confirmDialog: false,
         }
     },
     computed: {
         isFormValid() {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return this.branch_name !== '' &&
                 this.branch_location !== '' &&
                 this.m_name !== '' &&
                 this.m_email !== '' &&
-                this.contact !== '';
+                this.contact !== '' &&
+                emailPattern.test(this.m_email);
         },
         validatingBranch() {
             return this.branchStore.validatingBranch;
         }
     },
     methods: {
+        requiredRule(v) {
+            return !!v || 'Required';
+        },
+        emailFormatRule(v) {
+            const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return pattern.test(v) || 'Invalid email format';
+        },
         addClone() {
 
         },
@@ -138,6 +157,7 @@ export default {
                     m_name: this.m_name,
                     m_email: this.m_email,
                     contact: this.contact,
+                    staff_name: this.staff_name,
                 };
                 const response = await this.branchStore.createBranch(payload);
                 if (response && response.message) {
@@ -160,6 +180,7 @@ export default {
             this.m_name = ' ';
             this.m_email = ' ';
             this.contact = ' ';
+            this.staff_name = ' ';
             if (this.newBranchForm.resetValidation) {
                 this.newBranchForm.resetValidation();
             }
@@ -168,10 +189,25 @@ export default {
 };
 </script>
 
-<style>
-.custom-avatar-clone .v-list-item__prepend .v-avatar,
+<style scoped>
+.parent {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.child {
+    width: 500px;
+    min-width: 250px;
+    /* margin: 0 0 3px 3px; */
+}
+
+/* .child:nth-last-child(1) {
+    max-width: 500px;
+} */
+
+/* .custom-avatar-clone .v-list-item__prepend .v-avatar,
 .custom-avatar-manual .v-list-item__prepend .v-avatar {
     width: 150px !important;
     height: 150px !important;
-}
+} */
 </style>
