@@ -19,19 +19,19 @@
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.total_quantity`]>
+        <template v-slot:[`item.table_number`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.cash_render`]>
+        <template v-slot:[`item.product_name`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.customer_charge`]>
+        <template v-slot:[`item.quantity`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.customer_change`]>
+        <template v-slot:[`item.status`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
@@ -47,12 +47,13 @@ export default {
     data() {
         return {
             headers: [
-                { title: 'Reference', value: 'reference_number', sortable: 'true', width: '25%' },
-                { title: 'Quantity', value: 'total_quantity', sortable: 'true', width: '15%' },
-                { title: 'Cash_render', value: 'cash_render', sortable: 'true', width: '10%' },
-                { title: 'Charge', value: 'customer_charge', sortable: 'true', width: '10%' },
-                { title: 'Change', value: 'customer_change', sortable: 'true', width: '15%' },
-                { title: 'Transaction date', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: 'Reference', value: 'reference_number', sortable: 'true', width: '10%' },
+                { title: 'Table#', value: 'table_number', sortable: 'true', width: '10%' },
+                { title: 'Product', value: 'product_name', sortable: 'true', width: '20%' },
+                { title: 'Quantity', value: 'quantity', sortable: 'true', width: '10%' },
+                { title: 'Status', value: 'status', sortable: 'true', width: '10%' },
+                { title: 'Date created', value: 'updated_at', sortable: 'true', width: '20%' },
+                { title: '', value: 'actions', sortable: false, width: '10%' }
             ],
             skeletonItems: Array(10).fill({}) // Creates 10 empty rows
         }
