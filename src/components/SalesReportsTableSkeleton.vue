@@ -13,7 +13,7 @@
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
                     <div class="d-flex">
-                        <v-autocomplete label="Date Filter" class="w-75 ms-3 me-2" clearable></v-autocomplete>
+                        <v-autocomplete label="Date Filter" class="w-50 ms-3 me-2" clearable></v-autocomplete>
                         <v-text-field style="font-size: 12px;" readonly>Sales: ₱0</v-text-field>
                     </div>
                 </v-col>
