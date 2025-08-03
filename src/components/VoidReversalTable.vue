@@ -34,7 +34,7 @@
                 <v-tooltip text="Confirm" location="top">
                     <template v-slot:activator="{ props }">
                         <v-btn :class="Number(item.void_status_id) === 1 ? 'd-flex' : 'd-none'" v-bind="props"
-                            @click="editReversal({ item })" color="green" variant="tonal" size="small"
+                            @click="editReversal({ item })" :color="Number(item.void_status_id) === 1 ? 'red' : 'green'" variant="tonal" size="small"
                             icon="mdi-swap-horizontal"></v-btn>
                     </template>
                 </v-tooltip>
