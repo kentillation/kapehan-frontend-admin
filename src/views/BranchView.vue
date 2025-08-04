@@ -306,7 +306,7 @@
                                             <OrdersReportsTableSkeleton
                                                 v-if="loadingTransactionsReports && activeReportsTab === 'orders'" />
                                             <OrdersReportTable v-else-if="activeReportsTab === 'orders'"
-                                                :transactions="transactStore.transactions"
+                                                :all-orders="transactStore.transactions"
                                                 :loading="loadingTransactionsReports" @refresh="fetchAllOrdersReport"
                                                 :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
@@ -902,13 +902,13 @@ export default {
                 if (this.transactStore.transactions.length === 0) {
                     this.transactionReports = [];
                 } else {
-                    this.transactionReports = this.transactStore.transactions.map(transact => this.formatTransactions(transact));
+                    this.transactionReports = this.transactStore.transactions.map(order => this.formatOrder(order));
                 }
                 this.transactionReportsLoaded = true;
                 this.loadingTransactionsReports = false;
             } catch (error) {
                 console.error('Error fetching orders report:', error);
-                this.showError("Error fetching orders report!");
+                this.showError(error);
             } finally {
                 this.loadingTransactionsReports = false;
             }
@@ -1248,14 +1248,22 @@ export default {
             };
         },
 
-        formatTransactions(orders) {
+        formatOrder(order) {
+            const customer_cash_value = Number(order.customer_cash);
+            const display_customer_cash = (Math.round(customer_cash_value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
+
+            const customer_charge_value = Number(order.customer_charge);
+            const display_customer_charge = (Math.round(customer_charge_value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
+
+            const customer_change_value = Number(order.customer_change);
+            const display_customer_change = (Math.round(customer_change_value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
             return {
-                ...orders,
-                display_customer_cash: `₱${orders.customer_cash}`,
-                display_customer_charge: `₱${orders.customer_charge}`,
-                display_customer_change: `₱${orders.customer_change}`,
-                display_total_quantity: orders.total_quantity,
-                updated_at: this.formatDateTime(orders.updated_at),
+                ...order,
+                display_customer_cash: `₱${display_customer_cash}`,
+                display_customer_charge: `₱${display_customer_charge}`,
+                display_customer_change: `₱${display_customer_change}`,
+                display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
+                updated_at: this.formatDateTime(order.updated_at),
             };
         },
 

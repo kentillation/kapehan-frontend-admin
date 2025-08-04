@@ -36,7 +36,7 @@ export const TRANSACT_API = {
             }
             return response.data;
         } catch (error) {
-            console.error('[fetchAllOrdersApi] Error fetching transactions:', error);
+            console.error('[fetchAllOrdersApi] Error fetching orders:', error);
             throw error;
         }
     },

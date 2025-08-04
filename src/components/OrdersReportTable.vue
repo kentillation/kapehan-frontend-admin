@@ -74,7 +74,7 @@ export default {
         this.fetchAllOrdersReport(this.dateFilter);
     },
     watch: {
-        transactions: {
+        allOrders: {
             handler(newVal) {
                 this.mappedTransactions = newVal.map(order => this.formatOrder(order));
             },
@@ -94,7 +94,7 @@ export default {
         Snackbar,
     },
     props: {
-        transactions: {
+        allOrders: {
             type: Array,
             default: () => []
         },
@@ -167,9 +167,9 @@ export default {
         async fetchAllOrdersReport(dateFilterId = null) {
             try {
                 await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-                this.mappedTransactions = this.transactStore.transactions.map(order => this.formatOrder(order));
+                this.mappedTransactions = this.transactStore.allOrders.map(order => this.formatOrder(order));
             } catch (error) {
-                this.showError("Error fetching transactions!");
+                this.showError(error);
             }
         },
 
@@ -297,11 +297,19 @@ export default {
         },
 
         formatOrder(order) {
+            const customer_cash_value = Number(order.customer_cash);
+            const display_customer_cash = (Math.round(customer_cash_value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
+
+            const customer_charge_value = Number(order.customer_charge);
+            const display_customer_charge = (Math.round(customer_charge_value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
+
+            const customer_change_value = Number(order.customer_change);
+            const display_customer_change = (Math.round(customer_change_value * 100) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '';
             return {
                 ...order,
-                display_customer_cash: `₱${order.customer_cash}`,
-                display_customer_charge: `₱${Number(order.customer_charge).toLocaleString('en-PH')}`,
-                display_customer_change: `₱${order.customer_change}`,
+                display_customer_cash: `₱${display_customer_cash}`,
+                display_customer_charge: `₱${display_customer_charge}`,
+                display_customer_change: `₱${display_customer_change}`,
                 display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
                 updated_at: this.formatDateTime(order.updated_at),
             };

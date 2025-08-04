@@ -4,6 +4,7 @@ import { TRANSACT_API } from '@/api/transactApi';
 export const useTransactStore = defineStore('transactions', {
     state: () => ({
         transactions: [],
+        allOrders: [],
         grossSalesByDate: [],
         salesByMonth: [],
         voidStatuses: [],
@@ -25,12 +26,13 @@ export const useTransactStore = defineStore('transactions', {
                 const response = await TRANSACT_API.fetchAllOrdersApi(branchId, dateFilterId);
                 if (response && response.status === true) {
                     this.transactions = response.data;
+                    this.allOrders = response.data;
                 } else {
-                    throw new Error(response?.message || 'Failed to fetch transactions');
+                    throw new Error(response?.message || 'Failed to fetch orders');
                 }
             } catch (error) {
                 console.error('Error in fetchAllOrdersApi:', error);
-                this.error = error.message || 'Failed to fetch transactions';
+                this.error = error.message || 'Failed to fetch orders';
                 throw error;
             } finally {
                 this.loading = false;
