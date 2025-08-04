@@ -23,7 +23,7 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.void_status="{ item }">
-            <v-chip :color="item.void_status_id === 1 ? 'red' : 'green'" size="small" variant="tonal">
+            <v-chip :color="Number(item.void_status_id) === 1 ? 'red' : 'green'" size="small" variant="tonal">
                 {{ item.void_status }}
             </v-chip>
         </template>
@@ -33,7 +33,7 @@
             <div class="d-flex" style="gap: 8px;">
                 <v-tooltip text="Confirm" location="top">
                     <template v-slot:activator="{ props }">
-                        <v-btn :class="item.void_status_id === 1 ? 'd-flex' : 'd-none'" v-bind="props"
+                        <v-btn :class="Number(item.void_status_id) === 1 ? 'd-flex' : 'd-none'" v-bind="props"
                             @click="editReversal({ item })" color="green" variant="tonal" size="small"
                             icon="mdi-swap-horizontal"></v-btn>
                     </template>
