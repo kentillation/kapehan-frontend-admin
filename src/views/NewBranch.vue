@@ -2,7 +2,7 @@
     <v-container>
         <h3>Create New Branch</h3>
         <v-row>
-            <v-col cols="12" lg="6" md="6" sm="7">
+            <v-col cols="12" lg="4" md="6" sm="7">
                 <v-card class="pa-5 mt-3">
                     <v-card-text>
                         <v-form ref="newBranchForm" @submit.prevent="showConfirmDialog">

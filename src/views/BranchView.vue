@@ -292,10 +292,10 @@
                                     <transition name="slide-x-transition" mode="out-in">
                                         <div :key="activeReportsTab">
                                             <SalesReportsTableSkeleton
-                                                v-if="loadingTransactionOrdersReports && activeReportsTab === 'sales'" />
+                                                v-if="loadingSalesReports && activeReportsTab === 'sales'" />
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
                                                 :sales-by-date="transactStore.grossSalesByDate"
-                                                :loading="loadingTransactionOrdersReports" @refresh="fetchSalesReport"
+                                                :loading="loadingSalesReports"
                                                 :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
@@ -307,7 +307,7 @@
                                                 v-if="loadingTransactionsReports && activeReportsTab === 'orders'" />
                                             <OrdersReportTable v-else-if="activeReportsTab === 'orders'"
                                                 :all-orders="transactStore.transactions"
-                                                :loading="loadingTransactionsReports" @refresh="fetchAllOrdersReport"
+                                                :loading="loadingTransactionsReports"
                                                 :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
@@ -319,7 +319,7 @@
                                                 v-if="loadingStockReports && activeReportsTab === 'stocks'" />
                                             <StocksReportTable v-else-if="activeReportsTab === 'stocks'"
                                                 :stocks="stockReports" :loading="loadingStockReports"
-                                                @refresh="fetchStocksReport" :shop-id="branchDetails.shop_id"
+                                                :shop-id="branchDetails.shop_id"
                                                 :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
@@ -359,6 +359,7 @@ import { ref, computed } from 'vue';
 import { mapState } from 'pinia';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
+import { useStockOptionsStore } from '@/stores/stockOptionsStore';
 import { useProductsStore } from '@/stores/productsStore';
 import { useProductOptionsStore } from '@/stores/productOptionsStore'; 
 import { useTransactStore } from '@/stores/transactStore';
@@ -484,9 +485,10 @@ export default {
             transactionReportsLoaded: false,
             loadingTransactionsReports: false,
 
+            dateFilter: 1,
             salesByDateReports: [],
             salesByDateReportsLoaded: false,
-            loadingTransactionOrdersReports: false,
+            loadingSalesReports: false,
 
             salesByMonthReports: [],
             loadingSalesByMonthReports: false,
@@ -504,6 +506,9 @@ export default {
     setup() {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
+        const stockOptionsStore = useStockOptionsStore();
+        const stockUnitOption = computed(() => stockOptionsStore.unitOption); 
+        const stockAvailabilityOption = computed(() => stockOptionsStore.availabilityOption); 
         const productsStore = useProductsStore();
         const productOptionsStore = useProductOptionsStore(); 
         const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions); 
@@ -515,7 +520,10 @@ export default {
         const activeReportsTab = ref('sales');
         const activeBranchInfoTab = ref('details');
         return { loadingStore, 
-            stocksStore, 
+            stocksStore,
+            stockOptionsStore,
+            stockUnitOption,
+            stockAvailabilityOption,
             productsStore,
             productOptionsStore, 
             productTemperatureOption, 
@@ -603,30 +611,22 @@ export default {
                 this.fetchVoidOrders();
                 this.loadingStore.hide();
             } else if (newTab === 'branch-info') {
-                this.loadingStore.show("Preparing...");
-                // this.fetchVoidOrders();
-                this.loadingStore.hide();
+                console.log("You're on the Branch Info page.")
             } else if (newTab === 'reports') {
-                this.loadingStore.show("Preparing...");
-                this.fetchSalesReport();
-                this.loadingStore.hide();
+                console.log("You're on the Sales Report page.")
             }
         },
         activeReportsTab(newReportsTab) {
             if (newReportsTab === 'sales') {
                 console.log("Current Reports Tab: ", newReportsTab);
             } else if (newReportsTab === 'orders') {
-                this.loadingStore.show("Preparing...");
-                this.fetchAllOrdersReport();
-                this.loadingStore.hide();
+                console.log("Current Reports Tab: ", newReportsTab);
             } else if (newReportsTab === 'products') {
                 this.loadingStore.show("Preparing...");
                 this.fetchProductsReport();
                 this.loadingStore.hide();
             } else if (newReportsTab === 'stocks') {
-                this.loadingStore.show("Preparing...");
-                this.fetchStocksReport();
-                this.loadingStore.hide();
+                console.log("Current Reports Tab: ", newReportsTab);
             }
         },
         activeBranchInfoTab (newBranchInfoTab) {
@@ -647,7 +647,7 @@ export default {
                 // this.fetchCashierPersonnel();
                 this.loadingStore.hide();
             }
-        }
+        },
     },
     methods: {
         async fetchLowStocks() {
@@ -864,78 +864,54 @@ export default {
             }
         },
 
-        async fetchStocksReport() {
-            this.loadingStockReports = true;
+        async fetchStocksReport(dateFilterId = 1) {
+            this.loadingStore.show("Preparing...");
             try {
-                this.isSaving = false;
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
                     this.stockReports = [];
                     return;
                 }
-                await this.stocksStore.fetchStocksReportStore(this.branchDetails.branch_id);
-                if (this.stocksStore.stocks.length === 0) {
-                    this.stockReports = [];
-                } else {
-                    this.stockReports = this.stocksStore.stocks.map(stock => this.formatStock(stock));
-                }
-                this.stockReportsLoaded = true;
-                this.loadingStockReports = false;
+                await this.stocksStore.fetchStocksReportStore(this.branchDetails.branch_id, dateFilterId);
             } catch (error) {
-                console.error('Error fetching stocks report:', error);
-                this.showError("Error fetching stocks report!");
-            } finally {
-                this.loadingStockReports = false;
-            }
-        },
-
-        async fetchAllOrdersReport() {
-            this.loadingTransactionsReports = true;
-            try {
-                this.isSaving = false;
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.transactionReports = [];
-                    return;
-                }
-                await this.transactStore.fetchAllOrdersStore(this.branchDetails.branch_id);
-                if (this.transactStore.transactions.length === 0) {
-                    this.transactionReports = [];
-                } else {
-                    this.transactionReports = this.transactStore.transactions.map(order => this.formatOrder(order));
-                }
-                this.transactionReportsLoaded = true;
-                this.loadingTransactionsReports = false;
-            } catch (error) {
-                console.error('Error fetching orders report:', error);
+                console.error(error);
                 this.showError(error);
             } finally {
-                this.loadingTransactionsReports = false;
+                this.loadingStore.hide();
             }
         },
 
-        async fetchSalesReport() {
-            this.loadingTransactionOrdersReports = true;
+        async fetchAllOrdersReport(dateFilterId = 1) {
+            this.loadingStore.show('Preparing...');
             try {
-                this.isSaving = false;
+                if (!this.branchDetails.branch_id) {
+                    this.showError("Branch ID is not available!");
+                    this.transactionReports = [];
+                    return;
+                }
+                await this.transactStore.fetchAllOrdersStore(this.branchDetails.branch_id, dateFilterId);
+            } catch (error) {
+                console.error(error);
+                this.showError(error);
+            } finally {
+                this.loadingStore.hide();
+            }
+        },
+
+        async fetchSalesReport(dateFilterId = 1) {
+            this.loadingStore.show('Preparing...');
+            try {
                 if (!this.branchDetails.branch_id) {
                     this.showError("Branch ID is not available!");
                     this.salesByDateReports = [];
                     return;
                 }
-                await this.transactStore.fetchGrossSalesByDateStore(this.branchDetails.branch_id);
-                if (this.transactStore.grossSalesByDate.length === 0) {
-                    this.salesByDateReports = [];
-                } else {
-                    this.salesByDateReports = this.transactStore.grossSalesByDate.map(t_orders => this.formatSalesByDate(t_orders));
-                }
-                this.salesByDateReportsLoaded = true;
-                this.loadingTransactionOrdersReports = false;
+                await this.transactStore.fetchGrossSalesByDateStore(this.branchDetails.branch_id, dateFilterId);
             } catch (error) {
-                console.error('Error fetching sales report:', error);
-                this.showError("Error fetching sales! report");
+                console.error(error);
+                this.showError(error);
             } finally {
-                this.loadingTransactionOrdersReports = false;
+                this.loadingStore.hide();
             }
         },
 
@@ -1046,6 +1022,8 @@ export default {
         async updatingStock() {
             this.isSaving = true;
             try {
+                const now = new Date();
+                const formattedDate = now.toISOString();
                 const stockData = {
                     stock_id: Number(this.currentStock.stock_id),
                     stock_ingredient: this.currentStock.stock_ingredient,
@@ -1056,10 +1034,30 @@ export default {
                     branch_id: Number(this.currentStock.branch_id),
                     shop_id: Number(this.currentStock.shop_id)
                 };
+                const stockDataWithUpdatedAt = {
+                    stock_id: Number(this.currentStock.stock_id),
+                    stock_ingredient: this.currentStock.stock_ingredient,
+                    stock_in: parseFloat(this.currentStock.stock_in),
+                    stock_unit: Number(this.currentStock.stock_unit),
+                    stock_cost_per_unit: parseFloat(this.currentStock.stock_cost_per_unit),
+                    availability_id: Number(this.currentStock.availability_id),
+                    branch_id: Number(this.currentStock.branch_id),
+                    shop_id: Number(this.currentStock.shop_id),
+                    updated_at: formattedDate,
+                };
                 this.confirmUpdatingStockDialog = false;
                 await this.stocksStore.updateStockStore(stockData);
+                await this.stockOptionsStore.fetchAllOptions(); 
+
+                // For reactive effect
+                const updatedStock = this.formatStock({ ...this.currentStock, ...stockDataWithUpdatedAt });
+                const index = this.stocks.findIndex(
+                    s => s.stock_id === this.currentStock.stock_id
+                );
+                if (index !== -1) {
+                    this.stocks.splice(index, 1, updatedStock);
+                }
                 this.stockEditDialog = false;
-                this.fetchStocks();
                 this.fetchLowStocks();
                 this.showSuccess("Stock updated successfully!");
             } catch (error) {
@@ -1104,10 +1102,9 @@ export default {
                     updated_at: formattedDate,
                 };
                 await this.productsStore.updateProductStore(productData);
-                console.log("Updated product:", productData);
-
                 await this.productOptionsStore.fetchAllOptions(); 
-                // Insert condition
+
+                // For reactive effect
                 const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productDataWithUpdatedAt });
                 const index = this.products.findIndex(
                     p => p.product_id === this.currentProduct.product_id
@@ -1227,8 +1224,12 @@ export default {
         },
 
         formatStock(stock) {
+            const unit = this.stockUnitOption.find(u => u.unit_id === Number(stock.stock_unit)); 
+            const availability = this.stockAvailabilityOption.find(a => a.availability_id === Number(stock.availability_id)); 
             return {
                 ...stock,
+                unit_label: unit?.unit_label,
+                availability_label: availability?.availability_label,
                 stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
                 stock_unit: Number(stock.stock_unit),
                 stock_in: Number(stock.stock_in),

@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="transactionsHeaders" :items="mappedTransactions" :loading="loading" :items-per-page="10"
+    <v-data-table :headers="transactionsHeaders" :items="mappedOrders" :loading="loading" :items-per-page="10"
         :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-row class="mt-5">
@@ -10,7 +10,7 @@
                         <v-btn @click="printTransactions(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
                         <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
-                            @click="$emit('refresh')" :loading="loading"></v-btn>
+                            @click="fetchAllOrdersReport(dateFilter)" :loading="loading"></v-btn>
                     </div>
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
@@ -47,7 +47,7 @@ export default {
     name: 'TransactionsReportsTable',
     data() {
         return {
-            mappedTransactions: [],
+            mappedOrders: [],
             dateFilter: 1,
             shopLogoLink: '-',
             transactionsHeaders: [
@@ -76,7 +76,7 @@ export default {
     watch: {
         allOrders: {
             handler(newVal) {
-                this.mappedTransactions = newVal.map(order => this.formatOrder(order));
+                this.mappedOrders = newVal.map(order => this.formatOrder(order));
             },
             immediate: true
         },
@@ -136,9 +136,6 @@ export default {
         },
 
     },
-    emits: [
-        'refresh',
-    ],
     setup() {
         const loadingStore = useLoadingStore();
         const transactStore = useTransactStore();
@@ -165,11 +162,19 @@ export default {
     },
     methods: {
         async fetchAllOrdersReport(dateFilterId = null) {
+            this.loadingStore.show('Preparing...');
             try {
                 await this.transactStore.fetchAllOrdersStore(this.branchId, dateFilterId);
-                this.mappedTransactions = this.transactStore.allOrders.map(order => this.formatOrder(order));
+                if (this.transactStore.allOrders.length === 0) {
+                    this.mappedOrders = [];
+                } else {
+                    this.mappedOrders = this.transactStore.allOrders.map(t_order => this.formatOrder(t_order));
+                }
             } catch (error) {
+                console.error(error);
                 this.showError(error);
+            } finally {
+                this.loadingStore.hide();
             }
         },
 
@@ -211,7 +216,6 @@ export default {
             link.click();
             this.loadingStore.hide();
             document.body.removeChild(link);
-            // this.$emit('refresh');
         },
 
         async printTransactions(dateFilterId = null) {

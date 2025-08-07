@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="headers" :items="skeletonItems" hide-default-footer class="elevation-1">
+    <v-data-table :headers="headers" :items="skeletonItems">
         <template v-slot:top>
             <v-row class="mt-5">
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
@@ -13,30 +13,30 @@
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
                     <div class="d-flex">
-                        <v-autocomplete label="Date Filter" class="w-50 ms-3 me-2" clearable></v-autocomplete>
-                        <v-text-field style="font-size: 12px;" readonly>Sales: ₱0</v-text-field>
+                        <v-autocomplete label="Date Filter" class="ms-3 me-2" clearable></v-autocomplete>
+                        <span class="w-25">Net sales: <br /><h3>₱0</h3></span>
                     </div>
                 </v-col>
             </v-row>
         </template>
 
-        <template v-slot:[`item.reference_number`]>
+        <template v-slot:[`item.display_product_name`]>
+            <v-skeleton-loader type="text" width="300" class="bg-grey-lighten-1"></v-skeleton-loader>
+        </template>
+
+        <template v-slot:[`item.display_product_price`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.total_quantity`]>
+        <template v-slot:[`item.display_total_quantity`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
-        <template v-slot:[`item.cash_render`]>
-            <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
-        </template>
-
-        <template v-slot:[`item.customer_charge`]>
+        <template v-slot:[`item.category_label`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
         
-        <template v-slot:[`item.customer_change`]>
+        <template v-slot:[`item.display_sales`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
@@ -48,18 +48,18 @@
 
 <script>
 export default {
-    name: 'TransactionsReportsTableSkeleton',
+    name: 'SalesReportsTableSkeleton',
     data() {
         return {
             headers: [
-                { title: '', value: 'reference_number' },
-                { title: '', value: 'total_quantity' },
-                { title: '', value: 'cash_render' },
-                { title: '', value: 'customer_charge' },
-                { title: '', value: 'customer_change' },
-                { title: '', value: 'updated_at' },
+                { title: 'Product', value: 'display_product_name', sortable: 'true', width: '25%' },
+                { title: 'Price', value: 'display_product_price', sortable: 'true', width: '10%' },
+                { title: 'Quantity', value: 'display_total_quantity', sortable: 'true', width: '10%' },
+                { title: 'Category', value: 'category_label', sortable: 'true', width: '15%' },
+                { title: 'Subtotal', value: 'display_sales', sortable: 'true', width: '15%' },
+                { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
-            skeletonItems: Array(10).fill({}) // Creates 10 empty rows
+            skeletonItems: Array(10).fill({})
         }
     }
 }

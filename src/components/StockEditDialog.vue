@@ -66,8 +66,9 @@
 </template>
 
 <script>
+import { computed } from 'vue'; // added
+import { useStockOptionsStore } from '@/stores/stockOptionsStore';
 import LoaderUI from '@/components/LoaderUI.vue';
-import apiClient from '../axios'
 
 export default {
     name: 'StockEditDialog',
@@ -76,13 +77,14 @@ export default {
     },
     data() {
         return {
-            stockUnitOption: [],
-            stockAvailabilityOption: [],
         }
     },
-    mounted() {
-        this.getStockUnitOption();
-        this.getStockAvailabilityOption();
+    setup() {
+        const stockOptionsStore = useStockOptionsStore();
+        return {
+        stockUnitOption: computed(() => stockOptionsStore.unitOption),
+        stockAvailabilityOption: computed(() => stockOptionsStore.availabilityOption),
+        };
     },
     props: {
         modelValue: {
@@ -117,24 +119,6 @@ export default {
         'save'
     ],
     methods: {
-        async getOptions(endpoint, targetArray, errorMessage) {
-            try {
-                const response = await apiClient.get(endpoint, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-                    },
-                });
-                this[targetArray] = response.data;
-            } catch (error) {
-                this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
-            }
-        },
-        getStockUnitOption() {
-            this.getOptions('/admin/stock-unit-option', 'stockUnitOption', 'Failed to fetch stock unit');
-        },
-        getStockAvailabilityOption() {
-            this.getOptions('/admin/product-availability-option', 'stockAvailabilityOption', 'Failed to fetch stock availability');
-        },
         formatDate(date) {
             if (!date) return 'Invalid date';
             return date

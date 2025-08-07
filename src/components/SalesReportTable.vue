@@ -10,7 +10,7 @@
                         <v-btn @click="printSales(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
                         <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
-                            @click="$emit('refresh')" :loading="loading"></v-btn>
+                            @click="fetchSalesReport(dateFilter)" :loading="loading"></v-btn>
                     </div>
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
@@ -141,9 +141,6 @@ export default {
         },
 
     },
-    emits: [
-        'refresh',
-    ],
     setup() {
         const loadingStore = useLoadingStore();
         const transactStore = useTransactStore();
@@ -170,12 +167,21 @@ export default {
     },
     methods: {
         async fetchSalesReport(dateFilterId = null) {
+            this.loadingStore.show('Preparing...');
             try {
                 await this.transactStore.fetchGrossSalesByDateStore(this.branchId, dateFilterId);
-                this.mappedSales = this.transactStore.grossSalesByDate.map(t_order => this.formatSales(t_order));
-                this.totalSales = this.transactStore.grossSales;
+                if (this.transactStore.grossSalesByDate.length === 0) {
+                    this.mappedSales = [];
+                    this.totalSales = [];
+                } else {
+                    this.mappedSales = this.transactStore.grossSalesByDate.map(t_order => this.formatSales(t_order));
+                    this.totalSales = this.transactStore.grossSales;
+                }
             } catch (error) {
-                this.showError("Error fetching sales!");
+                console.error(error);
+                this.showError();
+            } finally {
+                this.loadingStore.hide();
             }
         },
 

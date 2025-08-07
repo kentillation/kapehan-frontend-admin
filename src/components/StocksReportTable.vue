@@ -10,7 +10,7 @@
                         <v-btn @click="printStocks(dateFilter)" prepend-icon="mdi-printer" color="primary"
                             variant="tonal">PRINT</v-btn>&nbsp;
                         <v-btn class="ps-7" prepend-icon="mdi-refresh" color="primary" variant="tonal"
-                            @click="$emit('refresh')" :loading="loading"></v-btn>
+                            @click="fetchStocksReport(dateFilter)" :loading="loading"></v-btn>
                     </div>
                 </v-col>
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
@@ -139,9 +139,6 @@ export default {
         },
 
     },
-    emits: [
-        'refresh',
-    ],
     setup() {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
@@ -168,14 +165,19 @@ export default {
     },
     methods: {
         async fetchStocksReport(dateFilterId = null) {
+            this.loadingStore.show('Preparing...');
             try {
                 await this.stocksStore.fetchStocksReportStore(this.branchId, dateFilterId);
-                this.mappedStocks = this.stocksStore.stocksByDate.map(stock => this.formatStock(stock));
+                if (this.stocksStore.stocksByDate.length === 0) {
+                    this.mappedStocks = [];
+                } else {
+                    this.mappedStocks = this.stocksStore.stocksByDate.map(stock => this.formatStock(stock));
+                }
             } catch (error) {
-                console.error('Error fetching stocks report:', error);
-                this.showError("Error fetching stocks report!");
+                console.error(error);
+                this.showError(error);
             } finally {
-                this.loadingStockReports = false;
+                this.loadingStore.hide();
             }
         },
 
@@ -218,7 +220,6 @@ export default {
             link.click();
             this.loadingStore.hide();
             document.body.removeChild(link);
-            // this.$emit('refresh');
         },
 
         async printStocks(dateFilterId = null) {
