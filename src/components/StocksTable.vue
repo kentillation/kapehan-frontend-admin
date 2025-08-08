@@ -1,11 +1,15 @@
 <template>
     <v-row>
         <v-col cols="12" lg="4" md="4" sm="6">
-            <v-text-field  density="comfortable"
+            <v-text-field
+                density="comfortable"
                 v-model="searchStock" 
-                placeholder="Search product here..." 
+                placeholder="Search stock details" 
                 variant="outlined" 
-                label="Search stock"></v-text-field>
+                label="Search stock details"
+                clearable
+                @click:clear="searchStock = ''"
+                @update:modelValue="debounceSearch"></v-text-field>
         </v-col>
     </v-row>
     <v-data-table 
@@ -26,7 +30,7 @@
                     <span class="to-hide">Add stocks</span>
                     <span class="to-show">Stocks</span>
                 </v-btn>
-                <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
+                <v-btn @click="fetchStocks" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
                     size="small" class="me-3"></v-btn>
             </v-toolbar>
         </template>
@@ -93,7 +97,10 @@
 </template>
 
 <script>
+import { computed } from 'vue';
 import { useLoadingStore } from '@/stores/loading';
+import { useStocksStore } from '@/stores/stocksStore';
+import { useStockOptionsStore } from '@/stores/stockOptionsStore';
 import AddStockDialog from '@/components/AddStockDialog.vue';
 
 export default {
@@ -101,6 +108,8 @@ export default {
     data() {
         return {
             searchStock: '',
+            debounceTimer: null,
+            mappedStocks: [],
             addStockDialog: false,
             stockHeaders: [
                 { title: '', value: 'select', width: '5%' },
@@ -139,30 +148,75 @@ export default {
             required: true
         }
     },
+    mounted() {
+        this.fetchStocks();
+    },
+    watch: {
+        stocks: {
+            handler(newVal) {
+                this.mappedStocks = newVal.map(stock => this.formatStock(stock));
+            },
+            immediate: true
+        },
+    },
     emits: [
-        'refresh',
         'edit-stock',
     ],
     computed: {
+        filteredStocks() {
+            if (!this.searchStock) {
+                return this.mappedStocks;
+            }
+            const searchTerm = this.searchStock.toLowerCase();
+            return this.mappedStocks.filter(stock => {
+                return (stock.stock_ingredient.toLowerCase().includes(searchTerm)) ||
+                (stock.unit_label.toLowerCase().includes(searchTerm)) ||
+                (stock.availability_label.toLowerCase().includes(searchTerm)) ||
+                (stock.display_stock_in.toLowerCase().includes(searchTerm)) ||
+                (stock.display_unit_cost.toLowerCase().includes(searchTerm)) ||
+                (stock.updated_at.toLowerCase().includes(searchTerm));
+            });
+        },
         // hasCheck() {
         //     return !this.stocks.some(item => item.selected);
         // },
-        filteredStocks() {
-            if (!this.searchStock) {
-                return this.stocks;
-            }
-            return this.stocks.filter(stock =>
-                stock.stock_ingredient.toLowerCase().includes(this.searchStock.toLowerCase())
-            );
-        },
     },
     setup() {
+        const stocksStore = useStocksStore();
+        const stockOptionsStore = useStockOptionsStore();
+        const stockUnitOption = computed(() => stockOptionsStore.unitOption); 
+        const stockAvailabilityOption = computed(() => stockOptionsStore.availabilityOption); 
         const loadingStore = useLoadingStore();
         return {
+            stocksStore,
+            stockOptionsStore,
+            stockUnitOption,
+            stockAvailabilityOption,
             loadingStore,
         };
     },
     methods: {
+        debounceSearch() {
+            if (this.debounceTimer) clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+            }, 300);
+        },
+        async fetchStocks() {
+            this.loadingStore.show('Preparing...');
+            try {
+                await this.stocksStore.fetchAllStocksStore(this.branchId);
+                if (this.stocksStore.stocks.length === 0) {
+                    this.mappedStocks = [];
+                } else {
+                    this.mappedStocks = this.stocksStore.stocks.map(stock => this.formatStock(stock));
+                }
+            } catch (error) {
+                console.error(error);
+                this.showError(error);
+            } finally {
+                this.loadingStore.hide();
+            }
+        },
         openAddStockDialog() {
             this.$router.push({
                 path: '/add-stock/',
@@ -173,6 +227,42 @@ export default {
                 }
             });
             // this.addStockDialog = true;
+        },
+        formatStock(stock) {
+            const unit = this.stockUnitOption.find(u => u.unit_id === Number(stock.stock_unit)); 
+            const availability = this.stockAvailabilityOption.find(a => a.availability_id === Number(stock.availability_id)); 
+            return {
+                ...stock,
+                unit_label: unit?.unit_label,
+                availability_label: availability?.availability_label,
+                stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
+                stock_unit: Number(stock.stock_unit),
+                stock_in: Number(stock.stock_in),
+                stock_alert_qty: Number(stock.stock_alert_qty),
+                availability_id: Number(stock.availability_id),
+                display_stock_in: `${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}`,
+                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
+                updated_at: this.formatDateTime(stock.updated_at),
+            };
+        },
+        capitalizeFirstLetter(text) {
+            return text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : '';
+        },
+        formatDateTime(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleString('en-PH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Manila'
+            });
+        },
+        showError(message) {
+            this.$refs.snackbarRef.showSnackbar(message, "error");
         },
     }
 }

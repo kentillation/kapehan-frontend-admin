@@ -185,12 +185,12 @@ export default {
         }
     },
     mounted() {
-        this.fetchProducts(this.dateFilter);
+        this.fetchProducts();
     },
     watch: {
         products: {
             handler(newVal) {
-                this.mappedProducts = newVal.map(sale => this.formatStock(sale));
+                this.mappedProducts = newVal.map(product => this.formatProduct(product));
             },
             immediate: true
         },

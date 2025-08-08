@@ -197,10 +197,11 @@
                             <v-tabs-window-item value="stocks">
                                 <v-container>
                                     <StocksTableSkeleton v-if="loadingStocks" />
-                                    <StocksTable v-else :stocks="stocks" @refresh="fetchStocks"
-                                        @edit-stock="openEditStockDialog" :branch-id="branchDetails.branch_id"
-                                        :branch-name="branchDetails.branch_name" :shop-id="branchDetails.shop_id"
-                                        :loading="loadingStocks" />
+                                    <StocksTable v-else @edit-stock="openEditStockDialog"
+                                        :stocks="stocks" :loading="loadingStocks"
+                                        :shop-id="branchDetails.shop_id"
+                                        :branch-id="branchDetails.branch_id"
+                                        :branch-name="branchDetails.branch_name"/>
                                     <StockEditDialog v-model="stockEditDialog"
                                         @update:modelValue="stockEditDialog = $event"
                                         @update:stock="currentStock = $event"
@@ -593,13 +594,9 @@ export default {
                 this.onDashboard();
                 this.loadingStore.hide();
             } else if (newTab === 'products') {
-                // this.loadingStore.show("Preparing...");
                 console.log("Current Reports Tab: ", newTab);
-                // this.loadingStore.hide();
             } else if (newTab === 'stocks') {
-                this.loadingStore.show("Preparing...");
-                this.fetchStocks();
-                this.loadingStore.hide();
+                console.log("Current Reports Tab: ", newTab);
             } else if (newTab === 'void-orders') {
                 this.loadingStore.show("Preparing...");
                 this.fetchVoidOrders();
