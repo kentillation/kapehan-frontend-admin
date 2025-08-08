@@ -1,16 +1,21 @@
 <template>
     <v-row>
         <v-col cols="12" lg="4" md="4" sm="6">
-            <v-text-field  density="comfortable"
+            <v-text-field
+                density="comfortable"
                 v-model="searchProduct" 
-                placeholder="Search product here..." 
+                placeholder="Search product details" 
                 variant="outlined" 
-                label="Search product"></v-text-field>
+                label="Search product details"
+                clearable
+                @click:clear="searchProduct = ''"
+                @update:modelValue="debounceSearch">
+            </v-text-field>
         </v-col>
     </v-row>
     <v-data-table 
         :headers="productHeaders" 
-        :items="mappedProducts" 
+        :items="filteredProducts" 
         :loading="loading" 
         :items-per-page="10"
         class="elevation-1 hover-table"
@@ -132,6 +137,7 @@ export default {
     name: 'ProductsTable',
     data() {
         return {
+            debounceTimer: null,
             mappedProducts: [],
             searchProduct: '',
             addProductDialog: false,
@@ -194,14 +200,21 @@ export default {
         'view-ingredients',
     ],
     computed: {
-        // filteredProducts() {
-        //     if (!this.searchProduct) {
-        //         return this.mappedProducts;
-        //     }
-        //     return this.mappedProducts.filter(product =>
-        //         product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
-        //     );
-        // },
+        filteredProducts() {
+            if (!this.searchProduct) {
+                return this.mappedProducts;
+            }
+            const searchTerm = this.searchProduct.toLowerCase();
+            return this.mappedProducts.filter(product => {
+                return (product.product_name.toLowerCase().includes(searchTerm)) ||
+                    (product.temp_label && product.temp_label.toLowerCase().includes(searchTerm)) ||
+                    (product.size_label && product.size_label.toLowerCase().includes(searchTerm)) ||
+                    (product.category_label && product.category_label.toLowerCase().includes(searchTerm)) ||
+                    (product.availability_label && product.availability_label.toLowerCase().includes(searchTerm)) ||
+                    product.display_product_price.toLowerCase().includes(searchTerm) ||
+                    product.updated_at.toLowerCase().includes(searchTerm);
+            });
+        },
         // hasCheck() {
         //     return !this.products.some(item => item.selected);
         // }
@@ -225,6 +238,12 @@ export default {
         };
     },
     methods: {
+        debounceSearch() {
+            if (this.debounceTimer) clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+                // The computed property will automatically update
+            }, 300);
+        },
         async fetchProducts() {
             this.loadingStore.show('Preparing...');
             try {
