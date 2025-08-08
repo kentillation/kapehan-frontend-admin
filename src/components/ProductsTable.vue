@@ -10,7 +10,7 @@
     </v-row>
     <v-data-table 
         :headers="productHeaders" 
-        :items="filteredProducts" 
+        :items="mappedProducts" 
         :loading="loading" 
         :items-per-page="10"
         class="elevation-1 hover-table"
@@ -26,7 +26,7 @@
                     <span class="to-hide">Add products</span>
                     <span class="to-show">products</span>
                 </v-btn>
-                <v-btn @click="$emit('refresh')" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
+                <v-btn @click="fetchProducts" :loading="loading" icon="mdi-refresh" color="#0090b6" variant="flat"
                     size="small" class="me-3"></v-btn>
             </v-toolbar>
 
@@ -117,16 +117,22 @@
             <v-skeleton-loader type="table-row@6"></v-skeleton-loader>
         </template>
     </v-data-table>
+    <Snackbar ref="snackbarRef" />
 </template>
 
 <script>
+import { computed } from 'vue';
 import { useLoadingStore } from '@/stores/loading';
+import { useProductsStore } from '@/stores/productsStore';
+import { useProductOptionsStore } from '@/stores/productOptionsStore'; 
+import Snackbar from '@/components/Snackbar.vue';
 import AddProductDialog from '@/components/AddProductDialog.vue';
 
 export default {
     name: 'ProductsTable',
     data() {
         return {
+            mappedProducts: [],
             searchProduct: '',
             addProductDialog: false,
             productHeaders: [
@@ -144,12 +150,12 @@ export default {
     },
     components: {
         AddProductDialog,
+        Snackbar,
     },
     props: {
         products: {
             type: Array,
             required: true,
-            // default: () => []
         },
         loading: {
             type: Boolean,
@@ -172,31 +178,69 @@ export default {
             default: null
         }
     },
+    mounted() {
+        this.fetchProducts(this.dateFilter);
+    },
+    watch: {
+        products: {
+            handler(newVal) {
+                this.mappedProducts = newVal.map(sale => this.formatStock(sale));
+            },
+            immediate: true
+        },
+    },
     emits: [
-        'refresh',
         'edit-product',
         'view-ingredients',
     ],
     computed: {
-        filteredProducts() {
-            if (!this.searchProduct) {
-                return this.products;
-            }
-            return this.products.filter(product =>
-                product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
-            );
-        },
+        // filteredProducts() {
+        //     if (!this.searchProduct) {
+        //         return this.mappedProducts;
+        //     }
+        //     return this.mappedProducts.filter(product =>
+        //         product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+        //     );
+        // },
         // hasCheck() {
         //     return !this.products.some(item => item.selected);
         // }
     },
     setup() {
         const loadingStore = useLoadingStore();
+        const productsStore = useProductsStore();
+        const productOptionsStore = useProductOptionsStore(); 
+        const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions); 
+        const productSizeOption = computed(() => productOptionsStore.sizeOptions); 
+        const productCategoryOption = computed(() => productOptionsStore.categoryOptions); 
+        const productAvailabilityOption = computed(() => productOptionsStore.availabilityOptions); 
         return {
             loadingStore,
+            productsStore,
+            productOptionsStore,
+            productTemperatureOption,
+            productSizeOption,
+            productCategoryOption,
+            productAvailabilityOption
         };
     },
     methods: {
+        async fetchProducts() {
+            this.loadingStore.show('Preparing...');
+            try {
+                await this.productsStore.fetchAllProductsStore(this.branchId);
+                if (this.productsStore.products.length === 0) {
+                    this.mappedProducts = [];
+                } else {
+                    this.mappedProducts = this.productsStore.products.map(product => this.formatProduct(product));
+                }
+            } catch (error) {
+                console.error(error);
+                this.showError(error);
+            } finally {
+                this.loadingStore.hide();
+            }
+        },
         openAddProductDialog() {
             this.$router.push({
                 path: '/add-product/',
@@ -206,19 +250,46 @@ export default {
                     branch_name: this.branchName,
                 }
             });
-            // this.addProductDialog = true;
         },
-        // toEditPage() {
-        //     this.$router.push({
-        //         path: '/edit-products/',
-        //         query: {
-        //             shop_id: this.products.shop_id,
-        //             branch_id: this.products.branchId,
-        //             branch_name: this.branchName,
-        //             product_id: this.products.product_id
-        //         }
-        //     });
-        // }
+        formatProduct(product) {
+            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id)); 
+            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id)); 
+            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id)); 
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id)); 
+            return {
+                ...product,
+                temp_label: temp?.temp_label,
+                size_label: size?.size_label,
+                category_label: category?.category_label,
+                availability_label: availability?.availability_label,
+                product_temp_id: Number(product.product_temp_id),
+                product_size_id: Number(product.product_size_id),
+                product_category_id: Number(product.product_category_id),
+                availability_id: Number(product.availability_id),
+                product_name: this.capitalizeFirstLetter(product.product_name),
+                display_product_price: `₱${product.product_price}`,
+                updated_at: this.formatDateTime(product.updated_at),
+            };
+        },
+        capitalizeFirstLetter(text) {
+            return text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : '';
+        },
+        formatDateTime(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleString('en-PH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Manila'
+            });
+        },
+        showError(message) {
+            this.$refs.snackbarRef.showSnackbar(message, "error");
+        },
     }
 }
 </script>

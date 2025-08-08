@@ -69,10 +69,11 @@
 </template>
 
 <script>
-import apiClient from '../axios';
+import { computed } from 'vue';
 import Snackbar from '@/components/Snackbar.vue';
 import LoaderUI from '@/components/LoaderUI.vue';
 import { useProductsStore } from '@/stores/productsStore';
+import { useProductOptionsStore } from '@/stores/productOptionsStore';
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -98,15 +99,18 @@ export default {
                     productStation: null,
                 },
             ],
-            productTemperatureOption: [],
-            productSizeOption: [],
-            productCategoryOption: [],
-            productStationOption: [],
         };
     },
     setup() {
         const productsStore = useProductsStore();
-        return { productsStore };
+        const productOptionsStore = useProductOptionsStore();
+        return { 
+            productsStore,
+            productTemperatureOption: computed(() => productOptionsStore.temperatureOptions),
+            productSizeOption: computed(() => productOptionsStore.sizeOptions),
+            productCategoryOption: computed(() => productOptionsStore.categoryOptions),
+            productStationOption: computed(() => productOptionsStore.stationOptions),
+        };
     },
     created() {
         this.shopID = this.$route.query.shop_id;
@@ -172,33 +176,9 @@ export default {
                 this.$refs.productForm.reset();
             } catch (error) {
                 this.validatingProduct = false;
-                this.showError("Failed to save product. Please try again!");
-                console.error('Product submission error:', error);
+                console.error(error);
+                this.showError(error);
             }
-        },
-        async getOptions(endpoint, targetArray, errorMessage) {
-            try {
-                const response = await apiClient.get(endpoint, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-                    },
-                });
-                this[targetArray] = response.data;
-            } catch (error) {
-                this.$refs.snackbarRef.showSnackbar(errorMessage, 'error');
-            }
-        },
-        getProductTemperatureOption() {
-            this.getOptions('/admin/product-temperature-option', 'productTemperatureOption', 'Failed to fetch product temperatures');
-        },
-        getProductSizeOption() {
-            this.getOptions('/admin/product-size-option', 'productSizeOption', 'Failed to fetch product sizes');
-        },
-        getProductCategoryOption() {
-            this.getOptions('/admin/product-category-option', 'productCategoryOption', 'Failed to fetch product category');
-        },
-        getProductStationOption() {
-            this.getOptions('/admin/product-station-option', 'productStationOption', 'Failed to fetch product station');
         },
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");

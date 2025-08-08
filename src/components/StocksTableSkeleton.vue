@@ -28,6 +28,10 @@
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
 
+        <template v-slot:[`item.unit_label`]>
+            <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
+        </template>
+
         <template v-slot:[`item.stock_in`]>
             <v-skeleton-loader type="text" width="100" class="bg-grey-lighten-1"></v-skeleton-loader>
         </template>
@@ -56,12 +60,13 @@ export default {
     data() {
         return {
             headers: [
-                { title: '', value: 'stock_ingredient' },
-                { title: '', value: 'stock_in' },
-                { title: '', value: 'stock_cost_per_unit' },
-                { title: '', value: 'availability_label' },
-                { title: '', value: 'updated_at' },
-                { title: '', value: 'actions' },
+                { title: 'Ingredients', value: 'stock_ingredient', sortable: 'true', width: '20%' },
+                { title: 'Unit', value: 'unit_label', sortable: 'true', width: '10%' },
+                { title: 'Stock quantity', value: 'stock_in', sortable: 'true', width: '15%' },
+                { title: 'Unit cost', value: 'stock_cost_per_unit', sortable: 'true', width: '10%' },
+                { title: 'Availability', value: 'availability_label', sortable: 'true', width: '15%' },
+                { title: 'Last update', value: 'updated_at', sortable: 'true', width: '25%' },
+                { title: '', value: 'actions', width: '10%' },
             ],
             skeletonItems: Array(10).fill({}) // Creates 10 empty rows
         }

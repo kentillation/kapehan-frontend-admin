@@ -160,7 +160,7 @@
                             <v-tabs-window-item value="products">
                                 <v-container>
                                     <ProductsTableSkeleton v-if="loadingProducts" />
-                                    <ProductsTable v-else @refresh="fetchProducts" @edit-product="editProductDialog"
+                                    <ProductsTable v-else @edit-product="editProductDialog"
                                         @view-ingredients="ingredientsDialog" :products="products"
                                         :loading="loadingProducts" :shop-id="branchDetails.shop_id"
                                         :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
@@ -327,7 +327,7 @@
                                                 :contact="branchDetails.contact"
                                                 :admin-name="branchDetails.admin_name" />
                                             
-                                            <ProductsReportsTableSkeleton
+                                            <!-- <ProductsReportsTableSkeleton
                                                 v-if="loadingProductReports && activeReportsTab === 'products'" />
                                             <ProductsReportTable v-else-if="activeReportsTab === 'products'"
                                                 :products="productReports" :loading="loadingProductReports"
@@ -337,7 +337,7 @@
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
-                                                :admin-name="branchDetails.admin_name" />
+                                                :admin-name="branchDetails.admin_name" /> -->
 
                                         </div>
                                     </transition>
@@ -375,8 +375,6 @@ import StocksTableSkeleton from '@/components/StocksTableSkeleton.vue';
 import StockEditDialog from '@/components/StockEditDialog.vue';
 import StocksHistoryDialog from '@/components/StocksHistoryDialog.vue';
 import ProductsHistoryDialog from '@/components/ProductsHistoryDialog.vue';
-import ProductsReportsTableSkeleton from '@/components/ProductsReportsTableSkeleton.vue';
-import ProductsReportTable from '@/components/ProductsReportTable.vue';
 import StocksReportTable from '@/components/StocksReportTable.vue';
 import StocksReportsTableSkeleton from '@/components/StocksReportsTableSkeleton.vue';
 import OrdersReportTable from '@/components/OrdersReportTable.vue';
@@ -402,8 +400,6 @@ export default {
         StockEditDialog,
         StocksHistoryDialog,
         ProductsHistoryDialog,
-        ProductsReportsTableSkeleton,
-        ProductsReportTable,
         StocksReportTable,
         StocksReportsTableSkeleton,
         OrdersReportTable,
@@ -472,29 +468,23 @@ export default {
             voidByDate: [],
 
             // Reports
-            // activeReportsTab: 'sales',
-            productReports: [],
-            productReportsLoaded: false,
-            loadingProductReports: false,
-
+            dateFilter: 1,
+            formValid: true,
+            isSaving: false,
             stockReports: [],
             stockReportsLoaded: false,
             loadingStockReports: false,
-
             transactionReports: [],
             transactionReportsLoaded: false,
             loadingTransactionsReports: false,
-
-            dateFilter: 1,
             salesByDateReports: [],
             salesByDateReportsLoaded: false,
             loadingSalesReports: false,
-
             salesByMonthReports: [],
             loadingSalesByMonthReports: false,
 
-            formValid: true,
-            isSaving: false,
+            
+            
         };
     },
     props: {
@@ -537,9 +527,9 @@ export default {
     },
     computed: {
         ...mapState(useStocksStore, ['stockNotificationQty']),
+
         branchDetailItems() {
             return [
-                // { label: 'Store name', value: this.branchDetails.shop_name },
                 { label: 'Branch name', value: this.branchDetails.branch_name },
                 { label: 'Branch manager', value: this.branchDetails.m_name },
                 { label: 'Contact', value: this.branchDetails.contact },
@@ -547,6 +537,7 @@ export default {
                 { label: 'Location', value: this.branchDetails.branch_location },
             ];
         },
+
         tabs() {
             return [
                 { label: 'Dashboard', value: 'dashboard' },
@@ -557,14 +548,15 @@ export default {
                 { label: 'Reports', value: 'reports', },
             ];
         },
+
         reportsTabs() {
             return [
                 { label: 'Sales', value: 'sales', },
                 { label: 'Orders', value: 'orders', },
                 { label: 'Stocks', value: 'stocks', },
-                { label: 'Products', value: 'products', },
             ];
         },
+
         branchInfoTabs() {
             return [
                 { label: 'Details', value: 'details', },
@@ -573,6 +565,7 @@ export default {
                 { label: 'Barista', value: 'barista', },
             ];
         },
+
         stockCost: {
             get() {
                 return this.stock.stock_cost_per_unit;
@@ -593,15 +586,16 @@ export default {
                 }
             }
         },
+
         activeTab(newTab) {
             if (newTab === 'dashboard') {
                 this.loadingStore.show("Preparing...");
                 this.onDashboard();
                 this.loadingStore.hide();
             } else if (newTab === 'products') {
-                this.loadingStore.show("Preparing...");
-                this.fetchProducts();
-                this.loadingStore.hide();
+                // this.loadingStore.show("Preparing...");
+                console.log("Current Reports Tab: ", newTab);
+                // this.loadingStore.hide();
             } else if (newTab === 'stocks') {
                 this.loadingStore.show("Preparing...");
                 this.fetchStocks();
@@ -616,19 +610,17 @@ export default {
                 console.log("You're on the Sales Report page.")
             }
         },
+
         activeReportsTab(newReportsTab) {
             if (newReportsTab === 'sales') {
                 console.log("Current Reports Tab: ", newReportsTab);
             } else if (newReportsTab === 'orders') {
                 console.log("Current Reports Tab: ", newReportsTab);
-            } else if (newReportsTab === 'products') {
-                this.loadingStore.show("Preparing...");
-                this.fetchProductsReport();
-                this.loadingStore.hide();
-            } else if (newReportsTab === 'stocks') {
+            }  else if (newReportsTab === 'stocks') {
                 console.log("Current Reports Tab: ", newReportsTab);
             }
         },
+
         activeBranchInfoTab (newBranchInfoTab) {
             if (newBranchInfoTab === 'details') {
                 this.loadingStore.show("Preparing...");
@@ -704,31 +696,6 @@ export default {
             }
         },
 
-        switchToSalesTab() {
-            this.activeTab = 'reports';
-            this.activeReportsTab = 'sales';   
-        },
-
-        switchToOrdersTab() {
-            this.activeTab = 'reports';
-            this.activeReportsTab = 'orders';
-        },
-
-        switchToProductsTab() {
-            this.activeTab = 'products';
-            // this.activeReportsTab = 'products';
-        },
-
-        switchToStocksTab() {
-            this.activeTab = 'stocks';
-            // this.activeReportsTab = 'stocks';
-        },
-
-        switchToBranchInfoTab() {
-            this.activeTab = 'branch-info';
-            this.activeBranchInfoTab = 'details';
-        },
-
         async ingredientsDialog(item) {
             this.dialogIngredients = true;
             this.ingredients = [];
@@ -752,30 +719,30 @@ export default {
             }
         },
 
-        async fetchProducts() {
-            this.loadingProducts = true;
-            try {
-                this.isSaving = false;
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.products = [];
-                    return;
-                }
-                await this.productsStore.fetchAllProductsStore(this.branchDetails.branch_id);
-                if (this.productsStore.products.length === 0) {
-                    this.products = [];
-                } else {
+        // async fetchProducts() {
+        //     this.loadingProducts = true;
+        //     try {
+        //         this.isSaving = false;
+        //         if (!this.branchDetails.branch_id) {
+        //             this.showError("Branch ID is not available!");
+        //             this.products = [];
+        //             return;
+        //         }
+        //         await this.productsStore.fetchAllProductsStore(this.branchDetails.branch_id);
+        //         if (this.productsStore.products.length === 0) {
+        //             this.products = [];
+        //         } else {
 
-                    this.products = this.productsStore.products.map(product => this.formatProduct(product));
-                }
-                this.productsLoaded = true;
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                this.showError("Error fetching products!");
-            } finally {
-                this.loadingProducts = false;
-            }
-        },
+        //             this.products = this.productsStore.products.map(product => this.formatProduct(product));
+        //         }
+        //         this.productsLoaded = true;
+        //     } catch (error) {
+        //         console.error('Error fetching products:', error);
+        //         this.showError("Error fetching products!");
+        //     } finally {
+        //         this.loadingProducts = false;
+        //     }
+        // },
 
         async fetchProductAlone(productId) {
             try {
@@ -838,67 +805,8 @@ export default {
                 this.loadingVoidReversal = false;
             }
         },
-        
-        async fetchProductsReport() {
-            this.loadingProductReports = true;
-            try {
-                this.isSaving = false;
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.productReports = [];
-                    return;
-                }
-                await this.productsStore.fetchAllProductsStore(this.branchDetails.branch_id);
-                if (this.productsStore.products.length === 0) {
-                    this.productReports = [];
-                } else {
-                    this.productReportsLoaded = true;
-                    this.productReports = this.productsStore.products.map(product => this.formatProduct(product));
-                }
-                this.loadingProductReports = false;
-            } catch (error) {
-                console.error('Error fetching products report:', error);
-                this.showError("Error fetching products report!");
-            } finally {
-                this.loadingProductReports = false;
-            }
-        },
 
-        async fetchStocksReport(dateFilterId = 1) {
-            this.loadingStore.show("Preparing...");
-            try {
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.stockReports = [];
-                    return;
-                }
-                await this.stocksStore.fetchStocksReportStore(this.branchDetails.branch_id, dateFilterId);
-            } catch (error) {
-                console.error(error);
-                this.showError(error);
-            } finally {
-                this.loadingStore.hide();
-            }
-        },
-
-        async fetchAllOrdersReport(dateFilterId = 1) {
-            this.loadingStore.show('Preparing...');
-            try {
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.transactionReports = [];
-                    return;
-                }
-                await this.transactStore.fetchAllOrdersStore(this.branchDetails.branch_id, dateFilterId);
-            } catch (error) {
-                console.error(error);
-                this.showError(error);
-            } finally {
-                this.loadingStore.hide();
-            }
-        },
-
-        async fetchSalesReport(dateFilterId = 1) {
+        /* async fetchSalesReport(dateFilterId = 1) {
             this.loadingStore.show('Preparing...');
             try {
                 if (!this.branchDetails.branch_id) {
@@ -913,7 +821,7 @@ export default {
             } finally {
                 this.loadingStore.hide();
             }
-        },
+        }, */
 
         async fetchSalesOnly(month = null) {
             this.loadingSalesOnly = true;
@@ -947,7 +855,7 @@ export default {
                     this.textSkeleton = false;
                     return;
                 }
-                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id, month); // month added
+                await this.transactStore.fetchOrdersOnlyStore(this.branchDetails.branch_id, month);
                 this.totalOrders = Number(this.transactStore.ordersOnly.total_orders).toLocaleString('en-PH') || '';
             } catch (error) {
                 console.error('Error fetching orders:', error);
@@ -1140,7 +1048,7 @@ export default {
                 this.ingredientEditDialog = false;
                 this.dialogIngredients = false;
                 this.confirmUpdatingIngredientDialog = false
-                this.fetchProducts();
+                // this.fetchProducts();
                 this.showSuccess("Ingredient updated successfully!");
             } catch (error) {
                 console.error('Failed to update ingredient:', error);
@@ -1158,6 +1066,30 @@ export default {
         async editIngredientDialog(item) {
             this.currentIngredient = { ...item };
             this.ingredientEditDialog = true;
+        },
+        
+        switchToSalesTab() {
+            this.activeTab = 'reports';
+            this.activeReportsTab = 'sales';   
+        },
+
+        switchToOrdersTab() {
+            this.activeTab = 'reports';
+            this.activeReportsTab = 'orders';
+        },
+
+        switchToProductsTab() {
+            this.activeTab = 'products';
+        },
+
+        switchToStocksTab() {
+            this.activeTab = 'stocks';
+            // this.activeReportsTab = 'stocks';
+        },
+
+        switchToBranchInfoTab() {
+            this.activeTab = 'branch-info';
+            this.activeBranchInfoTab = 'details';
         },
 
         openEditStockDialog(item) {

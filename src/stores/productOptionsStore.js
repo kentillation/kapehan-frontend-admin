@@ -7,6 +7,7 @@ export const useProductOptionsStore = defineStore('productOptions', {
     sizeOptions: [],
     categoryOptions: [],
     availabilityOptions: [],
+    stationOptions: [],
     isLoading: false,
     error: null,
   }),
@@ -17,6 +18,7 @@ export const useProductOptionsStore = defineStore('productOptions', {
     getSizeOptions: (state) => state.sizeOptions,
     getCategoryOptions: (state) => state.categoryOptions,
     getAvailabilityOptions: (state) => state.availabilityOptions,
+    getStationOptions: (state) => state.stationOptions,
   },
 
   actions: {
@@ -39,17 +41,19 @@ export const useProductOptionsStore = defineStore('productOptions', {
       this.isLoading = true;
       try {
         // Fetch all options in parallel (better performance)
-        const [temps, sizes, categories, availabilities] = await Promise.all([
+        const [temps, sizes, categories, availabilities, stations] = await Promise.all([
           this.fetchOptions('/admin/product-temperature-option'),
           this.fetchOptions('/admin/product-size-option'),
           this.fetchOptions('/admin/product-category-option'),
           this.fetchOptions('/admin/product-availability-option'),
+          this.fetchOptions('/admin/product-station-option'),
         ]);
 
         this.temperatureOptions = temps;
         this.sizeOptions = sizes;
         this.categoryOptions = categories;
         this.availabilityOptions = availabilities;
+        this.stationOptions = stations;
       } catch (error) {
         this.error = error;
         console.error('Failed to fetch all options:', error);
