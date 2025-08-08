@@ -195,14 +195,14 @@ export const useTransactStore = defineStore('transactions', {
             }
         },
 
-        async updateVoidStatusStore(branchId, referenceNumber, voidStatus) {
+        async updateVoidStatusStore(transactionVoidID, branchId, referenceNumber, voidStatus) {
             this.loading = true;
             this.error = null;
             try {
                 if (!referenceNumber || !voidStatus) {
                     throw new Error('Invalid branch_id, reference_number, or void status');
                 }
-                const response = await TRANSACT_API.updateVoidStatusApi(branchId, referenceNumber, voidStatus);
+                const response = await TRANSACT_API.updateVoidStatusApi(transactionVoidID, branchId, referenceNumber, voidStatus);
                 if (response && response.status === true) {
                     this.voidOrders = this.voidOrders.map(voidOrder =>
                         voidOrder.id === referenceNumber ? { ...voidOrder, voidStatus } : voidOrder

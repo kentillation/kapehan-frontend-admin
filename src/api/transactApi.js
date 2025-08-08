@@ -244,7 +244,7 @@ export const TRANSACT_API = {
         }
     },
 
-    async updateVoidStatusApi(branchId, referenceNumber, voidStatus) {
+    async updateVoidStatusApi(transactionVoidID, branchId, referenceNumber, voidStatus) {
         if (!referenceNumber || !voidStatus) {
             throw new Error('Invalid reference_number, or void_status');
         }
@@ -261,7 +261,7 @@ export const TRANSACT_API = {
             };
             const response = await apiClient.put(
                 `${this.ENDPOINTS.UPDATE_VOID}/${branchId}`,
-                { referenceNumber, voidStatus },
+                { transactionVoidID, referenceNumber, voidStatus },
                 config
             );
             if (!response.data) {

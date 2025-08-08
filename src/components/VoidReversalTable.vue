@@ -10,7 +10,7 @@
                 <div class="w-75 w-sm-50 d-flex align-center justify-space-between">
                     <v-autocomplete v-model="dateFilter" :items="dateFilterItems" item-title="filter_date_label"
                         item-value="filter_date_id" label="Date Filter" class="mt-5 me-3"></v-autocomplete>
-                    <v-btn @click="$emit('refresh', this.dateFilterId)" :loading="loading" icon="mdi-refresh"
+                    <v-btn @click="fetchVoidOrders(dateFilter)" :loading="loading" icon="mdi-refresh"
                         color="#0090b6" variant="flat" size="small" class="me-3"></v-btn>
                 </div>
             </v-toolbar>
@@ -123,7 +123,7 @@ export default {
     watch: {
         voidByDate: {
             handler(newVal) {
-                this.mappedReversalOrdersByDate = newVal.map(order => this.formatReversalOrders(order));
+                this.mappedReversalOrdersByDate = newVal.map(order => this.formatVoidOrders(order));
             },
             immediate: true
         },
@@ -158,9 +158,6 @@ export default {
         },
 
     },
-    emits: [
-        'refresh',
-    ],
     setup() {
         const loadingStore = useLoadingStore();
         const transactStore = useTransactStore();
@@ -187,11 +184,14 @@ export default {
     },
     methods: {
         async fetchVoidOrders(dateFilterId = null) {
+            this.loadingStore.show('Preparing...');
             try {
                 await this.transactStore.fetchVoidByDateStore(this.branchId, dateFilterId);
-                this.mappedReversalOrdersByDate = this.transactStore.voidOrdersByDate.map(order => this.formatReversalOrders(order));
+                this.mappedReversalOrdersByDate = this.transactStore.voidOrdersByDate.map(order => this.formatVoidOrders(order));
             } catch (error) {
                 console.error('Error fetching void orders:', error);
+            } finally {
+                this.loadingStore.hide();
             }
         },
 
@@ -231,12 +231,12 @@ export default {
                 return;
             }
             this.loadingStore.show("Updating status...");
-            this.transactStore.updateVoidStatusStore(this.branchId, voidOrder.reference_number, newStatus)
+            this.transactStore.updateVoidStatusStore(voidOrder.transaction_void_id, this.branchId, voidOrder.reference_number, newStatus)
                 .then(() => {
                     const statusName = this.getStatusName(newStatus);
                     this.showSuccess(`Void has been ${statusName} successfully!`);
                     voidOrder.void_status_id = newStatus;
-                    this.fetchVoidOrders();
+                    this.fetchVoidOrders(this.dateFilter);
                 })
                 .catch(error => {
                     console.error('Error updating void order:', error);
@@ -253,7 +253,7 @@ export default {
             return status ? status.void_status : 'Unknown';
         },
 
-        formatReversalOrders(order) {
+        formatVoidOrders(order) {
             return {
                 ...order,
                 display_product_name: `${order.product_name}${order.temp_label}${order.size_label}` || '',

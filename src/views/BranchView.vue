@@ -31,17 +31,15 @@
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <v-btn color="#0090b6" 
-                                                            class="pa-2 w-50 d-flex justify-center rounded"
-                                                            size="small"
+                                                        <v-btn color="#0090b6"
+                                                            class="pa-2 w-50 d-flex justify-center rounded" size="small"
                                                             @click="switchToSalesTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
                                                         </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon color="purple" class="position-absolute" 
-                                                    style="top: 75px; left: -10px;" 
-                                                    size="80">mdi-account-cash</v-icon>
+                                                <v-icon color="purple" class="position-absolute"
+                                                    style="top: 75px; left: -10px;" size="80">mdi-account-cash</v-icon>
                                             </v-card>
                                         </v-col>
 
@@ -64,16 +62,15 @@
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <v-btn color="#0090b6" 
-                                                            class="pa-2 w-50 d-flex justify-center rounded"
-                                                            size="small"
+                                                        <v-btn color="#0090b6"
+                                                            class="pa-2 w-50 d-flex justify-center rounded" size="small"
                                                             @click="switchToOrdersTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
                                                         </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon color="green" class="position-absolute" 
-                                                    style="top: 70px; left: -10px;" 
+                                                <v-icon color="green" class="position-absolute"
+                                                    style="top: 70px; left: -10px;"
                                                     size="80">mdi-invoice-text-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -95,17 +92,15 @@
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <v-btn color="#0090b6" 
-                                                            class="pa-2 w-50 d-flex justify-center rounded"
-                                                            size="small"
+                                                        <v-btn color="#0090b6"
+                                                            class="pa-2 w-50 d-flex justify-center rounded" size="small"
                                                             @click="switchToProductsTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
                                                         </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon color="orange" class="position-absolute" 
-                                                    style="top: 75px; left: -10px;" 
-                                                    size="80">mdi-food-outline</v-icon>
+                                                <v-icon color="orange" class="position-absolute"
+                                                    style="top: 75px; left: -10px;" size="80">mdi-food-outline</v-icon>
                                             </v-card>
                                         </v-col>
 
@@ -126,16 +121,15 @@
                                                         </template>
                                                     </div>
                                                     <div class="d-flex justify-end mt-3">
-                                                        <v-btn color="#0090b6" 
-                                                            class="pa-2 w-50 d-flex justify-center rounded"
-                                                            size="small"
+                                                        <v-btn color="#0090b6"
+                                                            class="pa-2 w-50 d-flex justify-center rounded" size="small"
                                                             @click="switchToStocksTab()">
                                                             <v-icon>mdi-eye-outline</v-icon>&nbsp; View
                                                         </v-btn>
                                                     </div>
                                                 </v-card-text>
-                                                <v-icon color="brown" class="position-absolute" 
-                                                    style="top: 70px; left: -10px;" 
+                                                <v-icon color="brown" class="position-absolute"
+                                                    style="top: 70px; left: -10px;"
                                                     size="80">mdi-archive-outline</v-icon>
                                             </v-card>
                                         </v-col>
@@ -197,11 +191,9 @@
                             <v-tabs-window-item value="stocks">
                                 <v-container>
                                     <StocksTableSkeleton v-if="loadingStocks" />
-                                    <StocksTable v-else @edit-stock="openEditStockDialog"
-                                        :stocks="stocks" :loading="loadingStocks"
-                                        :shop-id="branchDetails.shop_id"
-                                        :branch-id="branchDetails.branch_id"
-                                        :branch-name="branchDetails.branch_name"/>
+                                    <StocksTable v-else @edit-stock="openEditStockDialog" :stocks="stocks"
+                                        :loading="loadingStocks" :shop-id="branchDetails.shop_id"
+                                        :branch-id="branchDetails.branch_id" :branch-name="branchDetails.branch_name" />
                                     <StockEditDialog v-model="stockEditDialog"
                                         @update:modelValue="stockEditDialog = $event"
                                         @update:stock="currentStock = $event"
@@ -224,21 +216,19 @@
                             <v-tabs-window-item value="void-orders">
                                 <v-container>
                                     <VoidReversalTableSkeleton v-if="loadingVoidReversal" />
-                                    <VoidReversalTable v-else 
-                                        :void-by-date="transactStore.voidOrdersByDate"
-                                        @refresh="fetchVoidOrders"
-                                        :loading="loadingVoidReversal" 
-                                        :branch-id="branchDetails.branch_id" />
+                                    <VoidReversalTable v-else :void-by-date="transactStore.voidOrdersByDate"
+                                        :loading="loadingVoidReversal" :branch-id="branchDetails.branch_id" />
                                 </v-container>
                             </v-tabs-window-item>
 
                             <!-- Branch Info -->
                             <v-tabs-window-item value="branch-info">
                                 <v-container>
-                                    <v-tabs v-model="activeBranchInfoTab" style="background: #01546b;" class="d-flex px-3 rounded"
-                                        align-tabs="left" color="white" stacked show-arrows>
-                                        <v-tab v-for="tab in branchInfoTabs" :key="tab.value" class="rounded text-white mt-4 mx-2"
-                                            :value="tab.value" :class="{ 'active-tab': activeBranchInfoTab === tab.value }"
+                                    <v-tabs v-model="activeBranchInfoTab" style="background: #01546b;"
+                                        class="d-flex px-3 rounded" align-tabs="left" color="white" stacked show-arrows>
+                                        <v-tab v-for="tab in branchInfoTabs" :key="tab.value"
+                                            class="rounded text-white mt-4 mx-2" :value="tab.value"
+                                            :class="{ 'active-tab': activeBranchInfoTab === tab.value }"
                                             @click="tab.clickHandler ? tab.clickHandler() : null">
                                             {{ tab.label }}
                                         </v-tab>
@@ -248,7 +238,8 @@
                                             <!-- <v-container v-if="loadingBranchDetails && activeBranchInfoTab === 'details'" /> -->
                                             <v-container v-if="activeBranchInfoTab === 'details'" class="mt-5">
                                                 <v-row>
-                                                    <v-col v-for="(detail, i) in branchDetailItems" :key="i" cols="12" lg="6" md="6" sm="6">
+                                                    <v-col v-for="(detail, i) in branchDetailItems" :key="i" cols="12"
+                                                        lg="6" md="6" sm="6">
                                                         <p class="text-grey-darken-1">{{ detail.label }}</p>
                                                         <h4 class="mb-5">{{ detail.value }}</h4>
                                                     </v-col>
@@ -268,7 +259,7 @@
                                             <v-container v-if="activeBranchInfoTab === 'kitchen'">
                                                 <h3>Kitchen Personnel</h3>
                                             </v-container>
-                                            
+
                                             <!-- <v-container v-if="loadingBaristaPersonnel && activeBranchInfoTab === 'barista'" /> -->
                                             <v-container v-if="activeBranchInfoTab === 'barista'">
                                                 <h3>Barista Personnel</h3>
@@ -282,10 +273,11 @@
                             <!-- Reports -->
                             <v-tabs-window-item value="reports">
                                 <v-container>
-                                    <v-tabs v-model="activeReportsTab" style="background: #01546b;" class="d-flex px-3 rounded"
-                                        align-tabs="left" color="white" stacked show-arrows>
-                                        <v-tab v-for="tab in reportsTabs" :key="tab.value" class="text-white rounded mt-4 mx-2"
-                                            :value="tab.value" :class="{ 'active-tab': activeReportsTab === tab.value }"
+                                    <v-tabs v-model="activeReportsTab" style="background: #01546b;"
+                                        class="d-flex px-3 rounded" align-tabs="left" color="white" stacked show-arrows>
+                                        <v-tab v-for="tab in reportsTabs" :key="tab.value"
+                                            class="text-white rounded mt-4 mx-2" :value="tab.value"
+                                            :class="{ 'active-tab': activeReportsTab === tab.value }"
                                             @click="tab.clickHandler ? tab.clickHandler() : null">
                                             {{ tab.label }}
                                         </v-tab>
@@ -296,8 +288,8 @@
                                                 v-if="loadingSalesReports && activeReportsTab === 'sales'" />
                                             <SalesReportTable v-else-if="activeReportsTab === 'sales'"
                                                 :sales-by-date="transactStore.grossSalesByDate"
-                                                :loading="loadingSalesReports"
-                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
+                                                :loading="loadingSalesReports" :shop-id="branchDetails.shop_id"
+                                                :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
@@ -308,8 +300,8 @@
                                                 v-if="loadingTransactionsReports && activeReportsTab === 'orders'" />
                                             <OrdersReportTable v-else-if="activeReportsTab === 'orders'"
                                                 :all-orders="transactStore.transactions"
-                                                :loading="loadingTransactionsReports"
-                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
+                                                :loading="loadingTransactionsReports" :shop-id="branchDetails.shop_id"
+                                                :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
@@ -320,14 +312,13 @@
                                                 v-if="loadingStockReports && activeReportsTab === 'stocks'" />
                                             <StocksReportTable v-else-if="activeReportsTab === 'stocks'"
                                                 :stocks="stockReports" :loading="loadingStockReports"
-                                                :shop-id="branchDetails.shop_id"
-                                                :shop-name="branchDetails.shop_name"
+                                                :shop-id="branchDetails.shop_id" :shop-name="branchDetails.shop_name"
                                                 :branch-id="branchDetails.branch_id"
                                                 :branch-name="branchDetails.branch_name"
                                                 :branch-location="branchDetails.branch_location"
                                                 :contact="branchDetails.contact"
                                                 :admin-name="branchDetails.admin_name" />
-                                            
+
                                             <!-- <ProductsReportsTableSkeleton
                                                 v-if="loadingProductReports && activeReportsTab === 'products'" />
                                             <ProductsReportTable v-else-if="activeReportsTab === 'products'"
@@ -362,7 +353,7 @@ import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useStockOptionsStore } from '@/stores/stockOptionsStore';
 import { useProductsStore } from '@/stores/productsStore';
-import { useProductOptionsStore } from '@/stores/productOptionsStore'; 
+import { useProductOptionsStore } from '@/stores/productOptionsStore';
 import { useTransactStore } from '@/stores/transactStore';
 import Snackbar from '@/components/Snackbar.vue';
 import Alert from '@/components/Alert.vue';
@@ -484,8 +475,8 @@ export default {
             salesByMonthReports: [],
             loadingSalesByMonthReports: false,
 
-            
-            
+
+
         };
     },
     props: {
@@ -498,33 +489,35 @@ export default {
         const loadingStore = useLoadingStore();
         const stocksStore = useStocksStore();
         const stockOptionsStore = useStockOptionsStore();
-        const stockUnitOption = computed(() => stockOptionsStore.unitOption); 
-        const stockAvailabilityOption = computed(() => stockOptionsStore.availabilityOption); 
+        const stockUnitOption = computed(() => stockOptionsStore.unitOption);
+        const stockAvailabilityOption = computed(() => stockOptionsStore.availabilityOption);
         const productsStore = useProductsStore();
-        const productOptionsStore = useProductOptionsStore(); 
-        const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions); 
-        const productSizeOption = computed(() => productOptionsStore.sizeOptions); 
-        const productCategoryOption = computed(() => productOptionsStore.categoryOptions); 
-        const productAvailabilityOption = computed(() => productOptionsStore.availabilityOptions); 
+        const productOptionsStore = useProductOptionsStore();
+        const productTemperatureOption = computed(() => productOptionsStore.temperatureOptions);
+        const productSizeOption = computed(() => productOptionsStore.sizeOptions);
+        const productCategoryOption = computed(() => productOptionsStore.categoryOptions);
+        const productAvailabilityOption = computed(() => productOptionsStore.availabilityOptions);
         const transactStore = useTransactStore();
         const activeTab = ref('dashboard');
         const activeReportsTab = ref('sales');
         const activeBranchInfoTab = ref('details');
-        return { loadingStore, 
+        return {
+            loadingStore,
             stocksStore,
             stockOptionsStore,
             stockUnitOption,
             stockAvailabilityOption,
             productsStore,
-            productOptionsStore, 
-            productTemperatureOption, 
-            productSizeOption, 
-            productCategoryOption, 
-            productAvailabilityOption,  
-            transactStore, 
-            activeTab, 
+            productOptionsStore,
+            productTemperatureOption,
+            productSizeOption,
+            productCategoryOption,
+            productAvailabilityOption,
+            transactStore,
+            activeTab,
             activeReportsTab,
-            activeBranchInfoTab };
+            activeBranchInfoTab
+        };
     },
     computed: {
         ...mapState(useStocksStore, ['stockNotificationQty']),
@@ -598,13 +591,11 @@ export default {
             } else if (newTab === 'stocks') {
                 console.log("Current Reports Tab: ", newTab);
             } else if (newTab === 'void-orders') {
-                this.loadingStore.show("Preparing...");
-                this.fetchVoidOrders();
-                this.loadingStore.hide();
+                console.log("Current Reports Tab: ", newTab);
             } else if (newTab === 'branch-info') {
-                console.log("You're on the Branch Info page.")
+                console.log("Current Reports Tab: ", newTab);
             } else if (newTab === 'reports') {
-                console.log("You're on the Sales Report page.")
+                console.log("Current Reports Tab: ", newTab);
             }
         },
 
@@ -613,12 +604,12 @@ export default {
                 console.log("Current Reports Tab: ", newReportsTab);
             } else if (newReportsTab === 'orders') {
                 console.log("Current Reports Tab: ", newReportsTab);
-            }  else if (newReportsTab === 'stocks') {
+            } else if (newReportsTab === 'stocks') {
                 console.log("Current Reports Tab: ", newReportsTab);
             }
         },
 
-        activeBranchInfoTab (newBranchInfoTab) {
+        activeBranchInfoTab(newBranchInfoTab) {
             if (newBranchInfoTab === 'details') {
                 this.loadingStore.show("Preparing...");
                 this.fetchBranchDetails();
@@ -644,23 +635,23 @@ export default {
                 const response = await this.stocksStore.fetchLowStocksStore();
                 const formattedBranches = {};
                 Object.entries(response.data.branches).forEach(([id, branch]) => {
-                formattedBranches[id.toString()] = branch;
+                    formattedBranches[id.toString()] = branch;
                 });
                 this.lowStockBranches = formattedBranches;
                 this.totalLowStock = response.data.total_count;
                 if (this.totalLowStock > 0) {
-                const branchDetails = Object.values(this.lowStockBranches).map(
-                    branch => `${branch.name} branch (${branch.count} item${branch.count !== 1 ? 's' : ''})`
-                );
-                const message = `Low stock alert: ${branchDetails.join(', ')}`;
-                this.showStockAlert(message);
+                    const branchDetails = Object.values(this.lowStockBranches).map(
+                        branch => `${branch.name} branch (${branch.count} item${branch.count !== 1 ? 's' : ''})`
+                    );
+                    const message = `Low stock alert: ${branchDetails.join(', ')}`;
+                    this.showStockAlert(message);
                 }
             } catch (error) {
                 console.error('Error fetching stocks:', error);
             }
         },
 
-        async onDashboard () {
+        async onDashboard() {
             await this.fetchBranchDetails();
             this.activeTab = "dashboard";
             const currentMonth = new Date().getMonth() + 1;
@@ -723,13 +714,13 @@ export default {
         //         if (!this.branchDetails.branch_id) {
         //             this.showError("Branch ID is not available!");
         //             this.products = [];
+        //             console.log("Branch ID:", this.branchDetails.branch_id)
         //             return;
         //         }
         //         await this.productsStore.fetchAllProductsStore(this.branchDetails.branch_id);
         //         if (this.productsStore.products.length === 0) {
         //             this.products = [];
         //         } else {
-
         //             this.products = this.productsStore.products.map(product => this.formatProduct(product));
         //         }
         //         this.productsLoaded = true;
@@ -755,53 +746,53 @@ export default {
             }
         },
 
-        async fetchStocks() {
-            this.loadingStocks = true;
-            try {
-                this.isSaving = false;
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.stocks = [];
-                    return;
-                }
-                await this.stocksStore.fetchAllStocksStore(this.branchDetails.branch_id);
-                if (this.stocksStore.stocks.length === 0) {
-                    this.stocks = [];
-                } else {
-                    this.stocks = this.stocksStore.stocks.map(stock => this.formatStock(stock));
-                }
-                this.stocksLoaded = true;
-                this.loadingStocks = false;
-            } catch (error) {
-                console.error('Error fetching stocks:', error);
-                this.showError("Error fetching stocks!");
-            } finally {
-                this.loadingStocks = false;
-            }
-        },
+        // async fetchStocks() {
+        //     this.loadingStocks = true;
+        //     try {
+        //         this.isSaving = false;
+        //         if (!this.branchDetails.branch_id) {
+        //             this.showError("Branch ID is not available!");
+        //             this.stocks = [];
+        //             return;
+        //         }
+        //         await this.stocksStore.fetchAllStocksStore(this.branchDetails.branch_id);
+        //         if (this.stocksStore.stocks.length === 0) {
+        //             this.stocks = [];
+        //         } else {
+        //             this.stocks = this.stocksStore.stocks.map(stock => this.formatStock(stock));
+        //         }
+        //         this.stocksLoaded = true;
+        //         this.loadingStocks = false;
+        //     } catch (error) {
+        //         console.error('Error fetching stocks:', error);
+        //         this.showError("Error fetching stocks!");
+        //     } finally {
+        //         this.loadingStocks = false;
+        //     }
+        // },
 
-        async fetchVoidOrders() {
-            this.loadingVoidReversal = true;
-            try {
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.voidByDate = [];
-                    return;
-                }
-                await this.transactStore.fetchVoidByDateStore(this.branchDetails.branch_id);
-                if (this.transactStore.voidOrdersByDate.length === 0) {
-                    this.voidByDate = [];
-                } else {
-                    this.voidByDate = this.transactStore.voidOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
-                }
-                this.loadingVoidReversal = false;
-            } catch (error) {
-                console.error('Error fetching void orders:', error);
-                this.showError("Error fetching void orders!");
-            } finally {
-                this.loadingVoidReversal = false;
-            }
-        },
+        // async fetchVoidOrders() {
+        //     this.loadingVoidReversal = true;
+        //     try {
+        //         if (!this.branchDetails.branch_id) {
+        //             this.showError("Branch ID is not available!");
+        //             this.voidByDate = [];
+        //             return;
+        //         }
+        //         await this.transactStore.fetchVoidByDateStore(this.branchDetails.branch_id);
+        //         if (this.transactStore.voidOrdersByDate.length === 0) {
+        //             this.voidByDate = [];
+        //         } else {
+        //             this.voidByDate = this.transactStore.voidOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
+        //         }
+        //         this.loadingVoidReversal = false;
+        //     } catch (error) {
+        //         console.error('Error fetching void orders:', error);
+        //         this.showError("Error fetching void orders!");
+        //     } finally {
+        //         this.loadingVoidReversal = false;
+        //     }
+        // },
 
         /* async fetchSalesReport(dateFilterId = 1) {
             this.loadingStore.show('Preparing...');
@@ -926,9 +917,9 @@ export default {
 
         async updatingStock() {
             this.isSaving = true;
+            this.confirmUpdatingStockDialog = false;
             try {
-                const now = new Date();
-                const formattedDate = now.toISOString();
+                const now = new Date().toISOString();
                 const stockData = {
                     stock_id: Number(this.currentStock.stock_id),
                     stock_ingredient: this.currentStock.stock_ingredient,
@@ -937,29 +928,28 @@ export default {
                     stock_cost_per_unit: parseFloat(this.currentStock.stock_cost_per_unit),
                     availability_id: Number(this.currentStock.availability_id),
                     branch_id: Number(this.currentStock.branch_id),
-                    shop_id: Number(this.currentStock.shop_id)
-                };
-                const stockDataWithUpdatedAt = {
-                    stock_id: Number(this.currentStock.stock_id),
-                    stock_ingredient: this.currentStock.stock_ingredient,
-                    stock_in: parseFloat(this.currentStock.stock_in),
-                    stock_unit: Number(this.currentStock.stock_unit),
-                    stock_cost_per_unit: parseFloat(this.currentStock.stock_cost_per_unit),
-                    availability_id: Number(this.currentStock.availability_id),
-                    branch_id: Number(this.currentStock.branch_id),
                     shop_id: Number(this.currentStock.shop_id),
-                    updated_at: formattedDate,
+                    updated_at: this.formatDateTime(now),
                 };
-                this.confirmUpdatingStockDialog = false;
+
+                const stockDataWithUnitCostFormat = {
+                    ...stockData,
+                    display_unit_cost: `₱${parseFloat(this.currentStock.stock_cost_per_unit)}`,
+                };
+                
                 await this.stocksStore.updateStockStore(stockData);
-                await this.stockOptionsStore.fetchAllOptions(); 
+                await this.stockOptionsStore.fetchAllOptions();
 
                 // For reactive effect
-                const updatedStock = this.formatStock({ ...this.currentStock, ...stockDataWithUpdatedAt });
+                this.stocks = await this.stocksStore.stocks;
                 const index = this.stocks.findIndex(
-                    s => s.stock_id === this.currentStock.stock_id
+                    p => p.stock_id === this.currentStock.stock_id
                 );
                 if (index !== -1) {
+                    const updatedStock = this.formatStock({
+                        ...this.currentStock,
+                        ...stockDataWithUnitCostFormat
+                    });
                     this.stocks.splice(index, 1, updatedStock);
                 }
                 this.stockEditDialog = false;
@@ -981,8 +971,7 @@ export default {
             this.isSaving = true;
             this.confirmUpdatingProductDialog = false;
             try {
-                const now = new Date();
-                const formattedDate = now.toISOString();
+                const now = new Date().toISOString();
                 const productData = {
                     product_id: this.currentProduct.product_id,
                     product_name: this.currentProduct.product_name?.trim(),
@@ -993,28 +982,22 @@ export default {
                     availability_id: Number(this.currentProduct.availability_id),
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
+                    updated_at: this.formatDateTime(now),
                 };
-                const productDataWithUpdatedAt = {
-                    product_id: this.currentProduct.product_id,
-                    product_name: this.currentProduct.product_name?.trim(),
-                    product_price: parseFloat(this.currentProduct.product_price),
-                    product_size_id: Number(this.currentProduct.product_size_id),
-                    product_temp_id: Number(this.currentProduct.product_temp_id),
-                    product_category_id: Number(this.currentProduct.product_category_id),
-                    availability_id: Number(this.currentProduct.availability_id),
-                    shop_id: this.currentProduct.shop_id,
-                    branch_id: this.currentProduct.branch_id,
-                    updated_at: formattedDate,
-                };
+
                 await this.productsStore.updateProductStore(productData);
-                await this.productOptionsStore.fetchAllOptions(); 
+                await this.productOptionsStore.fetchAllOptions();
 
                 // For reactive effect
-                const updatedProduct = this.formatProduct({ ...this.currentProduct, ...productDataWithUpdatedAt });
+                this.products = await this.productsStore.products;
                 const index = this.products.findIndex(
                     p => p.product_id === this.currentProduct.product_id
                 );
                 if (index !== -1) {
+                    const updatedProduct = this.formatProduct({
+                        ...this.currentProduct,
+                        ...productData
+                    });
                     this.products.splice(index, 1, updatedProduct);
                 }
                 this.productEditDialog = false;
@@ -1064,10 +1047,10 @@ export default {
             this.currentIngredient = { ...item };
             this.ingredientEditDialog = true;
         },
-        
+
         switchToSalesTab() {
             this.activeTab = 'reports';
-            this.activeReportsTab = 'sales';   
+            this.activeReportsTab = 'sales';
         },
 
         switchToOrdersTab() {
@@ -1122,10 +1105,10 @@ export default {
         },
 
         formatProduct(product) {
-            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id)); 
-            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id)); 
-            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id)); 
-            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id)); 
+            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id));
+            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id));
+            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id));
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id));
             return {
                 ...product,
                 temp_label: temp?.temp_label,
@@ -1153,8 +1136,8 @@ export default {
         },
 
         formatStock(stock) {
-            const unit = this.stockUnitOption.find(u => u.unit_id === Number(stock.stock_unit)); 
-            const availability = this.stockAvailabilityOption.find(a => a.availability_id === Number(stock.availability_id)); 
+            const unit = this.stockUnitOption.find(u => u.unit_id === Number(stock.stock_unit));
+            const availability = this.stockAvailabilityOption.find(a => a.availability_id === Number(stock.availability_id));
             return {
                 ...stock,
                 unit_label: unit?.unit_label,
@@ -1173,7 +1156,7 @@ export default {
         formatReversalOrders(rev_order) {
             return {
                 ...rev_order,
-                display_product_name: `${ rev_order.product_name }${ rev_order.temp_label }${ rev_order.size_label }` || '',
+                display_product_name: `${rev_order.product_name}${rev_order.temp_label}${rev_order.size_label}` || '',
                 updated_at: rev_order.updated_at ? this.formatDateTime(rev_order.updated_at) : 'N/A',
             };
         },
@@ -1192,7 +1175,7 @@ export default {
                 display_customer_cash: `₱${display_customer_cash}`,
                 display_customer_charge: `₱${display_customer_charge}`,
                 display_customer_change: `₱${display_customer_change}`,
-                display_total_quantity: `${order.total_quantity} ${ order.total_quantity > 1 ? 'items' : 'item'}`,
+                display_total_quantity: `${order.total_quantity} ${order.total_quantity > 1 ? 'items' : 'item'}`,
                 updated_at: this.formatDateTime(order.updated_at),
             };
         },
