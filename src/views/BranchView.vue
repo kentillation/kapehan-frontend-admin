@@ -686,22 +686,21 @@ export default {
 
         async ingredientsDialog(item) {
             this.dialogIngredients = true;
-            this.ingredients = [];
             this.productId = item.product_id;
             this.productName = item.product_name;
             this.productTemp = item.temp_label;
             this.productSize = item.size_label;
             this.loadingIngredient = true;
             try {
-                const response = await apiClient.get(`/admin/ingredients/${item.product_id}`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
-                    }
-                });
-                this.ingredients = response.data.map(ingredient => this.formatIngredient(ingredient));
+                await this.productsStore.fetchProductIngredientsStore(this.productId);
+                if (this.productsStore.product_ingredients.length === 0) {
+                    this.ingredients = [];
+                } else {
+                    this.ingredients = this.productsStore.product_ingredients.map(i => this.formatIngredient(i));
+                }
             } catch (error) {
-                console.error('Error fetching ingredients:', error);
-                this.showError("Error fetching ingredients!");
+                console.error(error);
+                this.showError(error);
             } finally {
                 this.loadingIngredient = false;
             }
@@ -919,7 +918,8 @@ export default {
             this.isSaving = true;
             this.confirmUpdatingStockDialog = false;
             try {
-                const now = new Date().toISOString();
+                const now = new Date();
+                const isoString = now.toISOString().replace(/\.\d{3}Z$/, '.000000Z');
                 const stockData = {
                     stock_id: Number(this.currentStock.stock_id),
                     stock_ingredient: this.currentStock.stock_ingredient,
@@ -929,13 +929,9 @@ export default {
                     availability_id: Number(this.currentStock.availability_id),
                     branch_id: Number(this.currentStock.branch_id),
                     shop_id: Number(this.currentStock.shop_id),
-                    updated_at: this.formatDateTime(now),
+                    updated_at: isoString,
                 };
-
-                const stockDataWithUnitCostFormat = {
-                    ...stockData,
-                    display_unit_cost: `₱${parseFloat(this.currentStock.stock_cost_per_unit)}`,
-                };
+                this.updated_at = isoString;
                 
                 await this.stocksStore.updateStockStore(stockData);
                 await this.stockOptionsStore.fetchAllOptions();
@@ -946,9 +942,9 @@ export default {
                     p => p.stock_id === this.currentStock.stock_id
                 );
                 if (index !== -1) {
-                    const updatedStock = this.formatStock({
+                    const updatedStock = this.formatStockWithISO({
                         ...this.currentStock,
-                        ...stockDataWithUnitCostFormat
+                        ...stockData
                     });
                     this.stocks.splice(index, 1, updatedStock);
                 }
@@ -971,7 +967,8 @@ export default {
             this.isSaving = true;
             this.confirmUpdatingProductDialog = false;
             try {
-                const now = new Date().toISOString();
+                const now = new Date();
+                const isoString = now.toISOString().replace(/\.\d{3}Z$/, '.000000Z');
                 const productData = {
                     product_id: this.currentProduct.product_id,
                     product_name: this.currentProduct.product_name?.trim(),
@@ -982,8 +979,9 @@ export default {
                     availability_id: Number(this.currentProduct.availability_id),
                     shop_id: this.currentProduct.shop_id,
                     branch_id: this.currentProduct.branch_id,
-                    updated_at: this.formatDateTime(now),
+                    updated_at: isoString,
                 };
+                this.updated_at = isoString;
 
                 await this.productsStore.updateProductStore(productData);
                 await this.productOptionsStore.fetchAllOptions();
@@ -994,7 +992,7 @@ export default {
                     p => p.product_id === this.currentProduct.product_id
                 );
                 if (index !== -1) {
-                    const updatedProduct = this.formatProduct({
+                    const updatedProduct = this.formatProductWithISO({
                         ...this.currentProduct,
                         ...productData
                     });
@@ -1014,21 +1012,35 @@ export default {
         async updatingIngredient() {
             this.isSaving = true;
             try {
+                const now = new Date();
+                const isoString = now.toISOString().replace(/\.\d{3}Z$/, '.000000Z');
                 const ingredientData = {
                     product_ingredient_id: this.currentIngredient.product_ingredient_id,
                     product_id: this.currentIngredient.product_id,
                     stock_id: this.currentIngredient.stock_id,
                     unit_usage: this.currentIngredient.unit_usage,
                     ingredient_capital: parseFloat(this.currentIngredient.ingredient_capital),
+                    updated_at: isoString,
                 };
-                console.log(ingredientData);
                 await this.productsStore.updateIngredientStore(ingredientData);
+
+                // For reactive effect
+                this.ingredients = await this.productsStore.products;
+                const index = this.ingredients.findIndex(
+                    i => i.product_ingredient_id === this.currentIngredient.product_ingredient_id
+                );
+                if (index !== -1) {
+                    const updatedIngredient = this.formatIngredientWithISO({
+                        ...this.currentIngredient,
+                        ...ingredientData
+                    });
+                    this.ingredients.splice(index, 1, updatedIngredient);
+                }
                 this.productEditDialog = false;
                 this.confirmUpdatingEditDialog = false;
                 this.ingredientEditDialog = false;
                 this.dialogIngredients = false;
                 this.confirmUpdatingIngredientDialog = false
-                // this.fetchProducts();
                 this.showSuccess("Ingredient updated successfully!");
             } catch (error) {
                 console.error('Failed to update ingredient:', error);
@@ -1125,13 +1137,42 @@ export default {
             };
         },
 
+        formatProductWithISO(product) {
+            const temp = this.productTemperatureOption.find(t => t.temp_id === Number(product.product_temp_id));
+            const size = this.productSizeOption.find(s => s.size_id === Number(product.product_size_id));
+            const category = this.productCategoryOption.find(c => c.category_id === Number(product.product_category_id));
+            const availability = this.productAvailabilityOption.find(a => a.availability_id === Number(product.availability_id));
+            return {
+                ...product,
+                temp_label: temp?.temp_label,
+                size_label: size?.size_label,
+                category_label: category?.category_label,
+                availability_label: availability?.availability_label,
+                product_temp_id: Number(product.product_temp_id),
+                product_size_id: Number(product.product_size_id),
+                product_category_id: Number(product.product_category_id),
+                availability_id: Number(product.availability_id),
+                product_name: this.capitalizeFirstLetter(product.product_name),
+                display_product_price: `₱${product.product_price}`,
+                updated_at: this.updated_at,
+            };
+        },
+
         formatIngredient(ingredient) {
             return {
                 ...ingredient,
                 stock_ingredient: this.capitalizeFirstLetter(ingredient.stock_ingredient),
-                ingredient_capital: ingredient.ingredient_capital,
                 unit: `${ingredient.unit_usage}${ingredient.unit_avb}`,
                 updated_at: this.formatDateTime(ingredient.updated_at),
+            };
+        },
+
+        formatIngredientWithISO(ingredient) {
+            return {
+                ...ingredient,
+                stock_ingredient: this.capitalizeFirstLetter(ingredient.stock_ingredient),
+                unit: `${ingredient.unit_usage}${ingredient.unit_avb}`,
+                updated_at: ingredient.updated_at,
             };
         },
 
@@ -1150,6 +1191,24 @@ export default {
                 display_stock_in: `${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}`,
                 display_unit_cost: `₱${stock.stock_cost_per_unit}`,
                 updated_at: this.formatDateTime(stock.updated_at),
+            };
+        },
+
+        formatStockWithISO(stock) {
+            const unit = this.stockUnitOption.find(u => u.unit_id === Number(stock.stock_unit));
+            const availability = this.stockAvailabilityOption.find(a => a.availability_id === Number(stock.availability_id));
+            return {
+                ...stock,
+                unit_label: unit?.unit_label,
+                availability_label: availability?.availability_label,
+                stock_ingredient: this.capitalizeFirstLetter(stock.stock_ingredient),
+                stock_unit: Number(stock.stock_unit),
+                stock_in: Number(stock.stock_in),
+                stock_alert_qty: Number(stock.stock_alert_qty),
+                availability_id: Number(stock.availability_id),
+                display_stock_in: `${stock.stock_in} ${stock.stock_in > 1 ? 'items' : 'item'}`,
+                display_unit_cost: `₱${stock.stock_cost_per_unit}`,
+                updated_at: this.updated_at,
             };
         },
 

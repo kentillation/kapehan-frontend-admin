@@ -3,7 +3,7 @@
         <v-card>
             <v-card-text>
                 <v-data-table :headers="headers" :items="productsHistory" :loading="loading" :items-per-page="10"
-                    :sort-by="[{ key: 'created_at', order: 'desc' }]" class="elevation-1 hover-table">
+                    :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="elevation-1 hover-table">
                     <template v-slot:top>
                         <v-toolbar flat>
                             <h2 class="ms-3 to-hide">Products Management History</h2>
@@ -29,8 +29,8 @@
                     </template>
 
                     <!--eslint-disable-next-line -->
-                    <template v-slot:item.created_at="{ item }">
-                        {{ formatDateTime(item.created_at) }}
+                    <template v-slot:item.updated_at="{ item }">
+                        {{ formatDateTime(item.updated_at) }}
                     </template>
                 </v-data-table>
             </v-card-text>
@@ -83,7 +83,7 @@ export default {
                 { title: 'Description', value: 'description', sortable: true },
                 { title: 'Type', value: 'manage_id', sortable: true },
                 { title: 'Performed_by', value: 'admin_name', sortable: true },
-                { title: 'Date_created', value: 'created_at', sortable: true },
+                { title: 'Last_update', value: 'updated_at', sortable: true },
             ]
         };
     },

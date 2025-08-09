@@ -4,7 +4,7 @@ import { PRODUCTS_API } from '@/api/productsApi';
 export const useProductsStore = defineStore('products', {
     state: () => ({
         products: [],
-        productsOnly: '',
+        product_ingredients: '',
         productAlone: '',
         loading: false,
         error: null
@@ -46,6 +46,27 @@ export const useProductsStore = defineStore('products', {
             } catch (error) {
                 console.error('Error in fetchProductAloneApi:', error);
                 this.error = error.message || 'Failed to fetch product alone';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchProductIngredientsStore(productId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                if (!PRODUCTS_API || typeof PRODUCTS_API.fetchProductIngredientsApi !== 'function') {
+                    throw new Error('PRODUCTS_API service is not properly initialized');
+                }
+                const response = await PRODUCTS_API.fetchProductIngredientsApi(productId);
+                if (response && response.status === true) {
+                    this.product_ingredients = response.data;
+                } else {
+                    throw new Error('Failed to fetch product ingredients');
+                }
+            } catch (error) {
+                console.error(error);
                 throw error;
             } finally {
                 this.loading = false;

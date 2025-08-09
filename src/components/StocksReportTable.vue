@@ -1,6 +1,6 @@
 <template>
     <v-data-table :headers="stocksHeaders" :items="mappedStocks" :loading="loading" :items-per-page="10"
-        :sort-by="[{ key: 'created_at', order: 'desc' }]" class="hover-table" density="comfortable">
+        :sort-by="[{ key: 'updated_at', order: 'desc' }]" class="hover-table" density="comfortable">
         <template v-slot:top>
             <v-row class="mt-5">
                 <v-col cols="12" lg="6" md="6" sm="6" class="pa-0">
@@ -65,7 +65,7 @@ export default {
                 { title: 'Stock capital', value: 'ingredient_capital', sortable: 'true', width: '10%' },
                 { title: 'Quantity sold', value: 'total_quantity', sortable: 'true', width: '10%' },
                 { title: 'Total amount', value: 'total_amount', sortable: 'true', width: '10%' },
-                { title: 'Date', value: 'created_at', sortable: 'true', width: '25%' },
+                { title: 'Date', value: 'updated_at', sortable: 'true', width: '25%' },
             ],
         }
     },
@@ -196,7 +196,7 @@ export default {
                 'Stock capital': stock.ingredient_capital,
                 'Quantity sold': stock.total_quantity,
                 'Total amount': stock.total_amount,
-                'Date': this.formatDateTime(stock.created_at),
+                'Date': this.formatDateTime(stock.updated_at),
             }));
             const headings = [
                 `Shop Name: ${this.shopName}`,
@@ -279,7 +279,7 @@ export default {
                                     <td>₱${stock.ingredient_capital}</td>
                                     <td>${stock.total_quantity}</td>
                                     <td>₱${stock.total_amount}</td>
-                                    <td>${this.formatDateTime(stock.created_at)}</td>
+                                    <td>${this.formatDateTime(stock.updated_at)}</td>
                                 </tr>`).join('')}
                         </table>
                         <footer>
@@ -311,7 +311,7 @@ export default {
                 ingredient_capital: `₱${stock.ingredient_capital}`,
                 total_quantity: `x${Number(stock.total_quantity)}`,
                 total_amount: `₱${Number(stock.total_amount)}`,
-                created_at: this.formatDateTime(stock.created_at),
+                updated_at: this.formatDateTime(stock.updated_at),
             };
         },
 
