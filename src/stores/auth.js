@@ -72,8 +72,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Auto-logout if token expires
     const checkAuth = () => {
-        if (!isAuthenticated.value && router.currentRoute.value.meta.requiresAuth) {
-            logout();
+        if (!token.value) {
+            const savedToken = localStorage.getItem('auth_token');
+            if (savedToken) {
+                token.value = savedToken; // restore token
+            } else if (router.currentRoute.value.meta.requiresAuth) {
+                logout();
+            }
         }
     };
 
