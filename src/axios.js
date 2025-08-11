@@ -6,7 +6,7 @@ const apiClient = axios.create({
         'Content-Type': process.env.VUE_APP_MIME_TYPE,
         'Accept': process.env.VUE_APP_MIME_TYPE
     },
-    withCredentials: process.env.VUE_APP_WITH_CREDENTIALS
+    /* withCredentials: process.env.VUE_APP_WITH_CREDENTIALS */
 });
 
 // Add interceptor
