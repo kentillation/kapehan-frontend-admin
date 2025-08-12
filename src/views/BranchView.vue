@@ -347,7 +347,7 @@
 
 <script>
 import apiClient from '../axios';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { mapState } from 'pinia';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
@@ -501,6 +501,12 @@ export default {
         const activeTab = ref('dashboard');
         const activeReportsTab = ref('sales');
         const activeBranchInfoTab = ref('details');
+
+        onMounted(async () => {
+        await productOptionsStore.fetchAllOptions();
+        await stockOptionsStore.fetchAllOptions();
+        });
+
         return {
             loadingStore,
             stocksStore,
