@@ -91,11 +91,17 @@ export default {
             try {
                 this.loadingStore.show('');
                 const authStore = useAuthStore();
-                await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
-                window.location.href = '/about';
+                // await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
+                const result = await authStore.login({ 
+                    admin_email: this.admin_email, 
+                    admin_password: this.admin_password 
+                });
+
+                if (result.status === 200) {
+                    this.$router.push('/about');
+                }
             } catch (error) {
-                this.loadingStore.hide();
-                console.error('Error fetching ingredients:', error);
+                console.error(error);
                 this.showError(error);
             } finally {
                 this.loading = false;

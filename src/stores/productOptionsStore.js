@@ -24,11 +24,12 @@ export const useProductOptionsStore = defineStore('productOptions', {
   actions: {
     async fetchOptions(endpoint) {
       try {
-        const response = await apiClient.get(endpoint, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-          },
-        });
+        // const response = await apiClient.get(endpoint, {
+        //   headers: {
+        //     Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+        //   },
+        // });
+        const response = await apiClient.get(endpoint);
         return response.data;
       } catch (error) {
         this.error = error;

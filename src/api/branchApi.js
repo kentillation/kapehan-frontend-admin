@@ -9,14 +9,19 @@ export const BRANCH_API = {
 
     async fetchBranches() {
         try {
-            const authToken = localStorage.getItem('auth_token');
-            console.log("Access token: ", authToken);
-            if (!authToken) throw new Error('Authentication token not found');
-            const response = await apiClient.get(this.ENDPOINTS.FETCH_SHOP_BRANCHES, {
-                headers: {
-                    Authorization: `Bearer ${authToken}`
-                }
-            });
+            // const authToken = localStorage.getItem('auth_token');
+            // console.log("Access token: ", authToken);
+            // if (!authToken) throw new Error('Authentication token not found');
+            // const response = await apiClient.get(this.ENDPOINTS.FETCH_SHOP_BRANCHES, {
+            //     headers: {
+            //         Authorization: `Bearer ${authToken}`
+            //     }
+            // });
+            // if (!response.data?.success) {
+            //     throw new Error(response.data?.message || 'Failed to fetch branches');
+            // }
+
+            const response = await apiClient.get(this.ENDPOINTS.FETCH_SHOP_BRANCHES);
             if (!response.data?.success) {
                 throw new Error(response.data?.message || 'Failed to fetch branches');
             }
@@ -61,7 +66,7 @@ export const BRANCH_API = {
         try {
             const authToken = localStorage.getItem('auth_token');
             console.log("Access token: ", authToken);
-            
+
             if (!authToken) throw new Error('Authentication token not found');
 
             if (!branchName) {

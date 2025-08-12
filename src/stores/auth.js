@@ -23,14 +23,20 @@ export const useAuthStore = defineStore('auth', () => {
             const response = await apiClient.post('/admin/login', credentials);
 
             if (response.status === 200) {
-                token.value = response.data.access_token;
+                // localStorage.setItem('auth_token', response.data.access_token);
+                localStorage.setItem('shop_id', response.data.shop_id);
+                localStorage.setItem('shop_name', response.data.shop_name);
+                
+                // token.value = response.data.access_token;
                 shopId.value = response.data.shop_id;
                 shopName.value = response.data.shop_name;
-
-                localStorage.setItem('auth_token', token.value);
-                localStorage.setItem('shop_id', shopId.value);
-                localStorage.setItem('shop_name', shopName.value);
-                console.log("Access token: ", token.value);
+                
+                return { 
+                    status: response.status,
+                    success: true,
+                    shop_id: response.data.shop_id,
+                    shop_name: response.data.shop_name 
+                };
             }
         } catch (err) {
             error.value = err.response?.data?.message ||
