@@ -36,37 +36,29 @@ export const useAuthStore = defineStore('auth', () => {
             error.value = err.response?.data?.message ||
                 err.message ||
                 'Login failed. Please try again.';
-            throw error.value; // Re-throw for component handling
+            throw error.value;
         }
     };
 
     const logout = async () => {
-        // Store token temporarily for the API call
         const currentToken = token.value;
-
-        // Immediately clear client-side state
         token.value = null;
         shopId.value = null;
         shopName.value = null;
         error.value = null;
         localStorage.clear();
-
         try {
             if (currentToken) {
-                // Use the stored token for the API call
                 await apiClient.post('/admin/logout', null, {
                     headers: {
                         Authorization: `Bearer ${currentToken}`
                     },
-                    timeout: 3000 // 3-second timeout
+                    timeout: 3000
                 });
             }
         } catch (err) {
             console.error('Logout API error:', err);
-            // Continue regardless of API success
         }
-
-        // Hard redirect - prevents any Vue/Pinia state issues
         window.location.href = '/';
     };
 
@@ -75,7 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (!token.value) {
             const savedToken = localStorage.getItem('auth_token');
             if (savedToken) {
-                token.value = savedToken; // restore token
+                token.value = savedToken;
             } else if (router.currentRoute.value.meta.requiresAuth) {
                 logout();
             }

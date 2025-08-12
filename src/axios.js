@@ -6,10 +6,9 @@ const apiClient = axios.create({
         'Content-Type': process.env.VUE_APP_MIME_TYPE,
         'Accept': process.env.VUE_APP_MIME_TYPE
     },
-    /* withCredentials: process.env.VUE_APP_WITH_CREDENTIALS */
+    withCredentials: true
 });
 
-// Add interceptor
 apiClient.interceptors.request.use(config => {
   const token = localStorage.getItem('auth_token');
   if (token) {
