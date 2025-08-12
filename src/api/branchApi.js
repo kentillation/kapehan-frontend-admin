@@ -2,16 +2,17 @@ import apiClient from '../axios';
 
 export const BRANCH_API = {
     ENDPOINTS: {
-        FETCH_ALL: '/admin/shop-branches',
-        CREATE: '/admin/save-branch',
-        DETAILS: '/admin/branch-details'
+        FETCH_SHOP_BRANCHES: '/admin/shop-branches',
+        SAVE_NEW_BRANCH: '/admin/save-branch',
+        FETCH_BRANCH_DETAILS: '/admin/branch-details'
     },
 
     async fetchBranches() {
         try {
             const authToken = localStorage.getItem('auth_token');
+            console.log("Access token: ", authToken);
             if (!authToken) throw new Error('Authentication token not found');
-            const response = await apiClient.get(this.ENDPOINTS.FETCH_ALL, {
+            const response = await apiClient.get(this.ENDPOINTS.FETCH_SHOP_BRANCHES, {
                 headers: {
                     Authorization: `Bearer ${authToken}`
                 }
@@ -34,7 +35,7 @@ export const BRANCH_API = {
                 throw new Error('Branch data is required');
             }
             const response = await apiClient.post(
-                this.ENDPOINTS.CREATE,
+                this.ENDPOINTS.SAVE_NEW_BRANCH,
                 branchData,
                 {
                     headers: {
@@ -59,12 +60,15 @@ export const BRANCH_API = {
     async fetchBranchDetails(branchName) {
         try {
             const authToken = localStorage.getItem('auth_token');
+            console.log("Access token: ", authToken);
+            
             if (!authToken) throw new Error('Authentication token not found');
+
             if (!branchName) {
                 throw new Error('Branch name is required');
             }
             const response = await apiClient.get(
-                `${this.ENDPOINTS.DETAILS}/${branchName}`,
+                `${this.ENDPOINTS.FETCH_BRANCH_DETAILS}/${branchName}`,
                 {
                     headers: {
                         Authorization: `Bearer ${authToken}`
