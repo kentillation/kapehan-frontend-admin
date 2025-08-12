@@ -30,7 +30,12 @@ export const useAuthStore = defineStore('auth', () => {
                 token.value = response.data.access_token;
                 shopId.value = response.data.shop_id;
                 shopName.value = response.data.shop_name;
-                router.push('/about');
+                
+                return { 
+                    success: true,
+                    shop_id: response.data.shop_id,
+                    shop_name: response.data.shop_name,
+                };
             }
         } catch (err) {
             error.value = err.response?.data?.message ||

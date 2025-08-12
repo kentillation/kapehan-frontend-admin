@@ -91,9 +91,13 @@ export default {
             try {
                 this.loadingStore.show('');
                 const authStore = useAuthStore();
-                await authStore.login({ admin_email: this.admin_email, admin_password: this.admin_password });
-                // window.location.href = '/home';
-                // window.location.href = '/about';
+                const result = await authStore.login({ 
+                    admin_email: this.admin_email, 
+                    admin_password: this.admin_password 
+                });
+                if (result.success) {
+                    window.location.href = '/about';
+                }
             } catch (error) {
                 console.error(error);
                 this.showError(error);
