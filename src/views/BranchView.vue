@@ -235,11 +235,11 @@
                                     </v-tabs>
                                     <transition name="slide-x-transition" mode="out-in">
                                         <div :key="activeBranchInfoTab">
-                                            <!-- <v-container v-if="loadingBranchDetails && activeBranchInfoTab === 'details'" /> -->
+
                                             <v-container v-if="activeBranchInfoTab === 'details'" class="mt-5">
                                                 <v-row>
-                                                    <v-col v-for="(detail, i) in branchDetailItems" :key="i" cols="12"
-                                                        lg="6" md="6" sm="6">
+                                                    <v-col v-for="(detail, i) in branch_Details" :key="i" cols="12"
+                                                        lg="4" md="4" sm="6">
                                                         <p class="text-grey-darken-1">{{ detail.label }}</p>
                                                         <h4 class="mb-5">{{ detail.value }}</h4>
                                                     </v-col>
@@ -250,19 +250,34 @@
                                                 </div>
                                             </v-container>
 
-                                            <!-- <v-container v-if="loadingCashierPersonnel && activeBranchInfoTab === 'cashier'" /> -->
-                                            <v-container v-if="activeBranchInfoTab === 'cashier'">
-                                                <h3>Cashier Personnel</h3>
+                                            <v-container v-if="activeBranchInfoTab === 'cashier'" class="mt-5">
+                                                <v-row>
+                                                    <v-col v-for="(detail, i) in cashier_Details" :key="i" cols="12"
+                                                        lg="4" md="4" sm="6">
+                                                        <p class="text-grey-darken-1">{{ detail.label }}</p>
+                                                        <h4 class="mb-5">{{ detail.value }}</h4>
+                                                    </v-col>
+                                                </v-row>
                                             </v-container>
 
-                                            <!-- <v-container v-if="loadingKitchenPersonnel && activeBranchInfoTab === 'kitchen'" /> -->
-                                            <v-container v-if="activeBranchInfoTab === 'kitchen'">
-                                                <h3>Kitchen Personnel</h3>
+                                            <v-container v-if="activeBranchInfoTab === 'barista'" class="mt-5">
+                                                <v-row>
+                                                    <v-col v-for="(detail, i) in barista_Details" :key="i" cols="12"
+                                                        lg="4" md="4" sm="6">
+                                                        <p class="text-grey-darken-1">{{ detail.label }}</p>
+                                                        <h4 class="mb-5">{{ detail.value }}</h4>
+                                                    </v-col>
+                                                </v-row>
                                             </v-container>
 
-                                            <!-- <v-container v-if="loadingBaristaPersonnel && activeBranchInfoTab === 'barista'" /> -->
-                                            <v-container v-if="activeBranchInfoTab === 'barista'">
-                                                <h3>Barista Personnel</h3>
+                                            <v-container v-if="activeBranchInfoTab === 'kitchen'" class="mt-5">
+                                                <v-row>
+                                                    <v-col v-for="(detail, i) in kitchen_Details" :key="i" cols="12"
+                                                        lg="4" md="4" sm="6">
+                                                        <p class="text-grey-darken-1">{{ detail.label }}</p>
+                                                        <h4 class="mb-5">{{ detail.value }}</h4>
+                                                    </v-col>
+                                                </v-row>
                                             </v-container>
 
                                         </div>
@@ -528,13 +543,34 @@ export default {
     computed: {
         ...mapState(useStocksStore, ['stockNotificationQty']),
 
-        branchDetailItems() {
+        branch_Details() {
             return [
                 { label: 'Branch name', value: this.branchDetails.branch_name },
                 { label: 'Branch manager', value: this.branchDetails.m_name },
                 { label: 'Contact', value: this.branchDetails.contact },
                 { label: 'Email', value: this.branchDetails.m_email },
                 { label: 'Location', value: this.branchDetails.branch_location },
+            ];
+        },
+
+        cashier_Details() {
+            return [
+                { label: 'Name', value: this.branchDetails.cashier_name },
+                { label: 'Email', value: this.branchDetails.cashier_email },
+            ];
+        },
+
+        barista_Details() {
+            return [
+                { label: 'Name', value: this.branchDetails.barista_name },
+                { label: 'Email', value: this.branchDetails.barista_email },
+            ];
+        },
+
+        kitchen_Details() {
+            return [
+                { label: 'Name', value: this.branchDetails.kitchen_name },
+                { label: 'Email', value: this.branchDetails.kitchen_email },
             ];
         },
 
@@ -561,8 +597,8 @@ export default {
             return [
                 { label: 'Details', value: 'details', },
                 { label: 'Cashier', value: 'cashier', },
-                { label: 'Kitchen', value: 'kitchen', },
                 { label: 'Barista', value: 'barista', },
+                { label: 'Kitchen', value: 'kitchen', },
             ];
         },
 
@@ -624,11 +660,11 @@ export default {
                 this.loadingStore.show("Preparing...");
                 // this.fetchCashierPersonnel();
                 this.loadingStore.hide();
-            } else if (newBranchInfoTab === 'kitchen') {
+            } else if (newBranchInfoTab === 'barista') {
                 this.loadingStore.show("Preparing...");
                 // this.fetchKitchenPersonnel();
                 this.loadingStore.hide();
-            } else if (newBranchInfoTab === 'barista') {
+            } else if (newBranchInfoTab === 'kitchen') {
                 this.loadingStore.show("Preparing...");
                 // this.fetchCashierPersonnel();
                 this.loadingStore.hide();
@@ -712,31 +748,6 @@ export default {
             }
         },
 
-        // async fetchProducts() {
-        //     this.loadingProducts = true;
-        //     try {
-        //         this.isSaving = false;
-        //         if (!this.branchDetails.branch_id) {
-        //             this.showError("Branch ID is not available!");
-        //             this.products = [];
-        //             console.log("Branch ID:", this.branchDetails.branch_id)
-        //             return;
-        //         }
-        //         await this.productsStore.fetchAllProductsStore(this.branchDetails.branch_id);
-        //         if (this.productsStore.products.length === 0) {
-        //             this.products = [];
-        //         } else {
-        //             this.products = this.productsStore.products.map(product => this.formatProduct(product));
-        //         }
-        //         this.productsLoaded = true;
-        //     } catch (error) {
-        //         console.error('Error fetching products:', error);
-        //         this.showError("Error fetching products!");
-        //     } finally {
-        //         this.loadingProducts = false;
-        //     }
-        // },
-
         async fetchProductAlone(productId) {
             try {
                 await this.productsStore.fetchProductAloneStore(productId);
@@ -750,71 +761,6 @@ export default {
                 this.showError("Error fetching product_alone!");
             }
         },
-
-        // async fetchStocks() {
-        //     this.loadingStocks = true;
-        //     try {
-        //         this.isSaving = false;
-        //         if (!this.branchDetails.branch_id) {
-        //             this.showError("Branch ID is not available!");
-        //             this.stocks = [];
-        //             return;
-        //         }
-        //         await this.stocksStore.fetchAllStocksStore(this.branchDetails.branch_id);
-        //         if (this.stocksStore.stocks.length === 0) {
-        //             this.stocks = [];
-        //         } else {
-        //             this.stocks = this.stocksStore.stocks.map(stock => this.formatStock(stock));
-        //         }
-        //         this.stocksLoaded = true;
-        //         this.loadingStocks = false;
-        //     } catch (error) {
-        //         console.error('Error fetching stocks:', error);
-        //         this.showError("Error fetching stocks!");
-        //     } finally {
-        //         this.loadingStocks = false;
-        //     }
-        // },
-
-        // async fetchVoidOrders() {
-        //     this.loadingVoidReversal = true;
-        //     try {
-        //         if (!this.branchDetails.branch_id) {
-        //             this.showError("Branch ID is not available!");
-        //             this.voidByDate = [];
-        //             return;
-        //         }
-        //         await this.transactStore.fetchVoidByDateStore(this.branchDetails.branch_id);
-        //         if (this.transactStore.voidOrdersByDate.length === 0) {
-        //             this.voidByDate = [];
-        //         } else {
-        //             this.voidByDate = this.transactStore.voidOrdersByDate.map(rev_orders => this.formatReversalOrders(rev_orders));
-        //         }
-        //         this.loadingVoidReversal = false;
-        //     } catch (error) {
-        //         console.error('Error fetching void orders:', error);
-        //         this.showError("Error fetching void orders!");
-        //     } finally {
-        //         this.loadingVoidReversal = false;
-        //     }
-        // },
-
-        /* async fetchSalesReport(dateFilterId = 1) {
-            this.loadingStore.show('Preparing...');
-            try {
-                if (!this.branchDetails.branch_id) {
-                    this.showError("Branch ID is not available!");
-                    this.salesByDateReports = [];
-                    return;
-                }
-                await this.transactStore.fetchGrossSalesByDateStore(this.branchDetails.branch_id, dateFilterId);
-            } catch (error) {
-                console.error(error);
-                this.showError(error);
-            } finally {
-                this.loadingStore.hide();
-            }
-        }, */
 
         async fetchSalesOnly(month = null) {
             this.loadingSalesOnly = true;
@@ -958,8 +904,8 @@ export default {
                 this.fetchLowStocks();
                 this.showSuccess("Stock updated successfully!");
             } catch (error) {
-                console.error('Failed to update stock:', error);
-                this.showError("Failed to update stock. Please try again!");
+                console.error(error);
+                this.showError(error);
             } finally {
                 this.isSaving = false;
             }

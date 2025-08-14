@@ -43,42 +43,42 @@
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.stock_ingredient="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
+            <span :class="Number(item.availability_id) === 2 ? 'text-red' : ''">
                 {{ item.stock_ingredient }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.unit_label="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
+            <span :class="Number(item.availability_id) === 2 ? 'text-red' : ''">
                 {{ item.unit_label }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_unit_cost="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
+            <span :class="Number(item.availability_id) === 2 ? 'text-red' : ''">
                 {{ item.display_unit_cost }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.updated_at="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
+            <span :class="Number(item.availability_id) === 2 ? 'text-red' : ''">
                 {{ item.updated_at }}
             </span>
         </template>
         
         <!--eslint-disable-next-line -->
         <template v-slot:item.display_stock_in="{ item }">
-            <span :class="item.stock_in <= item.stock_alert_qty ? 'text-red' : ''">
+            <span :class="Number(item.availability_id) === 2 ? 'text-red' : ''">
                 {{ item.display_stock_in }}
             </span>
         </template>
 
         <!--eslint-disable-next-line -->
         <template v-slot:item.availability_label="{ item }">
-            <v-chip :color="item.stock_in <= item.stock_alert_qty ? 'red' : 'green'" size="small" variant="tonal">
+            <v-chip :color="Number(item.availability_id) === 1 ? 'green' : 'red'" size="small" variant="tonal">
                 {{ item.availability_label }}
             </v-chip>
         </template>
