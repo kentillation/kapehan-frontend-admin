@@ -10,7 +10,6 @@ export const BRANCH_API = {
     async fetchBranches() {
         try {
             const authToken = localStorage.getItem('auth_token');
-            console.log("Access token: ", authToken);
             if (!authToken) throw new Error('Authentication token not found');
             const response = await apiClient.get(this.ENDPOINTS.FETCH_SHOP_BRANCHES, {
                 headers: {
@@ -60,7 +59,6 @@ export const BRANCH_API = {
     async fetchBranchDetails(branchName) {
         try {
             const authToken = localStorage.getItem('auth_token');
-            console.log("Access token: ", authToken);
 
             if (!authToken) throw new Error('Authentication token not found');
 

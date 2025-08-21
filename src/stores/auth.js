@@ -7,8 +7,8 @@ export const useAuthStore = defineStore('auth', () => {
     const router = useRouter();
 
     // State
+    const token = ref(localStorage.getItem('auth_token') || null);    
     const shopName = ref(localStorage.getItem('shop_name') || null);
-    const token = ref(localStorage.getItem('auth_token') || null);
     const shopId = ref(localStorage.getItem('shop_id') || null);
     const error = ref(null);
 
@@ -51,7 +51,10 @@ export const useAuthStore = defineStore('auth', () => {
         shopId.value = null;
         shopName.value = null;
         error.value = null;
-        localStorage.clear();
+        localStorage.removeItem('auth_token', token.value);        
+        localStorage.removeItem('shop_id', shopId.value);
+        localStorage.removeItem('shop_name', shopName.value);
+        // localStorage.clear();
         try {
             if (currentToken) {
                 await apiClient.post('/admin/logout', null, {

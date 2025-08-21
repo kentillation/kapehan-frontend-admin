@@ -2,7 +2,7 @@
     <v-container>
         <h3>Create New Branch</h3>
         <v-row>
-            <v-col cols="12" lg="4" md="6" sm="7">
+            <v-col cols="12" lg="6" md="6" sm="8">
                 <v-card class="pa-5 mt-3">
                     <v-card-text>
                         <v-form ref="newBranchForm" @submit.prevent="showConfirmDialog">
@@ -18,18 +18,18 @@
                                         :rules="[requiredRule]" variant="outlined" />
                                 </div>
                                 <div class="child">
-                                    <label for="m_name"><span class="text-red">*</span> Name of Manager/Supervisor</label>
+                                    <label for="m_name"><span class="text-red">*</span> Name of Supervisor</label>
                                     <v-text-field v-model="m_name" placeholder="e.g. Juan Dela Cruz"
                                         :rules="[requiredRule]" variant="outlined" />
                                 </div>
                                 <div class="child">
-                                    <label for="contact"><span class="text-red">*</span> Contact # of Manager/Supervisor</label>
+                                    <label for="contact"><span class="text-red">*</span> Contact # of Supervisor</label>
                                     <v-text-field v-model="contact" placeholder="e.g. 09123456789"
                                         :rules="[requiredRule]" variant="outlined" type="number"
                                         @input="e => contact = e.target.value.replace(/[^0-9.]/g, '')"  />
                                 </div>
                                 <div class="child">
-                                    <label for="m_email"><span class="text-red">*</span> Email of Manager/Supervisor</label>
+                                    <label for="m_email"><span class="text-red">*</span> Email of Supervisor</label>
                                     <v-text-field v-model="m_email" placeholder="e.g. name@example.com"
                                         :rules="[requiredRule, emailFormatRule]" variant="outlined" type="email" />
                                 </div>
