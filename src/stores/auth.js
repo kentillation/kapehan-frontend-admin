@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
                     headers: {
                         Authorization: `Bearer ${currentToken}`
                     },
-                    timeout: 3000
+                    timeout: 1000
                 });
             }
         } catch (err) {
